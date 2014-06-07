@@ -2,8 +2,8 @@ Gem::Specification.new do |s|
   s.name        = 'oa_templater'
   s.version     = '0.1.0'
   s.date        = '2014-06-05'
-  s.summary     = "Hola!"
-  s.description = "A gem to parse out elements of Japanese Patent Office Actions"
+  s.summary     = "JPO OA Templater"
+  s.description = "A gem to parse out and \"translate\" elements of Japanese Patent Office Actions"
   s.authors     = ["James Rubingh"]
   s.email       = 'james@wrive.com'
   s.files       = ["lib/oa_templater.rb",
