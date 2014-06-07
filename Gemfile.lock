@@ -1,0 +1,47 @@
+GIT
+  remote: https://github.com/BaseCampOps/docx_templater.git
+  revision: 24bd563de1d6bcb3d81529e925da1d0edaabde07
+  specs:
+    docx_templater (0.2.3)
+      htmlentities (~> 4.3.1)
+      rubyzip (~> 1.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    columnize (0.8.9)
+    debugger (1.6.8)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.3.5)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.3.5)
+    diff-lcs (1.2.5)
+    htmlentities (4.3.2)
+    iconv (1.0.4)
+    metaclass (0.0.4)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
+    rspec (3.0.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+    rspec-core (3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-expectations (3.0.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.0.0)
+    rspec-mocks (3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-support (3.0.0)
+    rubyzip (1.1.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  debugger
+  docx_templater!
+  iconv
+  mocha
+  rspec
