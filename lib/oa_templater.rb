@@ -17,8 +17,13 @@ class OaTemplater
   def initialize(sourcefile, casenumber = "11110")
     @sourcefile = sourcefile
     @casenumber = casenumber
+    @kyozetsuriyu_template = File.join(File.dirname(__FILE__), "kyozetsuriyu.docx")
+    @kyozetsusatei_template = File.join(File.dirname(__FILE__), "kyozetsusatei.docx")
+    #set template, but can be overwritten at any time
     read_oa_data
+    set_templates(@kyozetsuriyu_template, @kyozetsusatei_template)
     init_instance_vars
+    set_reasons_file
   end
 
   #require template files, not included because of NDA
@@ -29,9 +34,8 @@ class OaTemplater
   end
 
   #require reason file, not included because of NDA
-  def set_reasons_file(r)
-    @reasons_file = r
-    @reasons = YAML.load_file(@reasons_file)
+  def set_reasons_file(r = File.join(File.dirname(__FILE__), "reasons.yml"))
+    @reasons = YAML.load_file(r)
   end
 
   def finish
@@ -43,7 +47,7 @@ class OaTemplater
     capture_the(:drafted, /起案日\p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/)  #year/month/day
     return if @scrapes[:drafted].nil?
 
-    @props[:drafted] = format_date("%04u/%02u/%02u", @scrapes[:drafted])
+    set_prop(:drafted, format_date("%04u/%02u/%02u", @scrapes[:drafted]))
   end
 
   def parse_mailing_date
@@ -52,53 +56,50 @@ class OaTemplater
 
     @outputfile = "#{Dir.pwd}/ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
 
-    @props[:mailing_date] = format_date("%04u/%02u/%02u", @scrapes[:mailing_date])
-    
+    set_prop(:mailing_date, format_date("%04u/%02u/%02u", @scrapes[:mailing_date]))
   end
 
   def parse_satei_previous_oa
     capture_the(:satei_previous_oa, /この出願については、\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)日付け拒絶理由通知書に記載/) 
     return if @scrapes[:satei_previous_oa].nil?
 
-    @props[:satei_previous_oa] = format_date("%04u/%02u/%02u", @scrapes[:satei_previous_oa])
+    set_prop(:satei_previous_oa, format_date("%04u/%02u/%02u", @scrapes[:satei_previous_oa]))
 
     #set "and Amendments"
     if @data =~ /なお、意見書及び手続補正書の内容を検討しましたが/
-      @props[:and_amendments] = "and Amendments"
+      set_prop(:and_amendments, "and Amendments")
     else
-      @props[:and_amendments] = ""
+      set_prop(:and_amendments, "")
     end
   end
-
 
   def parse_app_no
     capture_the(:app_no, /特許出願の番号\p{Z}+特願(\p{N}+)\S(\p{N}+)/) 
     return if @scrapes[:app_no].nil?
 
-    @props[:app_no] = NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2])
+    set_prop(:app_no, NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2]))
   end
-
 
   def parse_examiner
     capture_the(:taro, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #1, 2
     capture_the(:code, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #3, 4
     return if @scrapes[:taro].nil?
 
-    @props[:taro] = @scrapes[:taro][1] + " " + @scrapes[:taro][2]
-    @props[:code] = NKF.nkf('-m0Z1 -w', @scrapes[:taro][3]) + " " + NKF.nkf('-m0Z1 -w', @scrapes[:taro][4])
+    set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2])
+    set_prop(:code, NKF.nkf('-m0Z1 -w', @scrapes[:taro][3]) + " " + NKF.nkf('-m0Z1 -w', @scrapes[:taro][4]))
   end
 
   def parse_final_oa
     capture_the(:final_oa, /＜＜＜＜　　最　　後　　＞＞＞＞/)
     return if @scrapes[:final_oa].nil?
-    @props[:final_oa] = "\r\n<<<<    FINAL    >>>>\r\n \r\n"
+    set_prop(:final_oa, "\r\n<<<<    FINAL    >>>>\r\n \r\n")
   end
 
   def parse_see_list
     if @data.match(/引用文献等については引用文献等一覧参照/)
-      @props[:see_list] = "\r\n(See the List of Citations for the cited publications)\r\n \r\n"
+      set_prop(:see_list, "\r\n(See the List of Citations for the cited publications)\r\n \r\n")
     else
-      @props[:see_list] = ""
+      set_prop(:see_list, "")
     end
   end
 
@@ -109,21 +110,21 @@ class OaTemplater
     #only check last name
     case @scrapes[:our_lawyer][1] 
     when "村山" 
-      @props[:our_lawyer] = "Yasuhiko MURAYAMA"
+      set_prop(:our_lawyer, "Yasuhiko MURAYAMA")
     when "志賀"
-      @props[:our_lawyer] = "Masatake SHIGA"
+      set_prop(:our_lawyer, "Masatake SHIGA")
     when "佐伯"
-      @props[:our_lawyer] = "Yoshifumi SAEKI"
+      set_prop(:our_lawyer, "Yoshifumi SAEKI")
     else
-      @props[:our_lawyer] = "Taro TOKYO"
+      set_prop(:our_lawyer, "Taro TOKYO")
     end
   end
 
   def parse_currently_known
     if @data =~ /＜拒絶の理由を発見しない請求項＞/
-      @props[:currently_known] = "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found."
+      set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
     else
-      @props[:currently_known] = ""
+      set_prop(:currently_known, "")
     end
   end
 
@@ -138,7 +139,7 @@ class OaTemplater
       end
     end
 
-    @props[:ipc_list] = ipc_text
+    set_prop(:ipc_list, ipc_text)
   end
 
   def parse_references
@@ -152,7 +153,7 @@ class OaTemplater
       end
     end
 
-    @props[:ref_list] = ref_text
+    set_prop(:ref_list, ref_text)
   end
 
   def parse_citations
@@ -199,7 +200,7 @@ class OaTemplater
       end
     end
 
-    @props[:citation_list] = citation_text
+    set_prop(:citation_list, citation_text)
   end
 
   def parse_articles
@@ -220,13 +221,28 @@ class OaTemplater
       end
     end
 
-    @props[:articles] = articles_text
-    @props[:reasons_for] = reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text
+    set_prop(:articles, articles_text)
+    set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
   end
 
-  #the @props hash is passed to 
+  #the @props hash is passed to docx_templater gem
   def set_prop(prop, value)
     @props[prop] = value 
+  end
+
+  def scan
+    parse_mailing_date
+    parse_examiner
+    parse_app_no
+    parse_drafted
+    parse_our_lawyer
+    parse_see_list
+    parse_final_oa
+    parse_satei_previous_oa
+    parse_articles
+    parse_currently_known
+    parse_citations
+    parse_ipc
   end
 
   private
@@ -264,11 +280,6 @@ class OaTemplater
   end
 
   def pick_template
-    if @kyozetsusatei_template.nil? or @kyozetsuriyu_template.nil?
-      puts "templates required"
-      exit
-    end
-
     if @data.match(/<TITLE>拒絶理由通知書<\/TITLE>/)
       @template = @kyozetsuriyu_template
       @template_name = "拒絶理由"
