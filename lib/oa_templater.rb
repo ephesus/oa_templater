@@ -9,17 +9,17 @@ require "docx_templater"
 require "yaml"
 
 class OaTemplater
-	attr_accessor :outputfile
+  attr_accessor :outputfile
   attr_reader :props
 
   CITATIONS_FILE = File.join(File.dirname(__FILE__), "citations.yml")
 
-	def initialize(sourcefile, casenumber = "11110")
+  def initialize(sourcefile, casenumber = "11110")
     @sourcefile = sourcefile
     @casenumber = casenumber
     read_oa_data
     init_instance_vars
-	end
+  end
 
   #require template files, not included because of NDA
   def set_templates(r, s)
@@ -34,10 +34,10 @@ class OaTemplater
     @reasons = YAML.load_file(@reasons_file)
   end
 
-	def finish
-		@buffer = @doc.replace_file_with_content(@template, @props)
-		File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
-	end
+  def finish
+    @buffer = @doc.replace_file_with_content(@template, @props)
+    File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
+  end
 
   def parse_drafted
     capture_the(:drafted, /起案日\p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/)  #year/month/day
@@ -232,7 +232,7 @@ class OaTemplater
   private
 
   def init_instance_vars
-		@doc = DocxTemplater.new
+    @doc = DocxTemplater.new
     @props = Hash.new
     @scrapes = Hash.new
     @props[:citaton_list] = ""
