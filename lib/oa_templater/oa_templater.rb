@@ -224,11 +224,6 @@ module OaTemplater
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
     end
 
-    #the @props hash is passed to docx_templater gem
-    def set_prop(prop, value)
-      @props[prop] = value 
-    end
-
     def scan
       parse_mailing_date
       parse_examiner
@@ -245,6 +240,11 @@ module OaTemplater
     end
 
     private
+
+    #the @props hash is passed to docx_templater gem
+    def set_prop(prop, value)
+      @props[prop] = value 
+    end
 
     def init_instance_vars
       @doc = DocxTemplater.new
