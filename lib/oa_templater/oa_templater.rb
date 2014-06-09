@@ -189,7 +189,7 @@ module OaTemplater
                   pub = a["english"].gsub('CIT_NO', pub_no)
                 end
 
-                citation_text += "#{count}'.  #{pub}\r\n[#{count}'.  ]\r\n"
+                citation_text += "#{count}.  #{pub}\r\n[#{count}'.  ]\r\n"
               end
             end #cits
 
