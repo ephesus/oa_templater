@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe OaTemplater do
   #instead of factory girl or whatever, just open up actual OA files
-  let(:oas) { OaTemplater.new(File.join(File.dirname(__FILE__), "test_satei.htm"), 66666) }
-  let(:oa1) { OaTemplater.new(File.join(File.dirname(__FILE__), "test_oa1.htm"), 66666) }
-  let(:oa2) { OaTemplater.new(File.join(File.dirname(__FILE__), "test_oa2.htm"), 66666) }
-  let(:oa3) { OaTemplater.new(File.join(File.dirname(__FILE__), "test_oa3.htm"), 66666) }
-  let(:oa4) { OaTemplater.new(File.join(File.dirname(__FILE__), "test_oa4.htm"), 66666) }
-  let(:oa5) { OaTemplater.new(File.join(File.dirname(__FILE__), "test_oa5.htm"), 66666) }
+  let(:oas) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_satei.htm"), 66666) }
+  let(:oa1) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa1.htm"), 66666) }
+  let(:oa2) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa2.htm"), 66666) }
+  let(:oa3) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa3.htm"), 66666) }
+  let(:oa4) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa4.htm"), 66666) }
+  let(:oa5) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa5.htm"), 66666) }
 
   context "#new" do
     #fail fast on catastrphic error
@@ -18,7 +18,7 @@ describe OaTemplater do
     end
 
     it "should be an instance of OaTemplater" do
-      expect(oa1).to be_an_instance_of OaTemplater
+      expect(oa1).to be_an_instance_of OaTemplater::OA
     end
 
     #do some very high level checks that nothing is super-broken

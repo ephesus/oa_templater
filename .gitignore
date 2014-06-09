@@ -6,10 +6,8 @@ ALP*
 **/*.swp
 **/*.patch
 **/*lnk
-**/*docx
+./*docx
 *.gem
 
 #these three files are for testing
-kyozetsuriyu.docx
-kyozetsusatei.docx
 reasons.yml
