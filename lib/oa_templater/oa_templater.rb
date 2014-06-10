@@ -147,29 +147,15 @@ module OaTemplater
       set_prop(:ipc_list, ipc_text)
     end
 
-    def parse_ipc_citations(ipc_list_end)
-      ipc_citation_text = ""
+    def parse_ipc_references(ipc_list_end)
+      ipc_reference_text = ""
 
       data = @data[ipc_list_end..-1]
       if m = data.match(/^\p{Z}この先行技術文献調査結果/)
         data = data[0..m.begin(0)]
       end
 
-      set_prop(:ipc_citation_text, ipc_citation_text)
-    end
-
-    def parse_references
-
-      ref_text = ""
-
-      if m = @data.match(/先行技術文献(?:等{0,1})調査結果.*?先行技術文献(.*?)先行技術文献調査結果/m)
-        data = m[1]
-        if m = data.match(//)
-          data = data[m.begin(0)..-2] 
-        end
-      end
-
-      set_prop(:ref_list, ref_text)
+      set_prop(:ipc_reference_text, ipc_reference_text)
     end
 
     def parse_citations
