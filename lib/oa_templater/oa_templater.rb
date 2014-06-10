@@ -140,7 +140,7 @@ module OaTemplater
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:')
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('DB名', 'DB Name:')
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('^\p{Z}{3,8}', "\t ")
-          parse_ipc_citations(ipc_list_end)
+          parse_ipc_references(ipc_list_end)
         end
       end
 
@@ -149,10 +149,53 @@ module OaTemplater
 
     def parse_ipc_references(ipc_list_end)
       ipc_reference_text = ""
-
       data = @data[ipc_list_end..-1]
+
       if m = data.match(/^\p{Z}この先行技術文献調査結果/)
+        @cits ||= YAML.load_file(CITATIONS_FILE)
         data = data[0..m.begin(0)]
+        oldmatch = false
+        count = 1
+
+        data.each_line do |line|
+          puts line
+          puts "=="
+          match = false
+          @cits.each do |n,a|
+            if m = line.match(a['japanese'])
+              puts a["english"]
+              match = true
+              if m.length == 2
+                pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
+              elsif m.length == 3
+                pub = a["english"].gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
+              elsif m.length == 4 or m.length == 5
+                pub_no = ""
+                if m[2] == "平"
+                  pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+                elsif m[2] == "昭"
+                  pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+                else
+                  pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+                end
+                pub = a["english"].gsub('CIT_NO', pub_no)
+              end
+
+              ipc_reference_text += "#{count}.  #{pub}\r\n"
+            end
+          end #cits.each
+            
+          #increase count
+          count += 1
+
+          ipc_reference_text += line unless match
+
+          if !oldmatch and !match
+            #dont increase counter on second line of a non-match
+            count -= 1
+          end
+          oldmatch = match
+        end
       end
 
       set_prop(:ipc_reference_text, ipc_reference_text)
@@ -162,7 +205,7 @@ module OaTemplater
       citation_text = ""
 
       if m = @data.match(/(引　用　文　献　等　一　覧|引用文献)\s+\p{N}+?(?:\.|．)/)
-        cits ||= YAML.load_file(CITATIONS_FILE)
+        @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
 
@@ -174,7 +217,7 @@ module OaTemplater
             count += 1
 
             old_citation_text = citation_text
-            cits.each do |n,a|
+            @cits.each do |n,a|
               if m = tex.match(a['japanese'])
                 if m.length == 2
                   pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
