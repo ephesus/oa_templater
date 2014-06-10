@@ -134,13 +134,28 @@ module OaTemplater
 
       if m = @data.match(/先行技術文献(?:等{0,1})調査結果(.*?)..先行技術文献/m)
         data = m[1]
+        ipc_list_end = m.end(0)
         if m = data.match(/(Ｉ|I)(Ｐ|P)(Ｃ|C)/)
           data = data[m.begin(0)..-2] 
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:')
+          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('DB名', 'DB Name:')
+          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('^\p{Z}{3,8}', "\t ")
+          parse_ipc_citations(ipc_list_end)
         end
       end
 
       set_prop(:ipc_list, ipc_text)
+    end
+
+    def parse_ipc_citations(ipc_list_end)
+      ipc_citation_text = ""
+
+      data = @data[ipc_list_end..-1]
+      if m = data.match(/^\p{Z}この先行技術文献調査結果/)
+        data = data[0..m.begin(0)]
+      end
+
+      set_prop(:ipc_citation_text, ipc_citation_text)
     end
 
     def parse_references
