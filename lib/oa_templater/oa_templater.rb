@@ -114,6 +114,8 @@ module OaTemplater
         set_prop(:our_lawyer, "Masatake SHIGA")
       when "佐伯"
         set_prop(:our_lawyer, "Yoshifumi SAEKI")
+      when "棚井"
+        set_prop(:our_lawyer, "Sumio TANAI")
       else
         set_prop(:our_lawyer, "Taro TOKYO")
       end
