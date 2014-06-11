@@ -190,13 +190,12 @@ module OaTemplater
             line = NKF.nkf('-m0Z1 -w', line)
 
             #first line of non-match
-            if oldmatch and !match
+            if oldmatch and (!match)
               line.gsub(/^/, "#{count}. ")
-              line.gsub(/\p{Z}+/, " ")
             end
 
             # >1st line of non-match
-            if !oldmatch and !match
+            if (!oldmatch) and (!match)
               count -= 1
             end
 
