@@ -158,12 +158,9 @@ module OaTemplater
         count = 1
 
         data.each_line do |line|
-          puts line
-          puts "=="
           match = false
           @cits.each do |n,a|
             if m = line.match(a['japanese'])
-              puts a["english"]
               match = true
               if m.length == 2
                 pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
@@ -188,12 +185,24 @@ module OaTemplater
           #increase count
           count += 1
 
-          ipc_reference_text += line unless match
+          if !match
+            #if no match, change 全角 to 半角 
+            line = NKF.nkf('-m0Z1 -w', line)
 
-          if !oldmatch and !match
-            #dont increase counter on second line of a non-match
-            count -= 1
+            #first line of non-match
+            if oldmatch and !match
+              line.gsub(/^/, "#{count}. ")
+              line.gsub(/\p{Z}+/, " ")
+            end
+
+            # >1st line of non-match
+            if !oldmatch and !match
+              count -= 1
+            end
+
+            ipc_reference_text += line 
           end
+
           oldmatch = match
         end
       end
@@ -240,7 +249,7 @@ module OaTemplater
             end #cits
 
             #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
-            citation_text += "#{count}'.  #{line[0][1..-1]}" if old_citation_text == citation_text
+            citation_text += "#{count}'.  #{NKF.nkf('-m0Z1 -w', line[0][1..-1])}" if old_citation_text == citation_text
           end
         end
       end
@@ -300,6 +309,7 @@ module OaTemplater
       capture_the(:mailing_no, /発送番号\p{Z}+(\S+)/)
       capture_the(:ref_no, /整理番号\p{Z}+(\S+)/)
       capture_the(:ipc_list, /調査した分野$/)
+      set_prop(:ipc_reference_text, "")
     end
 
     def read_oa_data
