@@ -26,22 +26,22 @@ pct:
   japanese: !ruby/regexp '/\s*国際公開第(\p{N}+?).(\p{N}+?)号/'
 france_pa: 
   english: 'French Patent Application, Publication No. CIT_NO'
-  japanese: !ruby/regexp '/(?:\.|．|\p{Z})\s*仏国特許出願公開第(\p{N}+?)号/'
+  japanese: !ruby/regexp '/\s*仏国特許出願公開第(\p{N}+?)号/'
 ger_pa: 
   english: 'German Patent Application, Publication No. CIT_NO'
-  japanese: !ruby/regexp '/(?:\.|．|\p{Z})\s*独国特許出願公開第(\p{N}+?)号/'
+  japanese: !ruby/regexp '/(?:\.|．|\p{Z}|）)\s*独国特許出願公開第(\p{N}+?)号/'
 #uk_pa: 
 #  english: 'United Kingdom Patent Application, Publication No. CIT_NO'
 #  japanese: !ruby/regexp '/(?:\.|．|\p{Z})\s*/'
 euro_pa: 
   english: 'European Patent Application, Publication No. CIT_NO'
-  japanese: !ruby/regexp '/(?:.欧|．|\p{Z})\s*州特許出願公開第(\p{N}+?)号/'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*欧州特許出願公開第(\p{N}+?)号/'
 us_p: 
   english: 'United States Patent No. CIT_NO'
-  japanese: !ruby/regexp '/(?:.米|．|\p{Z})\s*国特許第(\p{N}+?)号/'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*米国特許第(\p{N}+?)号/'
 us_pa: 
   english: 'United States Patent Application, Publication No. CIT_NO'
-  japanese: !ruby/regexp '/(?:.米|．|\p{Z})\s*国特許出願公開第(\p{N}+?).(\p{N}+?)号/'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*米国特許出願公開第(\p{N}+?).(\p{N}+?)号/'
 west_german: 
   english: 'West German Patent Application Publication No. CIT_NO'
-  japanese: !ruby/regexp '/(?:.西|．|\p{Z})\s*独国特許出願公開第(\p{N}+?)号/'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*独国特許出願公開第(\p{N}+?)号/'
