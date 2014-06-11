@@ -133,34 +133,86 @@ module OaTemplater
 
       if m = @data.match(/先行技術文献(?:等{0,1})調査結果(.*?)..先行技術文献/m)
         data = m[1]
+        ipc_list_end = m.end(0)
         if m = data.match(/(Ｉ|I)(Ｐ|P)(Ｃ|C)/)
           data = data[m.begin(0)..-2] 
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:')
+          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('DB名', 'DB Name:')
+          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('^\p{Z}{3,8}', "\t ")
+          parse_ipc_references(ipc_list_end)
         end
       end
 
       set_prop(:ipc_list, ipc_text)
     end
 
-    def parse_references
+    def parse_ipc_references(ipc_list_end)
+      ipc_reference_text = ""
+      data = @data[ipc_list_end..-1]
 
-      ref_text = ""
+      if m = data.match(/^\p{Z}この先行技術文献調査結果/)
+        @cits ||= YAML.load_file(CITATIONS_FILE)
+        data = data[0..m.begin(0)]
+        oldmatch = false
+        count = 1
 
-      if m = @data.match(/先行技術文献(?:等{0,1})調査結果.*?先行技術文献(.*?)先行技術文献調査結果/m)
-        data = m[1]
-        if m = data.match(//)
-          data = data[m.begin(0)..-2] 
+        data.each_line do |line|
+          match = false
+          @cits.each do |n,a|
+            if m = line.match(a['japanese'])
+              match = true
+              if m.length == 2
+                pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
+              elsif m.length == 3
+                pub = a["english"].gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
+              elsif m.length == 4 or m.length == 5
+                pub_no = ""
+                if m[2] == "平"
+                  pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+                elsif m[2] == "昭"
+                  pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+                else
+                  pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+                end
+                pub = a["english"].gsub('CIT_NO', pub_no)
+              end
+
+              ipc_reference_text += "#{count}.  #{pub}\r\n"
+            end
+          end #cits.each
+            
+          #increase count
+          count += 1
+
+          if !match
+            #if no match, change 全角 to 半角 
+            line = NKF.nkf('-m0Z1 -w', line)
+
+            #first line of non-match
+            if oldmatch and (!match)
+              line.gsub(/^/, "#{count}. ")
+            end
+
+            # >1st line of non-match
+            if (!oldmatch) and (!match)
+              count -= 1
+            end
+
+            ipc_reference_text += line 
+          end
+
+          oldmatch = match
         end
       end
 
-      set_prop(:ref_list, ref_text)
+      set_prop(:ipc_reference_text, ipc_reference_text)
     end
 
     def parse_citations
       citation_text = ""
 
       if m = @data.match(/(引　用　文　献　等　一　覧|引用文献)\s+\p{N}+?(?:\.|．)/)
-        cits ||= YAML.load_file(CITATIONS_FILE)
+        @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
 
@@ -172,7 +224,7 @@ module OaTemplater
             count += 1
 
             old_citation_text = citation_text
-            cits.each do |n,a|
+            @cits.each do |n,a|
               if m = tex.match(a['japanese'])
                 if m.length == 2
                   pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
@@ -195,7 +247,7 @@ module OaTemplater
             end #cits
 
             #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
-            citation_text += "#{count}'.  #{line[0][1..-1]}" if old_citation_text == citation_text
+            citation_text += "#{count}'.  #{NKF.nkf('-m0Z1 -w', line[0][1..-1])}" if old_citation_text == citation_text
           end
         end
       end
@@ -255,6 +307,7 @@ module OaTemplater
       capture_the(:mailing_no, /発送番号\p{Z}+(\S+)/)
       capture_the(:ref_no, /整理番号\p{Z}+(\S+)/)
       capture_the(:ipc_list, /調査した分野$/)
+      set_prop(:ipc_reference_text, "")
     end
 
     def read_oa_data
