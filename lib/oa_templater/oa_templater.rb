@@ -80,8 +80,7 @@ module OaTemplater
     end
 
     def parse_examiner
-      capture_the(:taro, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #1, 2
-      capture_the(:code, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #3, 4
+      capture_the(:taro, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #1, 2 (codes are #3, 4)
       return if @scrapes[:taro].nil?
 
       set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2])
