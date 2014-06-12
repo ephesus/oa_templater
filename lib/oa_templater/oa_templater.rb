@@ -137,8 +137,8 @@ module OaTemplater
         if m = data.match(/(Ｉ|I)(Ｐ|P)(Ｃ|C)/)
           data = data[m.begin(0)..-2] 
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:')
-          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('DB名', 'DB Name:')
-          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('^\p{Z}{3,8}', "\t ")
+          ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('DB名', 'DB Name:')
+          ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('^\p{Z}{3,8}', "\t ")
           parse_ipc_references(ipc_list_end)
         end
       end
@@ -161,23 +161,7 @@ module OaTemplater
           @cits.each do |n,a|
             if m = line.match(a['japanese'])
               match = true
-              if m.length == 2
-                pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
-              elsif m.length == 3
-                pub = a["english"].gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
-              elsif m.length == 4 or m.length == 5
-                pub_no = ""
-                if m[2] == "平"
-                  pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-                elsif m[2] == "昭"
-                  pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-                else
-                  pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-                end
-                pub = a["english"].gsub('CIT_NO', pub_no)
-              end
-
-              ipc_reference_text += "#{count}.  #{pub}\r\n"
+              ipc_reference_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n"
             end
           end #cits.each
             
@@ -226,23 +210,7 @@ module OaTemplater
             old_citation_text = citation_text
             @cits.each do |n,a|
               if m = tex.match(a['japanese'])
-                if m.length == 2
-                  pub = a["english"].gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
-                elsif m.length == 3
-                  pub = a["english"].gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
-                elsif m.length == 4 or m.length == 5
-                  pub_no = ""
-                  if m[2] == "平"
-                    pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-                  elsif m[2] == "昭"
-                    pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-                  else
-                    pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-                  end
-                  pub = a["english"].gsub('CIT_NO', pub_no)
-                end
-
-                citation_text += "#{count}.  #{pub}\r\n[#{count}'.  ]\r\n"
+                citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n[#{count}'.  ]\r\n"
               end
             end #cits
 
@@ -253,6 +221,26 @@ module OaTemplater
       end
 
       set_prop(:citation_list, citation_text)
+    end
+
+    def convert_pub_no(m, eng)
+      if m.length == 2
+        pub = eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
+      elsif m.length == 3
+        pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
+      elsif m.length == 4 or m.length == 5
+        pub_no = ""
+        if m[2] == "平"
+          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+        elsif m[2] == "昭"
+          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+        else
+          pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+        end
+        pub = eng.gsub('CIT_NO', pub_no)
+      end
+
+      pub
     end
 
     def parse_articles
