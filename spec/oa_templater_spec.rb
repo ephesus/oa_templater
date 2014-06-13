@@ -182,4 +182,21 @@ describe OaTemplater do
       expect(oa1.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H10-101800\r\n[1'.  ]\r\n2.  Japanese Unexamined Patent Application, First Publication No. H11-147949\r\n[2'.  ]\r\n")
     end
   end
+
+  context "#parse_ipc" do
+    it "reads ipc, group text check" do
+      oa1.parse_ipc
+      expect(oa1.props[:ipc_list]).to eql("IPC: C08L 83/00-83/16\r\n             A61K 8/00-8/99\r\n             A61Q 1/00-90/00\r\n             C08G 77/00-77/62\r\n             C09D 1/00-10/00\r\n                  101/00-201/10\r\n             D06M 13/00-15/05\r\n                  15/07-15/41\r\n                  15/423-15/427\r\n                  15/43\r\n                  15/433-15/55\r\n                  15/564-15/576\r\n                  15/59\r\n                  15/61-15/70\r\n")
+    end
+
+    it "reads ipc, group text check" do
+      oa3.parse_ipc
+      expect(oa3.props[:ipc_list]).to eql("IPC: A61F2/06\r\n             A61M1/10\r\n\r\n")
+    end
+
+    it "reads ipc, group text check" do
+      oa4.parse_ipc
+      expect(oa4.props[:ipc_list]).to eql("IPC: G06F13/00\r\n             G06F12/00\r\n")
+    end
+  end #context parse_ipc
 end
