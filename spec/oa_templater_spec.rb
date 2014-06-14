@@ -190,6 +190,11 @@ describe OaTemplater do
     end
 
     it "reads ipc, group text check" do
+      oa2.parse_ipc
+      expect(oa2.props[:ipc_list]).to eql("IPC: A61K8/00-8/99\r\n             A61Q1/00-90/00\r\n\r\n・出願人への要請\r\n 引用文献3は、本願出願時に公開されており、本願と出願人又は発明者が共通\r\nする文献であって、本願の一以上の請求項について、当該引用文献のみで新規性\r\n又は進歩性を否定するものです。\r\n このような文献に基づいて、事前に発明を適切に評価することは、出願人によ\r\nる適切な請求項の作成に役立つとともに、迅速かつ的確な審査にも資するものと\r\n考えられます。出願・審査請求の際には、このような文献を出願人が知ってい")
+    end
+
+    it "reads ipc, group text check" do
       oa3.parse_ipc
       expect(oa3.props[:ipc_list]).to eql("IPC: A61F2/06\r\n             A61M1/10\r\n\r\n")
     end
