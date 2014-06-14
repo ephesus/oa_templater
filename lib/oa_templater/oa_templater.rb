@@ -54,7 +54,7 @@ module OaTemplater
       capture_the(:mailing_date, /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/) 
       return if @scrapes[:mailing_date].nil?
 
-      @outputfile = "#{Dir.pwd}/ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
+      @outputfile = "ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
 
       set_prop(:mailing_date, format_date("%04u/%02u/%02u", @scrapes[:mailing_date]))
     end
