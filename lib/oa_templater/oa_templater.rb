@@ -7,6 +7,7 @@ require "fileutils"
 require "date"
 require "docx_templater"
 require "yaml"
+require "charlock_holmes"
 
 module OaTemplater
   class OA
@@ -300,11 +301,11 @@ module OaTemplater
 
     def read_oa_data
       #read in OA data
-      @datafile = File.open(@sourcefile, "r")
-
+      @data = File.read(@sourcefile)
+      
       #convert SHIFT_JIS encoded HTML file (Japanese) to UTF-8
-      @data = Iconv.iconv("UTF-8","SHIFT_JIS",@datafile.read).join
-      @datafile.close
+      detection = CharlockHolmes::EncodingDetector.detect(@data)
+      @data = CharlockHolmes::Converter.convert @data, detection[:encoding], 'UTF-8'
     end
 
     def capture_the(prop, reg, offset = 0)

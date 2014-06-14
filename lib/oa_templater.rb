@@ -10,7 +10,7 @@ require "date"
 require "docx_templater"
 require "yaml"
 
-require "oa_templater"
+require "oa_templater/oa_templater" unless defined? OaTemplater
 
 module OaTemplater
     CITATIONS_FILE = File.join(File.dirname(__FILE__), "oa_templater", "citations.yml")

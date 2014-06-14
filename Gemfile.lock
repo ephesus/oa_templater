@@ -9,6 +9,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    charlock_holmes (0.7.3)
     columnize (0.8.9)
     debugger (1.6.8)
       columnize (>= 0.3.1)
@@ -26,12 +27,12 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.0)
+    rspec-core (3.0.1)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.0)
+    rspec-expectations (3.0.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
-    rspec-mocks (3.0.0)
+    rspec-mocks (3.0.1)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.0)
     rubyzip (1.1.4)
@@ -40,6 +41,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  charlock_holmes
   debugger
   docx_templater!
   iconv
