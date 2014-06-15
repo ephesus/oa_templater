@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-require "iconv"
 require "nkf"
 require "fileutils"
 require "date"
