@@ -54,12 +54,12 @@ describe OaTemplater do
 
     it "sets the outputfile" do
       oa1.parse_mailing_date
-      expect(oa1.outputfile).to eql(File.join(Dir.pwd, "ALP66666.拒絶理由.20140415.docx"))
+      expect(oa1.outputfile).to eql("ALP66666.拒絶理由.20140415.docx")
     end
 
     it "sets the outputfile" do
       oa5.parse_mailing_date
-      expect(oa5.outputfile).to eql(File.join(Dir.pwd, "ALP66666.拒絶理由.20140520.docx"))
+      expect(oa5.outputfile).to eql("ALP66666.拒絶理由.20140520.docx")
     end
   end
 
