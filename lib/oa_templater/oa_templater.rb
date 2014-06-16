@@ -150,7 +150,7 @@ module OaTemplater
       ipc_reference_text = ""
       data = @data[ipc_list_end..-1]
 
-      if m = data.match(/^\p{Z}この先行技術文献調査結果/)
+      if m = data.match(/^.*先行技術文献調査結果/)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         data = data[0..m.begin(0)]
         oldmatch = false
@@ -231,9 +231,9 @@ module OaTemplater
       elsif m.length == 4 or m.length == 5
         pub_no = ""
         if m[2] == "平"
-          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
         elsif m[2] == "昭"
-          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3])) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
         else
           pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
         end
