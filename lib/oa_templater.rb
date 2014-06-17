@@ -3,7 +3,6 @@
 
 $:.unshift File.join(File.dirname(__FILE__), "oa_templater")
 
-require "iconv"
 require "nkf"
 require "fileutils"
 require "date"
