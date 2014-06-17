@@ -38,7 +38,6 @@ module OaTemplater
     end
 
     def finish
-      @buffer = @doc.replace_file_with_content(@template, @props)
       File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
     end
 
@@ -278,6 +277,9 @@ module OaTemplater
       parse_currently_known
       parse_citations
       parse_ipc
+
+      @buffer = @doc.replace_file_with_content(@template, @props)
+      return @buffer
     end
 
     private

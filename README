@@ -4,6 +4,10 @@ oa = OaTemplater::OA.new(ARGV[0], ARGV[1])
 oa.set_templates(File.join(File.dirname(__FILE__), "templates", "kyozetsuriyu.docx"),
     File.join(File.dirname(__FILE__), "templates", "kyozetsusatei.docx"))
 oa.set_reasons_file(File.join(File.dirname(__FILE__), "templates", "reasons.yml"))
-oa.scan
-oa.finish
+buffer = oa.scan
 
+#write to oa.outputfile (e.g. ALP31232.拒絶理由.20140602.docx)
+oa.finish 
+
+#or manually
+File.open(oa.outputfile, 'wb') { |f| f.write(buffer.string) }
