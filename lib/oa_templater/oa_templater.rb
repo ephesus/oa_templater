@@ -37,10 +37,6 @@ module OaTemplater
       @reasons = YAML.load_file(r)
     end
 
-    def finish
-      File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
-    end
-
     def parse_drafted
       capture_the(:drafted, /起案日\p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/)  #year/month/day
       return if @scrapes[:drafted].nil?
@@ -262,24 +258,6 @@ module OaTemplater
 
       set_prop(:articles, articles_text)
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
-    end
-
-    def scan
-      parse_mailing_date
-      parse_examiner
-      parse_app_no
-      parse_drafted
-      parse_our_lawyer
-      parse_see_list
-      parse_final_oa
-      parse_satei_previous_oa
-      parse_articles
-      parse_currently_known
-      parse_citations
-      parse_ipc
-
-      @buffer = @doc.replace_file_with_content(@template, @props)
-      return @buffer
     end
 
     private
