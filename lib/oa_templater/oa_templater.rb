@@ -282,7 +282,7 @@ module OaTemplater
       #read in OA data
       @data = File.read(@sourcefile)
       
-      #convert SHIFT_JIS encoded HTML file (Japanese) to UTF-8
+      #convert detected encoding (usually SHIFT_JIS Japanese) to UTF-8
       detection = CharlockHolmes::EncodingDetector.detect(@data)
       @data = CharlockHolmes::Converter.convert @data, detection[:encoding], 'UTF-8'
     end
