@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.description = "A gem to parse out and \"translate\" elements of Japanese Patent Office Actions"
   s.authors     = ["James Rubingh"]
   s.email       = 'james@wrive.com'
-  s.files       = ["lib/oa_templater.rb",
-                   "lib/oa_templater/citations.yml"]
+  s.files       = `git ls-files`.split($/).grep(%r{^lib/})
+  s.require_paths = ['lib']
   s.homepage    = 'https://github.com/ephesus/oa_templater'
   s.license     = 'GPLv2+'
   s.add_runtime_dependency 'charlock_holmes'
