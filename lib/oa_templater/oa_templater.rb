@@ -260,6 +260,28 @@ module OaTemplater
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
     end
 
+    def finish
+      File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
+    end
+
+    def scan
+      parse_mailing_date
+      parse_examiner
+      parse_app_no
+      parse_drafted
+      parse_our_lawyer
+      parse_see_list
+      parse_final_oa
+      parse_satei_previous_oa
+      parse_articles
+      parse_currently_known
+      parse_citations
+      parse_ipc
+
+      @buffer = @doc.replace_file_with_content(@template, @props)
+      return @buffer
+    end
+
     private
 
     #the @props hash is passed to docx_templater gem
