@@ -16,25 +16,32 @@ module OaTemplater
     def initialize(sourcefile, casenumber = "11110")
       @sourcefile = sourcefile
       @casenumber = casenumber
-      @kyozetsuriyu_template = File.join(File.dirname(__FILE__), "default_riyu.docx")
-      @kyozetsusatei_template = File.join(File.dirname(__FILE__), "default_satei.docx")
       read_oa_data
-      #set template, but can be overwritten at any time
-      set_templates(@kyozetsuriyu_template, @kyozetsusatei_template)
+      set_templates
       init_instance_vars
       set_reasons_file
     end
 
     #require template files, not included because of NDA
-    def set_templates(r, s)
-      @kyozetsuriyu_template = r
-      @kyozetsusatei_template = s
+    def set_templates(options = {})
+      defaults = {  kyozetsuriyu: File.join(File.dirname(__FILE__), "default_riyu.docx"),
+                    kyozetsusatei: File.join(File.dirname(__FILE__), "default_satei.docx"),
+                    shinnen: File.join(File.dirname(__FILE__), "default_shinnen.docx")
+                  }
+      @templates = defaults.merge(options)
       pick_template
     end
 
     #require reason file, not included because of NDA
     def set_reasons_file(r = File.join(File.dirname(__FILE__), "reasons.yml"))
       @reasons = YAML.load_file(r)
+    end
+
+    def parse_appeal_drafted
+      capture_the(:appeal_drafted, /作成日p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/)  #year/month/day
+      return if @scrapes[:appeal_drafted].nil?
+
+      set_prop(:appeal_drafted, format_date("%04u/%02u/%02u", @scrapes[:appeal_drafted]))
     end
 
     def parse_drafted
@@ -67,6 +74,13 @@ module OaTemplater
       end
     end
 
+    def parse_appeal_no
+      capture_the(:appeal_no, /番号\p{Zs}*不服(\p{N}+)\S(\p{Zs}*\p{N}+)/) 
+      return if @scrapes[:appeal_no].nil?
+
+      set_prop(:appeal_no, NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][2]))
+    end
+
     def parse_app_no
       capture_the(:app_no, /特許出願の番号\p{Z}+特願(\p{N}+)\S(\p{N}+)/) 
       return if @scrapes[:app_no].nil?
@@ -80,6 +94,13 @@ module OaTemplater
 
       set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2])
       set_prop(:code, NKF.nkf('-m0Z1 -w', @scrapes[:taro][3]) + " " + NKF.nkf('-m0Z1 -w', @scrapes[:taro][4]))
+    end
+
+    def parse_appeal_examiner
+      capture_the(:appeal_taro, /審判長(?:\p{Z}*)特許庁審判官\p{Z}+(\S+?)\p{Z}(\S+?)\p{Z}*$/) #1, 2
+      return if @scrapes[:appeal_taro].nil?
+
+      set_prop(:appeal_taro, @scrapes[:appeal_taro][1] + " " + @scrapes[:appeal_taro][2])
     end
 
     def parse_final_oa
@@ -97,7 +118,7 @@ module OaTemplater
     end
 
     def parse_our_lawyer
-      capture_the(:our_lawyer, /[特許出願人]*代理人\p{Zs}+(\S+?)\p{Zs}(\S+?)（/) 
+      capture_the(:our_lawyer, /[特許出願人]*代理人[弁理士]*[弁護士]*\p{Zs}+(\S+?)\p{Zs}(\S+?)/) 
       return if @scrapes[:our_lawyer].nil?
 
       #only check last name
@@ -277,6 +298,9 @@ module OaTemplater
       parse_currently_known
       parse_citations
       parse_ipc
+      parse_appeal_examiner
+      parse_appeal_drafted
+      parse_appeal_no
 
       @buffer = @doc.replace_file_with_content(@template, @props)
       return @buffer
@@ -324,14 +348,17 @@ module OaTemplater
 
     def pick_template
       if @data.match(/<TITLE>拒絶理由通知書<\/TITLE>/)
-        @template = @kyozetsuriyu_template
+        @template = @templates[:kyozetsuriyu]
         @template_name = "拒絶理由"
       elsif @data.match(/<TITLE>拒絶査定<\/TITLE>/)
-        @template = @kyozetsusatei_template
+        @template = @templates[:kyozetsusatei]
         @template_name = "拒絶査定"
+      elsif @data.match(/<TITLE>審尋（審判官）<\/TITLE>/)
+        @template = @templates[:shinnen]
+        @template_name = "審尋"
       else
         #not satei or riyu, default to riyu
-        @template = @kyozetsuriyu_template
+        @template = @templates[:kyozetsuriyu]
         @template_name = "拒絶理由"
       end
     end
