@@ -6,8 +6,9 @@ Pulls out relevant data from an Office Action from the Japanese Patent Office.
 
 ```ruby
 oa = OaTemplater::OA.new(ARGV[0], ARGV[1])
-oa.set_templates(File.join(File.dirname(__FILE__), "templates", "kyozetsuriyu.docx"),
-    File.join(File.dirname(__FILE__), "templates", "kyozetsusatei.docx"))
+oa.set_templates(kyozetsuriyu: "./kyozetsuriyu.docx",
+                 kyozetsusatei: "kyozetsusatei.docx",
+                 shinnen: "shinnen.docx")
 oa.set_reasons_file(File.join(File.dirname(__FILE__), "templates", "reasons.yml"))
 buffer = oa.scan
 
