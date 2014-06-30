@@ -231,7 +231,7 @@ module OaTemplater
             end #cits
 
             #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
-            citation_text += "#{count}'.  #{NKF.nkf('-m0Z1 -w', line[0][1..-1])}" if old_citation_text == citation_text
+            citation_text += "#{count}.  #{NKF.nkf('-m0Z1 -w', line[0][1..-1])}" if old_citation_text == citation_text
           end
         end
       end
