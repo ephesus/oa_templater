@@ -1,3 +1,3 @@
-module OaTEmplater
-  VERSION = "0.1.1"
+module OaTemplater
+  VERSION = "0.1.2"
 end

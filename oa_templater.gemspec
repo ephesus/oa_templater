@@ -1,6 +1,8 @@
+require File.dirname(__FILE__) + '/lib/version'
+
 Gem::Specification.new do |s|
   s.name        = 'oa_templater'
-  s.version     = '0.1.1'
+  s.version     = OaTemplater::VERSION
   s.date        = '2014-06-05'
   s.summary     = "JPO OA Templater"
   s.description = "A gem to parse out and \"translate\" elements of Japanese Patent Office Actions"
