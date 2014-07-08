@@ -347,13 +347,13 @@ module OaTemplater
     end
 
     def pick_template
-      if @data.match(/<TITLE>拒絶理由通知書<\/TITLE>/)
+      if @data.match(/<TITLE>拒絶理由通知書<\/TITLE>/i)
         @template = @templates[:kyozetsuriyu]
         @template_name = "拒絶理由"
-      elsif @data.match(/<TITLE>拒絶査定<\/TITLE>/)
+      elsif @data.match(/<TITLE>拒絶査定<\/TITLE>/i)
         @template = @templates[:kyozetsusatei]
         @template_name = "拒絶査定"
-      elsif @data.match(/<TITLE>審尋（審判官）<\/TITLE>/)
+      elsif @data.match(/<TITLE>審尋（審判官）<\/TITLE>/i)
         @template = @templates[:shinnen]
         @template_name = "審尋"
       else
