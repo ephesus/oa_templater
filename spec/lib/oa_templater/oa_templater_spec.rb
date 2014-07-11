@@ -139,6 +139,7 @@ describe OaTemplater do
 
   context "#articles" do
     it "captures articles" do
+      oa1.set_reasons_file("/home/ephesus/code/reader/templates/reasons.yml")
       oa1.parse_articles
       expect(oa1.props[:articles]).to eql("Article 29, Paragraph 1\r\n\tArticle 29, Paragraph 2\r\n")
     end
