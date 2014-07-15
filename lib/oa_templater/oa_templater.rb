@@ -266,13 +266,13 @@ module OaTemplater
       reasons_for_text = ""
 
       @reasons.each do |r,a|
-        if data =~ /#{a['japanese']}.*?理　由/m
+        if data =~ /#{a['japanese']}/m
           #skip tab on first reason
           articles_text += "\t" unless articles_text.length < 1
           #only add short text once
           articles_text += a["short"] + "\r\n" unless articles_text.match(/#{a["short"]}/)
 
-            reasons_for_text += "#{count}.\t#{a['english']}\r\n\r\n"
+          reasons_for_text += "#{count}.\t#{a['english']}\r\n\r\n"
           count += 1
         end
       end
