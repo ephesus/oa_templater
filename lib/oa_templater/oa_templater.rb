@@ -67,8 +67,8 @@ module OaTemplater
       set_prop(:satei_previous_oa, format_date("%04u/%02u/%02u", @scrapes[:satei_previous_oa]))
 
       #set "and Amendments"
-      if @data =~ /なお、意見書及び手続補正書の内容を検討しましたが/
-        set_prop(:and_amendments, "and Amendments")
+      if @data =~ /なお、意見書.{0,4}?手続補正書の内容を検討しました/
+        set_prop(:and_amendments, " and Amendments")
       else
         set_prop(:and_amendments, "")
       end
