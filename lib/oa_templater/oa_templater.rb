@@ -107,6 +107,7 @@ module OaTemplater
       capture_the(:final_oa, /＜＜＜＜　　最　　後　　＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
       set_prop(:final_oa, "\r\n<<<<    FINAL    >>>>\r\n \r\n")
+      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\r\n\r\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to “A” among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to “B” among the reasons for rejection mentioned above).\r\n")
     end
 
     def parse_see_list
@@ -137,7 +138,7 @@ module OaTemplater
     end
 
     def parse_currently_known
-      if @data =~ /＜拒絶の理由を発見しない請求項＞/
+      if @data =~ /拒絶の理由を発見しない請求項/
         set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       else
         set_prop(:currently_known, "")
