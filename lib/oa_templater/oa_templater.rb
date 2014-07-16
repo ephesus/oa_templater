@@ -104,10 +104,11 @@ module OaTemplater
     end
 
     def parse_final_oa
+      set_prop(:reason_for_final, "")
       capture_the(:final_oa, /＜＜＜＜　　最　　後　　＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
       set_prop(:final_oa, "\r\n<<<<    FINAL    >>>>\r\n \r\n")
-      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\r\n\r\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to “A” among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to “B” among the reasons for rejection mentioned above).\r\n")
+      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\r\n\r\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\r\n")
     end
 
     def parse_see_list
@@ -154,7 +155,7 @@ module OaTemplater
         if m = data.match(/(Ｉ|I)(Ｐ|P)(Ｃ|C)/)
           data = data[m.begin(0)..-2] 
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:')
-          ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('DB名', 'DB Name:')
+          ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('DB名', "\tDB Name:")
           ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('^\p{Z}{3,8}', "\t ")
           parse_ipc_references(ipc_list_end)
         end
