@@ -278,6 +278,9 @@ module OaTemplater
         end
       end
 
+      #remove number if only 1 article listed
+      reasons_for_text.gsub!(/^1./, '') if count == 2
+
       set_prop(:articles, articles_text)
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
     end
