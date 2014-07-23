@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.1.11)
+    oa_templater (0.1.15)
       charlock_holmes
       docx_templater (~> 0.2, >= 0.2.3)
 
@@ -23,14 +23,14 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.2)
+    rspec-core (3.0.3)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.2)
+    rspec-expectations (3.0.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
-    rspec-mocks (3.0.2)
+    rspec-mocks (3.0.3)
       rspec-support (~> 3.0.0)
-    rspec-support (3.0.2)
+    rspec-support (3.0.3)
     rubyzip (1.1.6)
 
 PLATFORMS
