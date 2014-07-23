@@ -4,5 +4,6 @@ source 'https://rubygems.org'
 #gem "docx_replace", path: "~/docx_replace"
 gem "docx_templater", git: "https://github.com/BaseCampOps/docx_templater.git"
 gem "rspec"
+gem "byebug"
 
 gemspec

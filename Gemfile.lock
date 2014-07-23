@@ -9,14 +9,19 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.1.15)
+    oa_templater (0.1.17)
       charlock_holmes
       docx_templater (~> 0.2, >= 0.2.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (3.1.2)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
     charlock_holmes (0.7.3)
+    columnize (0.8.9)
+    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     htmlentities (4.3.2)
     rspec (3.0.0)
@@ -37,6 +42,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   docx_templater!
   oa_templater!
   rspec
