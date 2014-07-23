@@ -141,6 +141,8 @@ module OaTemplater
     def parse_currently_known
       if @data =~ /拒絶の理由を発見しない請求項/
         set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+      elsif @data =~ /拒絶の理由が通知される/
+        set_prop(:currently_known, "The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       else
         set_prop(:currently_known, "")
       end
