@@ -212,6 +212,21 @@ module OaTemplater
       set_prop(:ipc_reference_text, ipc_reference_text)
     end
 
+    def parse_headers
+      oa_headers_text = ""
+
+      if m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?)/mi)
+        data = @data[m.begin(0)..m.end(0)]
+        #puts data
+        data.scan(/(?: (?:(・.*)) )/x) do |result|
+          tex = result[0]
+          oa_headers_text += format_headers(tex)
+        end
+      end
+
+      set_prop(:oa_headers, oa_headers_text)
+    end
+
     def parse_citations
       citation_text = ""
 
@@ -245,7 +260,12 @@ module OaTemplater
 
     def convert_pub_no(m, eng)
       if m.length == 2
-        pub = eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
+        if eng =~ /United States Patent No/
+          #add commas for US patents
+          pub = eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]).to_i.commas)
+        else
+          pub = eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
+        end
       elsif m.length == 3
         pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
       elsif m.length == 4 or m.length == 5
@@ -293,7 +313,11 @@ module OaTemplater
       File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
     end
 
-    def scan
+    def scan (options = {})
+      defaults = {  do_headers: false
+                  }
+      options = defaults.merge(options)
+
       parse_mailing_date
       parse_examiner
       parse_app_no
@@ -310,11 +334,26 @@ module OaTemplater
       parse_appeal_drafted
       parse_appeal_no
 
+      if options[:do_headers]
+        parse_headers
+      end
+
       @buffer = @doc.replace_file_with_content(@template, @props)
       return @buffer
     end
 
     private
+
+    def format_headers(tex)
+      formatted_text = ""
+      if m = formatted_text.match(/・(.*)/)
+        tex = tex[m.begin(0)..m.end(0)]
+        formatted_text += "•#{NKF.nkf('-m0Z1 -w', tex)}\r\n"
+      else
+        formatted_text += "#{NKF.nkf('-m0Z1 -w', tex)}\r\n"
+      end
+      return formatted_text
+    end
 
     #the @props hash is passed to docx_templater gem
     def set_prop(prop, value)
