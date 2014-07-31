@@ -212,10 +212,10 @@ module OaTemplater
       set_prop(:ipc_reference_text, ipc_reference_text)
     end
 
-    def parse_headers
+    def parse_headers(dh)
       oa_headers_text = ""
 
-      if m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?)/mi)
+      if dh && m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?)/mi)
         data = @data[m.begin(0)..m.end(0)]
         #puts data
         data.scan(/(?: (?:(・.*)) )/x) do |result|
@@ -334,9 +334,7 @@ module OaTemplater
       parse_appeal_drafted
       parse_appeal_no
 
-      if options[:do_headers]
-        parse_headers
-      end
+      parse_headers options[:do_headers]
 
       @buffer = @doc.replace_file_with_content(@template, @props)
       return @buffer
@@ -348,11 +346,21 @@ module OaTemplater
       formatted_text = ""
       if m = formatted_text.match(/・(.*)/)
         tex = tex[m.begin(0)..m.end(0)]
-        formatted_text += "•#{NKF.nkf('-m0Z1 -w', tex)}\r\n"
+        formatted_text += "•#{NKF.nkf('-m0Z1 -w', replace_common_phrases(tex))}\r\n"
       else
-        formatted_text += "#{NKF.nkf('-m0Z1 -w', tex)}\r\n"
+        formatted_text += "#{NKF.nkf('-m0Z1 -w', replace_common_phrases(tex))}\r\n"
       end
+
       return formatted_text
+    end
+
+    def replace_common_phrases(tex)
+      tex.gsub!('請求項', 'Claim')
+      tex.gsub!('引用文献', 'Citation')
+      tex.gsub!('備考', 'Notes')
+      tex.gsub!('理由', 'Reason')
+
+      return tex
     end
 
     #the @props hash is passed to docx_templater gem
