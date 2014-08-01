@@ -51,11 +51,15 @@ module OaTemplater
       set_prop(:drafted, format_date("%04u/%02u/%02u", @scrapes[:drafted]))
     end
 
-    def parse_mailing_date
+    def parse_mailing_date(do_dashes = false)
       capture_the(:mailing_date, /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/) 
       return if @scrapes[:mailing_date].nil?
 
-      @outputfile = "ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
+      if do_dashes
+        @outputfile = "ALP#{@casenumber}-#{@template_name}-#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
+      else
+        @outputfile = "ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
+      end
 
       set_prop(:mailing_date, format_date("%04u/%02u/%02u", @scrapes[:mailing_date]))
     end
@@ -215,7 +219,7 @@ module OaTemplater
     def parse_headers(dh)
       oa_headers_text = ""
 
-      if dh && m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?)/mi)
+      if dh and m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?)/mi)
         data = @data[m.begin(0)..m.end(0)]
         #puts data
         data.scan(/(?: (?:(・.*)) )/x) do |result|
@@ -313,12 +317,13 @@ module OaTemplater
       File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
     end
 
-    def scan (options = {})
-      defaults = {  do_headers: false
+    def scan(options = {})
+      defaults = {  do_headers: false,
+                    do_dashes: false
                   }
       options = defaults.merge(options)
 
-      parse_mailing_date
+      parse_mailing_date options[:do_dashes]
       parse_examiner
       parse_app_no
       parse_drafted
@@ -342,23 +347,38 @@ module OaTemplater
 
     private
 
-    def format_headers(tex)
+    def format_headers(tex, options = {})
+      defaults = {  replace_toh: false
+                  }
+      options = defaults.merge(options)
+
       formatted_text = ""
-      if m = formatted_text.match(/・(.*)/)
-        tex = tex[m.begin(0)..m.end(0)]
-        formatted_text += "•#{NKF.nkf('-m0Z1 -w', replace_common_phrases(tex))}\r\n"
-      else
-        formatted_text += "#{NKF.nkf('-m0Z1 -w', replace_common_phrases(tex))}\r\n"
+      if formatted_text =~ /・(.*)/
+        formatted_text.gsub('・', '•')
       end
+
+      formatted_text += "#{NKF.nkf('-m0Z1 -w', replace_common_phrases(tex, options))}\r\n"
 
       return formatted_text
     end
 
-    def replace_common_phrases(tex)
+    def replace_common_phrases(tex, options)
       tex.gsub!('請求項', 'Claim')
       tex.gsub!('引用文献', 'Citation')
       tex.gsub!('備考', 'Notes')
       tex.gsub!('理由', 'Reason')
+      tex.gsub!('－', ' to ')
+      tex.gsub!('-', ' to ')
+      tex.gsub!('乃至', ' to ')
+
+      #match 備考:
+      if tex =~ /備考(:*)\p{Z}+$/
+        tex.gsub!('備考', 'Notes')
+      end
+
+      if options[:replace_toh]
+        tex.gsub!('等', ', etc.')
+      end
 
       return tex
     end
