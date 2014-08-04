@@ -174,7 +174,7 @@ module OaTemplater
       ipc_reference_text = ""
       data = @data[ipc_list_end..-1]
 
-      if m = data.match(/^.*先行技術文献調査結果/)
+      if m = data.match(/(^.*先行技術文献調査結果|この拒絶理由通知の内容)/)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         data = data[0..m.begin(0)]
         oldmatch = false

@@ -12,9 +12,9 @@ tokuhyo:
 jp_repub: 
   english: 'Republished Japanese Translation No. CIT_NO of the PCT International Publication for Patent Applications'
   japanese: !ruby/regexp '/\s*(再公表)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
-#jp_pa: 
-#  english: 'Japanese Patent Application No. CIT_NO (First Publication No. CIT_NO2)'
-#  japanese: !ruby/regexp '/(?:\.|．|\p{Z})\s*/'
+jp_pa: 
+  english: 'Japanese Patent Application No. CIT_NO'
+  japanese: !ruby/regexp '/\s*(特願)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
 #jp_uma: 
 #  english: 'Japanese Utility Model Application No. CIT_NO (First Publication No. CIT_NO2)'
 #  japanese: !ruby/regexp '/(?:\.|．|\p{Z})\s*/'
