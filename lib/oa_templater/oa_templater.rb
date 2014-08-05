@@ -234,7 +234,7 @@ module OaTemplater
     def parse_citations
       citation_text = ""
 
-      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献|引用文献等一覧)\s+\p{N}+?(?:\.|．)/)
+      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献|引用文献等一覧)\s+\p{Z}*\p{N}+?(?:\.|．)/m)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
