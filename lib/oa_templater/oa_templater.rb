@@ -249,7 +249,12 @@ module OaTemplater
             old_citation_text = citation_text
             @cits.each do |n,a|
               if m = tex.match(a['japanese'])
-                citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n[#{count}'.  ]\r\n"
+                if a["english"] =~ /United States/
+                  #citation is in English (no prime needed)
+                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n"
+                else #normal
+                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n[#{count}'.  ]\r\n"
+                end
               end
             end #cits
 
