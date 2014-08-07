@@ -111,13 +111,13 @@ module OaTemplater
       set_prop(:reason_for_final, "")
       capture_the(:final_oa, /＜＜＜＜　　最　　後　　＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
-      set_prop(:final_oa, "\r\n<<<<    FINAL    >>>>\r\n \r\n")
-      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\r\n\r\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\r\n")
+      set_prop(:final_oa, "\n<<<<    FINAL    >>>>\n \n")
+      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\n\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\n\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\n \n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\n\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\n")
     end
 
     def parse_see_list
       if @data.match(/引用文献等については引用文献等一覧参照/)
-        set_prop(:see_list, "\r\n(See the List of Citations for the cited publications)\r\n \r\n")
+        set_prop(:see_list, "\n(See the List of Citations for the cited publications)\n \n")
       else
         set_prop(:see_list, "")
       end
@@ -144,7 +144,7 @@ module OaTemplater
 
     def parse_currently_known
       if @data =~ /拒絶の理由を発見しない請求項/
-        set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+        set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       elsif @data =~ /拒絶の理由が通知される/
         set_prop(:currently_known, "The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       else
@@ -185,7 +185,7 @@ module OaTemplater
           @cits.each do |n,a|
             if m = line.match(a['japanese'])
               match = true
-              ipc_reference_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n"
+              ipc_reference_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
             end
           end #cits.each
             
@@ -242,7 +242,7 @@ module OaTemplater
         catch :done_scanning do 
           data.scan(/\p{N}+((?:\.|．).*?)(?:(?:\p{N}+(?:\.|．))|(?:$)|(?:－－－+))/m) do |line|
             tex = line[0]
-            throw :done_scanning if line[0][0..1].eql?("\r\n") or line[0][0..2].eql?("－－－")
+            throw :done_scanning if line[0][0..1].eql?("\n") or line[0][0..2].eql?("－－－")
 
             count += 1
 
@@ -251,9 +251,9 @@ module OaTemplater
               if m = tex.match(a['japanese'])
                 if a["english"] =~ /United States/
                   #citation is in English (no prime needed)
-                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n"
+                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
                 else #normal
-                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\r\n[#{count}'.  ]\r\n"
+                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n[#{count}'.  ]\n"
                 end
               end
             end #cits
@@ -303,9 +303,9 @@ module OaTemplater
           #skip tab on first reason
           articles_text += "\t" unless articles_text.length < 1
           #only add short text once
-          articles_text += a["short"] + "\r\n" unless articles_text.match(/#{a["short"]}/)
+          articles_text += a["short"] + "\n" unless articles_text.match(/#{a["short"]}/)
 
-          reasons_for_text += "#{count}.\t#{a['english']}\r\n\r\n"
+          reasons_for_text += "#{count}.\t#{a['english']}\n\n"
           count += 1
         end
 
@@ -362,19 +362,20 @@ module OaTemplater
         formatted_text.gsub('・', '•')
       end
 
-      formatted_text += "#{NKF.nkf('-m0Z1 -w', replace_common_phrases(tex, options))}\r\n"
+      formatted_text += "#{replace_common_phrases(tex, options)}\n"
 
       return formatted_text
     end
 
     def replace_common_phrases(tex, options)
-      tex.gsub!('請求項', 'Claims')
-      tex.gsub!('引用文献', 'Citations')
-      tex.gsub!('理由', 'Reasons')
-      tex.gsub!('－', ' to ')
-      tex.gsub!('-', ' to ')
-      tex.gsub!('～', ' to ')
-      tex.gsub!('乃至', ' to ')
+      tex = NKF.nkf('-m0Z1 -w', tex)
+      tex.gsub!('請求項', 'Claim')
+      tex.gsub!('引用文献', 'Citation')
+      tex.gsub!('理由', 'Reason')
+      tex.gsub!('－', 'to')
+      tex.gsub!('-', 'to')
+      tex.gsub!('～', 'to')
+      tex.gsub!('乃至', 'to')
 
       #match 備考:
       tex.gsub!('備考', 'Notes')
@@ -383,9 +384,44 @@ module OaTemplater
         tex.gsub!('等', ', etc.')
       end
 
-      tex.gsub!(/\p{Z}+/, ' ')
+      #strip abberant \r characters
+      tex.gsub!("\r", '')
+        
+      return format_number_listing(tex)
+    end
 
+    #formats a number listing assuming only one list in the string
+    #ex: 請求項３，１７，３１，４５
+    def format_number_listing(tex)
+      tex = NKF.nkf('-m0Z1 -w', tex)
 
+      #if no numbers (like "Notes:") then do nothing
+      if m = tex.match(/(.*?)\p{N}/)
+        #opening, numbers, close
+        op = tex[0..m.end(1)-1]
+        num_start = m.end(1)
+        m = tex.match(/\p{N}(?!.*\p{N})/)
+        cl = tex[m.end(0)..-1]
+        nums = tex[num_start..m.end(0)-1]
+
+        parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/)
+        parsed.reject!(&:empty?)
+
+        if (parsed.length > 2) 
+          parsed.insert(-2, 'and')
+        end
+
+        tex = "#{op} #{parsed.join(' ')}#{cl}"
+
+        if (parsed.length > 2) or (tex =~ /\p{N}to\p{N}/)
+          tex.gsub!('Claim', 'Claims')
+          tex.gsub!('Citation', 'Citations')
+          tex.gsub!('Reason', 'Reasons')
+        end
+        tex.gsub!('to', ' to ')
+        #remove extra spaces
+        tex.gsub!(/\p{Z}+/, ' ')
+      end
 
       return tex
     end
