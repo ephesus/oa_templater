@@ -234,13 +234,13 @@ module OaTemplater
     def parse_citations
       citation_text = ""
 
-      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献|引用文献等一覧)\s+\p{Z}*\p{N}+?(?:\.|．)/m)
+      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献|引用文献等一覧)\s+\p{Z}*\p{N}+?(?:\.|．|：)/m)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
 
         catch :done_scanning do 
-          data.scan(/\p{N}+((?:\.|．).*?)(?:(?:\p{N}+(?:\.|．))|(?:$)|(?:－－－+))/m) do |line|
+          data.scan(/\p{N}+((?:\.|．|：).*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m) do |line|
             tex = line[0]
             throw :done_scanning if line[0][0..1].eql?("\n") or line[0][0..2].eql?("－－－")
 
@@ -369,6 +369,7 @@ module OaTemplater
 
     def replace_common_phrases(tex, options)
       tex = NKF.nkf('-m0Z1 -w', tex)
+      tex.gsub!('、', ',')
       tex.gsub!('請求項', 'Claim')
       tex.gsub!('引用文献', 'Citation')
       tex.gsub!('理由', 'Reason')
