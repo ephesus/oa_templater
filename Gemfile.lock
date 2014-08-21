@@ -9,14 +9,14 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.1.37)
+    oa_templater (0.1.39)
       charlock_holmes
       docx_templater (~> 0.2, >= 0.2.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    byebug (3.1.2)
+    byebug (3.2.0)
       columnize (~> 0.8)
       debugger-linecache (~> 1.2)
     charlock_holmes (0.7.3)
@@ -28,14 +28,14 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.3)
+    rspec-core (3.0.4)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.3)
+    rspec-expectations (3.0.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
-    rspec-mocks (3.0.3)
+    rspec-mocks (3.0.4)
       rspec-support (~> 3.0.0)
-    rspec-support (3.0.3)
+    rspec-support (3.0.4)
     rubyzip (1.1.6)
 
 PLATFORMS

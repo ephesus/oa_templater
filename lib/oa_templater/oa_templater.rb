@@ -413,9 +413,10 @@ module OaTemplater
         parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/)
         parsed.reject!(&:empty?)
 
-        if (parsed.length > 2) 
+        if (parsed.length > 1) 
           parsed.insert(-2, 'and')
         end
+
 
         tex = "#{op} #{parsed.join(' ')}#{cl}"
 
@@ -425,6 +426,10 @@ module OaTemplater
           tex.gsub!('Reason', 'Reasons')
         end
         tex.gsub!('to', ' to ')
+       
+        #remove comma is only 2 elements ("1 and 2" not "1, and 2")
+        tex.gsub!(',', '') if (parsed.length == 2) 
+
         #remove extra spaces
         tex.gsub!(/\p{Z}+/, ' ')
       end
