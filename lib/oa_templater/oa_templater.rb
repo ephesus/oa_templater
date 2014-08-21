@@ -355,7 +355,8 @@ module OaTemplater
     private
 
     def format_headers(tex, options = {})
-      defaults = {  replace_toh: false
+      defaults = {  replace_toh: false,
+                    ignore_toh: true
                   }
       options = defaults.merge(options)
 
@@ -383,7 +384,9 @@ module OaTemplater
       #match 備考:
       tex.gsub!('備考', 'Notes')
 
-      if options[:replace_toh]
+      if options[:ignore_toh]
+        tex.gsub!('等', '')
+      elsif options[:replace_toh]
         tex.gsub!('等', ', etc.')
       end
 
