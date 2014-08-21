@@ -244,27 +244,35 @@ module OaTemplater
             tex = line
             throw :done_scanning if line[0..1].eql?("\n") or line[0..2].eql?("－－－")
 
+            old_citation_text = citation_text
             if tex =~ /\p{N}+((?:\.|．|：).*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m
               count += 1
-
-              old_citation_text = citation_text
-              @cits.each do |n,a|
-                if m = tex.match(a['japanese'])
-                  if a["english"] =~ /United States/
-                    #citation is in English (no prime needed)
-                    citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
-                  else #normal
-                    citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n[#{count}'.  ]\n"
-                  end
-                end
-              end #cits
             end
 
-            #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
-            citation_text += "#{count}.  #{NKF.nkf('-m0Z1 -w', line[0][1..-1])}" if old_citation_text == citation_text
-          end
-        end
-      end
+            @cits.each do |n,a|
+              if m = tex.match(a['japanese'])
+                if a["english"] =~ /United States/
+                  #citation is in English (no prime needed)
+                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
+                else #normal
+                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n[#{count}'.  ]\n"
+                end
+              end
+            end #cits
+
+            if old_citation_text == citation_text
+              #strip blank dos lines
+              tex.gsub!(/\p{Z}*\r\n/, '')
+              
+              #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
+              #should have the correct number from the actual source (not from count variable)
+              citation_text += "#{NKF.nkf('-m0Z1 -w', tex)}\n" 
+            end
+          end # each line
+        end #catch
+      end #if citations found
+
+
 
       set_prop(:citation_list, citation_text)
     end
