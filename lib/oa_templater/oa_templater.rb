@@ -6,6 +6,7 @@ require "fileutils"
 require "date"
 require "docx_templater"
 require "yaml"
+require "csv"
 require "charlock_holmes"
 
 module OaTemplater
@@ -26,7 +27,8 @@ module OaTemplater
     def set_templates(options = {})
       defaults = {  kyozetsuriyu: File.join(File.dirname(__FILE__), "default_riyu.docx"),
                     kyozetsusatei: File.join(File.dirname(__FILE__), "default_satei.docx"),
-                    shinnen: File.join(File.dirname(__FILE__), "default_shinnen.docx")
+                    shinnen: File.join(File.dirname(__FILE__), "default_shinnen.docx"),
+                    examiners: File.join(File.dirname(__FILE__), "examiners.txt")
                   }
       @templates = defaults.merge(options)
       pick_template
@@ -92,11 +94,26 @@ module OaTemplater
       set_prop(:app_no, NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2]))
     end
 
+    #definitely need to fix this up later, haha
     def parse_examiner
       capture_the(:taro, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #1, 2 (codes are #3, 4)
       return if @scrapes[:taro].nil?
 
-      set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2])
+      last = @scrapes[:taro][1]
+      first = @scrapes[:taro][2]
+      found = false
+
+      CSV.foreach(@templates[:examiners]) do |r|
+        if r[1].eql? (' ' + last + ' ' + first)
+          set_prop(:taro, r[0])
+          found = true
+          break
+        end
+      end
+
+      set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2]) unless found
+
+      #always set examiners numbers
       set_prop(:code, NKF.nkf('-m0Z1 -w', @scrapes[:taro][3]) + " " + NKF.nkf('-m0Z1 -w', @scrapes[:taro][4]))
     end
 
