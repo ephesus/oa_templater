@@ -240,7 +240,7 @@ module OaTemplater
 
       if dh and m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?|TEL|この拒絶理由通知の内容に関するお問い合わせ)/mi)
         data = @data[m.begin(0)..m.end(0)]
-        data.scan(/( （(?:本願)*(?:請求項|引用文献|理由|備考)(?:\p{Z}*.*\p{N}，*\p{Z}*)+）  |   (?:(?:・.*))  )/x) do |result|
+        data.scan(/( （(?:本願)*(?:請求項|引用文献|理由|備考)(?:\p{Z}*.*\p{N}，*\p{Z}*)+）  |   (?:^\p{Z}*(?:・.*))  )/x) do |result|
           tex = result[0]
 
           oa_headers_text += format_headers(tex)
