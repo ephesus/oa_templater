@@ -288,38 +288,28 @@ module OaTemplater
       elsif m.length == 3
         pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
       elsif m.length == 4 or m.length == 5
-        pub_no = ""
-        if m[2] == "平"
-          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-        elsif m[2] == "昭"
-          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-        else
-          pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-        end
-        pub = eng.gsub('CIT_NO', pub_no)
+        pub = eng.gsub('CIT_NO', convert_possible_heisei(m[2], m[3], m[4]))
       elsif m.length == 9
-        pub_no = ""
-        if m[2] == "平"
-          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-        elsif m[2] == "昭"
-          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-        else
-          pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
-        end
-        pub = eng.gsub(/CIT_NO /, pub_no+' ')
-
-        pub_no = ""
-        if m[6] == "平"
-          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[7]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[8])
-        elsif m[6] == "昭"
-          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[7]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[8])
-        else
-          pub_no += NKF.nkf('-m0Z1 -w',m[7]) + "-" + NKF.nkf('-m0Z1 -w',m[8])
-        end
-        pub = pub.gsub('CIT_NO2', pub_no)
+        pub = eng.gsub(/CIT_NO /, convert_possible_heisei(m[2], m[3], m[4])+' ')
+        pub = pub.gsub('CIT_NO2', convert_possible_heisei(m[6], m[7], m[8]))
       end
 
       pub
+    end
+
+    # matches /([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/
+    # convert 平０９－０６０２７４ into H09-060274 or ２００８-００３７４９ into 2008-003748
+    def convert_possible_heisei(hs, first, last)
+      no = ""
+      if hs == "平"
+        no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',first).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',last)
+      elsif hs == "昭"
+        no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',first).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',last)
+      else
+        no += NKF.nkf('-m0Z1 -w',first) + "-" + NKF.nkf('-m0Z1 -w',last)
+      end
+
+      no
     end
 
     def parse_articles
