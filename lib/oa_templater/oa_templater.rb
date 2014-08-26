@@ -297,6 +297,26 @@ module OaTemplater
           pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
         end
         pub = eng.gsub('CIT_NO', pub_no)
+      elsif m.length == 9
+        pub_no = ""
+        if m[2] == "平"
+          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+        elsif m[2] == "昭"
+          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[3]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+        else
+          pub_no += NKF.nkf('-m0Z1 -w',m[3]) + "-" + NKF.nkf('-m0Z1 -w',m[4])
+        end
+        pub = eng.gsub(/CIT_NO /, pub_no+' ')
+
+        pub_no = ""
+        if m[6] == "平"
+          pub_no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[7]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[8])
+        elsif m[6] == "昭"
+          pub_no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',m[7]).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',m[8])
+        else
+          pub_no += NKF.nkf('-m0Z1 -w',m[7]) + "-" + NKF.nkf('-m0Z1 -w',m[8])
+        end
+        pub = pub.gsub('CIT_NO2', pub_no)
       end
 
       pub
