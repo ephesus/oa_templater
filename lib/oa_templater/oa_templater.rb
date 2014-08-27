@@ -445,15 +445,13 @@ module OaTemplater
         parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/)
         parsed.reject!(&:empty?)
 
-        #remove comma is only 2 elements ("1 and 2" not "1, and 2")
-        tex.gsub!(',', '') if (parsed.length == 2) 
-
         if (parsed.length > 1) 
           parsed.insert(-2, 'and')
+          parsed[0].gsub!(',', '') if parsed.length == 3
         end
 
         tex = "#{op} #{parsed.join(' ')}#{cl}"
-
+        
         if (parsed.length > 2) or (tex =~ /\p{N}to\p{N}/)
           tex.gsub!('Claim', 'Claims')
           tex.gsub!('Citation', 'Citations')
