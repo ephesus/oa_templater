@@ -129,12 +129,12 @@ module OaTemplater
       capture_the(:final_oa, /＜＜＜＜　　最　　後　　＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
       set_prop(:final_oa, "\n<<<<    FINAL    >>>>\n \n")
-      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\n\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\n\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\n \n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\n\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\n")
+      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\r\n\r\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\r\n")
     end
 
     def parse_see_list
       if @data.match(/引用文献等については引用文献等一覧参照/)
-        set_prop(:see_list, "\n(See the List of Citations for the cited publications)\n \n")
+        set_prop(:see_list, "\r\n(See the List of Citations for the cited publications)\r\n\r\n")
       else
         set_prop(:see_list, "")
       end
@@ -163,7 +163,7 @@ module OaTemplater
 
     def parse_currently_known
       if @data =~ /拒絶の理由を発見しない請求項/
-        set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+        set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       elsif @data =~ /拒絶の理由が通知される/
         set_prop(:currently_known, "The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       else
@@ -397,12 +397,7 @@ module OaTemplater
                   }
       options = defaults.merge(options)
 
-      formatted_text = ""
-      if formatted_text =~ /・(.*)/
-        formatted_text.gsub('・', '•')
-      end
-
-      formatted_text += "#{replace_common_phrases(tex, options)}\n"
+      formatted_text = "#{replace_common_phrases(tex, options)}\n"
 
       return formatted_text
     end
@@ -450,10 +445,12 @@ module OaTemplater
         parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/)
         parsed.reject!(&:empty?)
 
+        #remove comma is only 2 elements ("1 and 2" not "1, and 2")
+        tex.gsub!(',', '') if (parsed.length == 2) 
+
         if (parsed.length > 1) 
           parsed.insert(-2, 'and')
         end
-
 
         tex = "#{op} #{parsed.join(' ')}#{cl}"
 
@@ -464,9 +461,6 @@ module OaTemplater
         end
         tex.gsub!('to', ' to ')
        
-        #remove comma is only 2 elements ("1 and 2" not "1, and 2")
-        tex.gsub!(',', '') if (parsed.length == 2) 
-
         #remove extra spaces
         tex.gsub!(/\p{Z}+/, ' ')
       end

@@ -104,7 +104,7 @@ describe OaTemplater do
   context "#see_list" do
     it "captures see_list" do
       oa1.parse_see_list
-      expect(oa1.props[:see_list]).to eql("\n(See the List of Citations for the cited publications)\n \n")
+      expect(oa1.props[:see_list]).to eql("\r\n(See the List of Citations for the cited publications)\r\n\r\n")
     end
 
     it "captures no see_list" do
