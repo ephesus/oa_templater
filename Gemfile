@@ -5,5 +5,6 @@ source 'https://rubygems.org'
 gem "docx_templater", git: "https://github.com/BaseCampOps/docx_templater.git"
 gem "rspec"
 gem "byebug"
+gem "kakasi", git: "https://github.com/knu/kakasi_ffi.git"
 
 gemspec

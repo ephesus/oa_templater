@@ -8,6 +8,7 @@ require "docx_templater"
 require "yaml"
 require "csv"
 require "charlock_holmes"
+require "kakasi"
 
 module OaTemplater
   class OA
@@ -112,6 +113,14 @@ module OaTemplater
             break
           end
         end
+
+        if !found
+          found = true
+          first = Kakasi.kakasi('-Ja', first).capitalize
+          last = Kakasi.kakasi('-Ja', last).upcase
+          #use kakashi to romajify the Examiner names
+          set_prop(:taro, "#{first} #{last} #{@scrapes[:taro][1]} #{@scrapes[:taro][2]}")
+        end
       end
 
       set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2]) unless found
@@ -157,6 +166,8 @@ module OaTemplater
         set_prop(:our_lawyer, "Yoshifumi SAEKI")
       when "渡邊"
         set_prop(:our_lawyer, "Takashi WATANABE")
+      when "実広"
+        set_prop(:our_lawyer, "Shinya JITSUHIRO")
       when "棚井"
         set_prop(:our_lawyer, "Sumio TANAI")
       else

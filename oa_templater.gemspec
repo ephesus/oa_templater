@@ -14,4 +14,5 @@ Gem::Specification.new do |s|
   s.license     = 'GPLv2+'
   s.add_runtime_dependency 'charlock_holmes'
   s.add_runtime_dependency 'docx_templater', '~> 0.2', '>= 0.2.3'
+  s.add_runtime_dependency 'kakasi'
 end

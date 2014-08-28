@@ -6,12 +6,19 @@ GIT
       htmlentities (~> 4.3.1)
       rubyzip (~> 1.1)
 
+GIT
+  remote: https://github.com/knu/kakasi_ffi.git
+  revision: 4a7632ae272e41b6719ee249919d2d18d72d7025
+  specs:
+    kakasi (1.0.1)
+
 PATH
   remote: .
   specs:
-    oa_templater (0.1.47)
+    oa_templater (0.1.51)
       charlock_holmes
       docx_templater (~> 0.2, >= 0.2.3)
+      kakasi
 
 GEM
   remote: https://rubygems.org/
@@ -44,5 +51,6 @@ PLATFORMS
 DEPENDENCIES
   byebug
   docx_templater!
+  kakasi!
   oa_templater!
   rspec

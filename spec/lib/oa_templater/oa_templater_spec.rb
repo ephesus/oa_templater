@@ -65,12 +65,12 @@ describe OaTemplater do
 
   context "#examiner" do
     it "captures examiner" do
-      oa1.parse_examiner
+      oa1.parse_examiner(do_examiner: true)
       expect(oa1.props[:taro]).to eql("Atsushi OKAZAKI")
     end
 
     it "captures examiner code" do
-      oa1.parse_examiner
+      oa1.parse_examiner(do_examiner: true)
       expect(oa1.props[:code]).to eql("4515 4J00")
     end
   end
