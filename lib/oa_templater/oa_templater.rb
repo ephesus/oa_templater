@@ -95,19 +95,22 @@ module OaTemplater
     end
 
     #definitely need to fix this up later, haha
-    def parse_examiner
+    def parse_examiner(do_examiner = false)
       capture_the(:taro, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #1, 2 (codes are #3, 4)
       return if @scrapes[:taro].nil?
 
-      last = @scrapes[:taro][1]
-      first = @scrapes[:taro][2]
       found = false
 
-      CSV.foreach(@templates[:examiners]) do |r|
-        if r[1].eql? (' ' + last + ' ' + first)
-          set_prop(:taro, r[0])
-          found = true
-          break
+      if do_examiner
+        last = @scrapes[:taro][1]
+        first = @scrapes[:taro][2]
+
+        CSV.foreach(@templates[:examiners]) do |r|
+          if r[1].eql? (' ' + last + ' ' + first)
+            set_prop(:taro, r[0])
+            found = true
+            break
+          end
         end
       end
 
@@ -363,12 +366,13 @@ module OaTemplater
 
     def scan(options = {})
       defaults = {  do_headers: false,
-                    do_dashes: false
+                    do_dashes: false,
+                    do_examiner: false
                   }
       options = defaults.merge(options)
 
       parse_mailing_date options[:do_dashes]
-      parse_examiner
+      parse_examiner options[:do_examiner]
       parse_app_no
       parse_drafted
       parse_our_lawyer
