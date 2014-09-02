@@ -145,7 +145,7 @@ module OaTemplater
     end
 
     def parse_see_list
-      if @data.match(/引用文献等については引用文献等一覧参照/)
+      if /引用文献等については引用文献等一覧参照/ =~ @data
         set_prop(:see_list, "\r\n(See the List of Citations for the cited publications)\r\n\r\n")
       else
         set_prop(:see_list, "")
@@ -358,8 +358,7 @@ module OaTemplater
     end
 
     def parse_articles
-      data = @data
-      count = 1
+      data, count = @data, 1
       articles_text = ""
       reasons_for_text = ""
 
@@ -368,7 +367,7 @@ module OaTemplater
           #skip tab on first reason
           articles_text += "\t" unless articles_text.length < 1
           #only add short text once
-          articles_text += a["short"] + "\n" unless articles_text.match(/#{a["short"]}/)
+          articles_text += a["short"] + "\n" unless /#{a["short"]}/ =~ articles_text
 
           reasons_for_text += "#{count}.\t#{a['english']}\n\n"
           count += 1
@@ -424,13 +423,14 @@ module OaTemplater
                   }
       options = defaults.merge(options)
 
+      #try to handle when Examiners put multiple groups separated by :
+      #on the same line like 引用文献１：請求項１，２
       if /：|:/ =~ tex
-        new_tex = ""
+        formatted_text = ""
         tex.split(/：|:/).each do |section|
-          new_tex += " : " unless new_tex.length == 0
-          new_tex += format_headers(section, options)
+          formatted_text += " : " unless formatted_text.length == 0
+          formatted_text += format_headers(section, options)
         end
-        formatted_text = new_tex
       else
         formatted_text = "#{replace_common_phrases(tex, options)}"
       end
@@ -552,13 +552,13 @@ module OaTemplater
     end
 
     def pick_template
-      if @data.match(/<TITLE>拒絶理由通知書<\/TITLE>/i)
+      if /<TITLE>拒絶理由通知書<\/TITLE>/i =~ @data
         @template = @templates[:kyozetsuriyu]
         @template_name = "拒絶理由"
-      elsif @data.match(/<TITLE>拒絶査定<\/TITLE>/i)
+      elsif /<TITLE>拒絶査定<\/TITLE>/i =~ @data
         @template = @templates[:kyozetsusatei]
         @template_name = "拒絶査定"
-      elsif @data.match(/<TITLE>審尋（審判官）<\/TITLE>/i)
+      elsif /<TITLE>審尋（審判官）<\/TITLE>/i =~ @data
         @template = @templates[:shinnen]
         @template_name = "審尋"
       else
