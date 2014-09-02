@@ -261,7 +261,7 @@ module OaTemplater
         #・引用文献１
         #引用文献１
         #備考
-        data.scan(/( (?:＜|（)(?:本願)*(?:請求項|引用文献|理由|備考)(?:\p{Z}*.*\p{N}，*\p{Z}*)+(?:＞|）)  
+        data.scan(/( (?:..)?(?:＜|（)(?:本願)*(?:請求項|引用文献|理由|備考)(?:\p{Z}*.*\p{N}，*\p{Z}*)+(?:＞|）)  
                     |  (?:^\p{Z}*(?:・.*))  
                     |  (?:^(?:本願)*(?:請求項|引用文献|理由|備考).*\p{N}$)  
                     | (?:備考) 
@@ -269,7 +269,7 @@ module OaTemplater
           tex = result[0]
 
           #added a match against unnecessary IPC lines
-          oa_headers_text += format_headers(tex) unless tex =~ /調査/
+          oa_headers_text += format_headers(tex)+"\n" unless tex =~ /調査/
         end
       end
 
@@ -424,7 +424,16 @@ module OaTemplater
                   }
       options = defaults.merge(options)
 
-      formatted_text = "#{replace_common_phrases(tex, options)}\n"
+      if /：|:/ =~ tex
+        new_tex = ""
+        tex.split(/：|:/).each do |section|
+          new_tex += " : " unless new_tex.length == 0
+          new_tex += format_headers(section, options)
+        end
+        formatted_text = new_tex
+      else
+        formatted_text = "#{replace_common_phrases(tex, options)}"
+      end
 
       return formatted_text
     end
