@@ -481,6 +481,17 @@ module OaTemplater
         parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/)
         parsed.reject!(&:empty?)
 
+        #change ["1to2,", "3"] to ["1", "2", "3"]
+        parsed.each_index do |el|
+          if /to/ =~ parsed[el]
+            parts = parsed[el].split(/to/)
+            if parts[0].to_i(10) == (parts[1].to_i(10) - 1)
+              parsed[el] = parts[0]+","
+              parsed.insert(el+1, parts[1])
+            end
+          end
+        end
+
         if (parsed.length > 1) 
           parsed.insert(-2, 'and')
           parsed[0].gsub!(',', '') if parsed.length == 3
