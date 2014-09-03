@@ -58,11 +58,8 @@ module OaTemplater
       capture_the(:mailing_date, /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/) 
       return if @scrapes[:mailing_date].nil?
 
-      if do_dashes
-        @outputfile = "ALP#{@casenumber}-#{@template_name}-#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
-      else
-        @outputfile = "ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
-      end
+        @outputfile = do_dashes ? "ALP#{@casenumber}-#{@template_name}-#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx" 
+                                : "ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
 
       set_prop(:mailing_date, format_date("%04u/%02u/%02u", @scrapes[:mailing_date]))
     end
@@ -74,11 +71,7 @@ module OaTemplater
       set_prop(:satei_previous_oa, format_date("%04u/%02u/%02u", @scrapes[:satei_previous_oa]))
 
       #set "and Amendments"
-      if @data =~ /なお、意見書.{0,4}?手続補正書の内容を検討しました/
-        set_prop(:and_amendments, " and Amendments")
-      else
-        set_prop(:and_amendments, "")
-      end
+        set_prop(:and_amendments, /なお、意見書.{0,4}?手続補正書の内容を検討しました/ =~ @data ? " and Amendments" : "")
     end
 
     def parse_appeal_no
@@ -103,8 +96,7 @@ module OaTemplater
       found = false
 
       if do_examiner
-        last = @scrapes[:taro][1]
-        first = @scrapes[:taro][2]
+        last, first = @scrapes[:taro][1], @scrapes[:taro][2]
 
         CSV.foreach(@templates[:examiners]) do |r|
           if r[1].eql? (' ' + last + ' ' + first)
@@ -116,8 +108,8 @@ module OaTemplater
 
         if !found
           found = true
-          first = Kakasi.kakasi('-Ja', first).capitalize
-          last = Kakasi.kakasi('-Ja', last).upcase
+          first, last = Kakasi.kakasi('-Ja', first).capitalize, Kakasi.kakasi('-Ja', last).upcase
+
           #use kakashi to romajify the Examiner names
           set_prop(:taro, "#{first} #{last} #{@scrapes[:taro][1]} #{@scrapes[:taro][2]}")
         end
@@ -145,11 +137,7 @@ module OaTemplater
     end
 
     def parse_see_list
-      if /引用文献等については引用文献等一覧参照/ =~ @data
-        set_prop(:see_list, "\r\n(See the List of Citations for the cited publications)\r\n\r\n")
-      else
-        set_prop(:see_list, "")
-      end
+      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n\r\n" : "")
     end
 
     def parse_our_lawyer
@@ -193,9 +181,7 @@ module OaTemplater
         ipc_list_end = m.end(0)
         if m = data.match(/(Ｉ|I)(Ｐ|P)(Ｃ|C)/)
           data = data[m.begin(0)..-2] 
-          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:')
-          ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('DB名', "\tDB Name:")
-          ipc_text = NKF.nkf('-m0Z1 -w', ipc_text).gsub('^\p{Z}{3,8}', "\t ")
+          ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:').gsub('DB名', "\tDB Name:").gsub('^\p{Z}{3,8}', "\t ")
           parse_ipc_references(ipc_list_end)
         end
       end
@@ -324,19 +310,13 @@ module OaTemplater
 
     def convert_pub_no(m, eng)
       if m.length == 2
-        if eng =~ /United States Patent No/
-          #add commas for US patents
-          pub = eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]).to_i.commas)
-        else
-          pub = eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
-        end
+        pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]).to_i.commas) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
       elsif m.length == 3
         pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
       elsif m.length == 4 or m.length == 5
         pub = eng.gsub('CIT_NO', convert_possible_heisei(m[2], m[3], m[4]))
       elsif m.length == 9
-        pub = eng.gsub(/CIT_NO /, convert_possible_heisei(m[2], m[3], m[4])+' ')
-        pub = pub.gsub('CIT_NO2', convert_possible_heisei(m[6], m[7], m[8]))
+        pub = eng.gsub(/CIT_NO /, convert_possible_heisei(m[2], m[3], m[4])+' ').gsub('CIT_NO2', convert_possible_heisei(m[6], m[7], m[8]))
       end
 
       pub
@@ -359,8 +339,7 @@ module OaTemplater
 
     def parse_articles
       data, count = @data, 1
-      articles_text = ""
-      reasons_for_text = ""
+      articles_text = reasons_for_text = ""
 
       @reasons.each do |r,a|
         if data =~ a['japanese']
@@ -370,6 +349,7 @@ module OaTemplater
           articles_text += a["short"] + "\n" unless /#{a["short"]}/ =~ articles_text
 
           reasons_for_text += "#{count}.\t#{a['english']}\n\n"
+
           count += 1
         end
 
@@ -452,11 +432,8 @@ module OaTemplater
       #match 備考:
       tex.gsub!('備考', 'Notes')
 
-      if options[:ignore_toh]
-        tex.gsub!('等', '')
-      elsif options[:replace_toh]
-        tex.gsub!('等', ', etc.')
-      end
+      tex.gsub!('等', '') if options[:ignore_toh]
+      tex.gsub!('等', ', etc.') if options[:replace_toh]
 
       #strip abberant \r characters
       tex.gsub!("\r", '')
@@ -499,7 +476,7 @@ module OaTemplater
 
         tex = "#{op} #{parsed.join(' ')}#{cl}"
         
-        if (parsed.length > 2) or (tex =~ /\p{N}to\p{N}/)
+        if (parsed.length > 2) or (/\p{N}to\p{N}/ =~ tex)
           tex.gsub!('Claim', 'Claims')
           tex.gsub!('Citation', 'Citations')
           tex.gsub!('Reason', 'Reasons')
