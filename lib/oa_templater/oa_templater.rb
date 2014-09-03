@@ -265,7 +265,7 @@ module OaTemplater
     def parse_citations
       citation_text = ""
 
-      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献).?\s+\p{Z}*\p{N}+?(?:\.|．|：)/m)
+      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献|引用刊行(物)?).?\s+\p{Z}*\p{N}+?(?:\.|．|：)/m)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
@@ -423,6 +423,7 @@ module OaTemplater
       tex.gsub!('、', ',')
       tex.gsub!('請求項', 'Claim')
       tex.gsub!('引用文献', 'Citation')
+      tex.gsub!('引用例', 'Citation')
       tex.gsub!('理由', 'Reason')
       tex.gsub!('－', 'to')
       tex.gsub!('-', 'to')
@@ -455,8 +456,7 @@ module OaTemplater
         cl = tex[m.end(0)..-1]
         nums = tex[num_start..m.end(0)-1]
 
-        parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/)
-        parsed.reject!(&:empty?)
+        parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/).reject(&:empty?)
 
         #change ["1to2,", "3"] to ["1", "2", "3"]
         parsed.each_index do |el|
