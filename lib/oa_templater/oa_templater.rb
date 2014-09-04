@@ -273,7 +273,7 @@ module OaTemplater
         catch :done_scanning do 
           data.each_line do |line|
             tex = line
-            throw :done_scanning if line[0..1].eql?("\n") or line[0..2].eql?("－－－")
+            throw :done_scanning if (/^\s*$/ =~ line) or (line[0..2].eql?("－－－"))
 
             old_citation_text = citation_text
             if tex =~ /\p{N}+((?:\.|．|：).*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m
