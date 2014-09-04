@@ -18,9 +18,9 @@ jp_pa:
 jp_uma: 
   english: 'Japanese Utility Model Application No. CIT_NO (First Publication No. CIT_NO2)'
   japanese: !ruby/regexp '/\s*(実願)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号.*(?:（|\()(実開)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
-#jp_umr: 
-#  english: 'Japanese Utility Model Registration No. CIT_NO'
-#  japanese: !ruby/regexp '/(?:\.|．|\p{Z})\s*/'
+jp_umr: 
+  english: 'Japanese Utility Model Registration No. CIT_NO'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*登録実用新案第(\p{N}+?)号/'
 pct: 
   english: 'PCT International Publication No. WO CIT_NO'
   japanese: !ruby/regexp '/\s*国際公開第(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
