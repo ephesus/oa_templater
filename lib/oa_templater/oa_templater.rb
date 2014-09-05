@@ -78,7 +78,7 @@ module OaTemplater
       capture_the(:retroactive, /出願日（遡及日）\p{Z}*平成(\p{N}*)年\p{Z}*(\p{N}*)月\p{Z}*(\p{N}*)日/) 
       return if @scrapes[:retroactive].nil?
 
-      set_prop(:retroactive, format_date("%04u/%02u/%02u", @scrapes[:retroactive]))
+      set_prop(:retroactive, format_date("\nFiling Date (Retroactive Date) \t%04u/%02u/%02u\n\n", @scrapes[:retroactive]))
     end
 
     def parse_appeal_no
