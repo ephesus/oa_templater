@@ -14,6 +14,8 @@ module OaTemplater
   class OA
     attr_accessor :outputfile
     attr_reader :props
+      
+    HEADER_SEPARATOR = /\p{N}:|\p{N}：|\/|／/
 
     def initialize(sourcefile, casenumber = "11110")
       @sourcefile = sourcefile
@@ -78,7 +80,7 @@ module OaTemplater
       capture_the(:retroactive, /出願日（遡及日）\p{Z}*平成(\p{N}*)年\p{Z}*(\p{N}*)月\p{Z}*(\p{N}*)日/) 
       return if @scrapes[:retroactive].nil?
 
-      set_prop(:retroactive, format_date("\nFiling Date (Retroactive Date) \t%04u/%02u/%02u\n\n", @scrapes[:retroactive]))
+      set_prop(:retroactive, format_date("\nFiling Date (Retroactive Date) \t%04u/%02u/%02u\n \n", @scrapes[:retroactive]))
     end
 
     def parse_appeal_no
@@ -144,7 +146,7 @@ module OaTemplater
     end
 
     def parse_see_list
-      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n\r\n" : "")
+      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n \r\n" : "")
     end
 
     def parse_our_lawyer
@@ -272,7 +274,7 @@ module OaTemplater
     def parse_citations
       citation_text = ""
 
-      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献|引用刊行(物)?).?\s+\p{Z}*\p{N}+?(?:\.|．|：)/m)
+      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献|引用刊行(物)?).?(?:<\/CENTER>)*\s+\p{Z}*\p{N}+?(?:\.|．|：)/m)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
@@ -283,13 +285,13 @@ module OaTemplater
             throw :done_scanning if (/^\s*$/ =~ line) or (line[0..2].eql?("－－－"))
 
             old_citation_text = citation_text
-            if tex =~ /\p{N}+((?:\.|．|：).*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m
+            if /\p{N}+((?:\.|．|：).*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m =~ tex
               count += 1
             end
 
             @cits.each do |n,a|
               if m = tex.match(a['japanese'])
-                if a["english"] =~ /United States/
+                if /United States/ =~ a["english"] 
                   #citation is in English (no prime needed)
                   citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
                 else #normal
@@ -412,10 +414,10 @@ module OaTemplater
       options = defaults.merge(options)
 
       #try to handle when Examiners put multiple groups separated by :
-      #on the same line like 引用文献１：請求項１，２
-      if /：|:/ =~ tex
+      #on the same line like 引用文献１：請求項１，２/ bla
+      if HEADER_SEPARATOR =~ tex
         formatted_text = ""
-        tex.split(/：|:/).each do |section|
+        tex.split(HEADER_SEPARATOR).each do |section|
           formatted_text += " : " unless formatted_text.length == 0
           formatted_text += format_headers(section, options)
         end

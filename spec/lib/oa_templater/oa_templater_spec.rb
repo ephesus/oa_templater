@@ -73,6 +73,26 @@ describe OaTemplater do
       oa1.parse_examiner(do_examiner: true)
       expect(oa1.props[:code]).to eql("4515 4J00")
     end
+
+    it "captures examiner" do
+      oa2.parse_examiner(do_examiner: true)
+      expect(oa2.props[:taro]).to eql("Naoko MATSUMOTO")
+    end
+
+    it "captures examiner code" do
+      oa2.parse_examiner(do_examiner: true)
+      expect(oa2.props[:code]).to eql("9546 4D00")
+    end
+
+    it "captures examiner" do
+      oa3.parse_examiner(do_examiner: true)
+      expect(oa3.props[:taro]).to eql("Tadashi TERASAWA")
+    end
+
+    it "captures examiner code" do
+      oa3.parse_examiner(do_examiner: true)
+      expect(oa3.props[:code]).to eql("9623 3I00")
+    end
   end
 
   context "#app_no" do
@@ -86,6 +106,18 @@ describe OaTemplater do
     it "captures drafted" do
       oa1.parse_drafted
       expect(oa1.props[:drafted]).to eql("2014/04/10")
+    end
+  end
+
+  context "#headers" do 
+    it "outputs some headers general check 3" do
+      oa3.parse_headers true
+      expect(oa3.props[:oa_headers]).to eql("・Claims 1, 24, and 25\n・Citation 1\n・Claims 1, 24, and 25\n・Citation 2\n・Claims 2 to 4\n・Citations 1, 3, and 4\n")
+    end
+
+    it "outputs no headers" do
+      oa5.parse_headers true
+      expect(oa5.props[:oa_headers]).to eql("")
     end
   end
 
@@ -104,7 +136,7 @@ describe OaTemplater do
   context "#see_list" do
     it "captures see_list" do
       oa1.parse_see_list
-      expect(oa1.props[:see_list]).to eql("\r\n(See the List of Citations for the cited publications)\r\n\r\n")
+      expect(oa1.props[:see_list]).to eql("\r\n(See the List of Citations for the cited publications)\r\n \r\n")
     end
 
     it "captures no see_list" do
@@ -164,23 +196,23 @@ describe OaTemplater do
     end
 
     it "reads citations, general check 3" do
-      oa1.parse_citations
-      expect(oa1.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H10-101800\n[1'.  ]\n2.  Japanese Unexamined Patent Application, First Publication No. H11-147949\n[2'.  ]\n")
+      oa3.parse_citations
+      expect(oa3.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H07-132123\n[1'.  ]\n2.  Published Japanese Translation No. H09-511409 of the PCT International Publication\n[2'.  ]\n3.  Published Japanese Translation No. 2009-525128 of the PCT International Publication\n[3'.  ]\n4.  Japanese Unexamined Patent Application, First Publication No. S63-246174\n[4'.  ]\n")
     end
 
     it "reads citations, general check 3" do
-      oa1.parse_citations
-      expect(oa1.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H10-101800\n[1'.  ]\n2.  Japanese Unexamined Patent Application, First Publication No. H11-147949\n[2'.  ]\n")
+      oa4.parse_citations
+      expect(oa4.props[:citation_list]).to eql("1.  United States Patent Application, Publication No. 2010/0049872\n2.  Japanese Unexamined Patent Application, First Publication No. 2006-178513\n[2'.  ]\n3.  PCT International Publication No. WO 98/24027\n[3'.  ]\n4.  United States Patent Application, Publication No. 2008/0228864\n5.  Japanese Unexamined Patent Application, First Publication No. 2007-287175\n[5'.  ]\n6.  Japanese Unexamined Patent Application, First Publication No. 2002-251315\n[6'.  ]\n7.  Japanese Unexamined Patent Application, First Publication No. 2003-330789\n[7'.  ]\n8.  Japanese Unexamined Patent Application, First Publication No. 2005-341004\n[8'.  ]\n9.  Japanese Unexamined Patent Application, First Publication No. 2004-021769\n[9'.  ]\n")
     end
 
     it "reads citations, general check 4" do
-      oa1.parse_citations
-      expect(oa1.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H10-101800\n[1'.  ]\n2.  Japanese Unexamined Patent Application, First Publication No. H11-147949\n[2'.  ]\n")
+      oa5.parse_citations
+      expect(oa5.props[:citation_list]).to eql("")
     end
 
     it "reads citations, general check 5" do
-      oa1.parse_citations
-      expect(oa1.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H10-101800\n[1'.  ]\n2.  Japanese Unexamined Patent Application, First Publication No. H11-147949\n[2'.  ]\n")
+      oas.parse_citations
+      expect(oas.props[:citation_list]).to eql("")
     end
   end
 
