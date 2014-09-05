@@ -74,8 +74,15 @@ module OaTemplater
         set_prop(:and_amendments, /なお、意見書.{0,4}?手続補正書の内容を検討しました/ =~ @data ? " and Amendments" : "")
     end
 
+    def parse_retroactive
+      capture_the(:retroactive, /出願日（遡及日）\p{Z}*平成(\p{N}*)年\p{Z}*(\p{N}*)月\p{Z}*(\p{N}*)日/) 
+      return if @scrapes[:retroactive].nil?
+
+      set_prop(:retroactive, format_date("%04u/%02u/%02u", @scrapes[:retroactive]))
+    end
+
     def parse_appeal_no
-      capture_the(:appeal_no, /番号\p{Zs}*不服(\p{N}+)\S(\p{Zs}*\p{N}+)/) 
+      capture_the(:appeal_no, /番号\p{Zs}*不服(\p{N}+)\S(\p{Zs}*\p{N}+)/)
       return if @scrapes[:appeal_no].nil?
 
       set_prop(:appeal_no, NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][2]))
@@ -388,6 +395,7 @@ module OaTemplater
       parse_appeal_examiner
       parse_appeal_drafted
       parse_appeal_no
+      parse_retroactive
 
       parse_headers options[:do_headers]
 
