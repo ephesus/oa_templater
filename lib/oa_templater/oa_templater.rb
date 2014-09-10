@@ -57,6 +57,7 @@ module OaTemplater
     end
 
     def parse_mailing_date(do_dashes = false)
+      @outputfile = "oa_template"
       capture_the(:mailing_date, /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/) 
       return if @scrapes[:mailing_date].nil?
 
@@ -149,6 +150,10 @@ module OaTemplater
       set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n \r\n" : "")
     end
 
+    def parse_response_period
+      set_prop(:response_period, /、この通知書の発送の日から６０日以内に意見書を提出して/ =~ @data ? "60 days" : "three months")
+    end
+
     def parse_our_lawyer
       capture_the(:our_lawyer, /[特許出願人]*代理人[弁理士]*[弁護士]*\p{Zs}+(\S+?)\p{Zs}(\S+?)/) 
       return if @scrapes[:our_lawyer].nil?
@@ -174,7 +179,7 @@ module OaTemplater
 
     def parse_currently_known
       if @data =~ /拒絶の理由を発見しない請求項/
-        set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\nNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+        set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       elsif @data =~ /拒絶の理由が通知される/
         set_prop(:currently_known, "The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       else
@@ -264,7 +269,7 @@ module OaTemplater
           tex = result[0]
 
           #added a match against unnecessary IPC lines
-          oa_headers_text += format_headers(tex)+"\n" unless tex =~ /調査/
+          oa_headers_text += format_headers(tex)+"\n" unless (tex =~ /調査/ or /先行技術文/ =~ tex or /注意/ =~ tex)
         end
       end
 
@@ -372,7 +377,7 @@ module OaTemplater
     end
 
     def finish
-      File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) }
+      File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) } if @outputfile
     end
 
     def scan(options = {})
@@ -387,6 +392,7 @@ module OaTemplater
       parse_app_no
       parse_drafted
       parse_our_lawyer
+      parse_response_period
       parse_see_list
       parse_final_oa
       parse_satei_previous_oa
@@ -416,9 +422,10 @@ module OaTemplater
       #try to handle when Examiners put multiple groups separated by :
       #on the same line like 引用文献１：請求項１，２/ bla
       if HEADER_SEPARATOR =~ tex
+        demarker = NKF.nkf('-m0Z1 -w', "#{$&} ")
         formatted_text = ""
         tex.split(HEADER_SEPARATOR).each do |section|
-          formatted_text += " : " unless formatted_text.length == 0
+          formatted_text += demarker unless formatted_text.length == 0
           formatted_text += format_headers(section, options)
         end
       else
@@ -435,6 +442,7 @@ module OaTemplater
       tex.gsub!('引用文献', 'Citation')
       tex.gsub!('引用例', 'Citation')
       tex.gsub!('理由', 'Reason')
+      tex.gsub!('先願', 'Prior Application')
       tex.gsub!('－', 'to')
       tex.gsub!('-', 'to')
       tex.gsub!('～', 'to')
@@ -490,6 +498,7 @@ module OaTemplater
           tex.gsub!('Claim', 'Claims')
           tex.gsub!('Citation', 'Citations')
           tex.gsub!('Reason', 'Reasons')
+          tex.gsub!('Prior Application', 'Prior Applications')
         end
         tex.gsub!('to', ' to ')
        
@@ -532,6 +541,7 @@ module OaTemplater
     end
 
     def format_date(format, date)
+      return "" if date.nil?
       y = (NKF.nkf('-m0Z1 -w',date[1]).to_i + 1988).to_s
       m = (NKF.nkf('-m0Z1 -w',date[2]).to_i).to_s 
       d = (NKF.nkf('-m0Z1 -w',date[3]).to_i).to_s 

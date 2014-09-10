@@ -24,6 +24,9 @@ jp_umr:
 pct: 
   english: 'PCT International Publication No. WO CIT_NO'
   japanese: !ruby/regexp '/\s*国際公開第(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
+japanese_patent: 
+  english: 'Japanese Patent No. CIT_NO'
+  japanese: !ruby/regexp '/\s*特許(?:第)?(\p{N}+?)号/'
 france_pa: 
   english: 'French Patent Application, Publication No. CIT_NO'
   japanese: !ruby/regexp '/\s*仏国特許出願公開第(\p{N}+?)号/'
