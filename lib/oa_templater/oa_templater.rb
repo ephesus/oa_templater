@@ -178,9 +178,10 @@ module OaTemplater
     end
 
     def parse_currently_known
-      if @data =~ /拒絶の理由を発見しない請求項/
+      case @data 
+      when /拒絶の理由を発見しない請求項/
         set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
-      elsif @data =~ /拒絶の理由が通知される/
+      when /拒絶の理由が通知される/
         set_prop(:currently_known, "The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
       else
         set_prop(:currently_known, "")
@@ -323,13 +324,14 @@ module OaTemplater
     end
 
     def convert_pub_no(m, eng)
-      if m.length == 2
+      case m.length
+      when 2
         pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]).to_i.commas) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
-      elsif m.length == 3
+      when 3
         pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
-      elsif m.length == 4 or m.length == 5
+      when 4, 5
         pub = eng.gsub('CIT_NO', convert_possible_heisei(m[2], m[3], m[4]))
-      elsif m.length == 9
+      when 9
         pub = eng.gsub(/CIT_NO /, convert_possible_heisei(m[2], m[3], m[4])+' ').gsub('CIT_NO2', convert_possible_heisei(m[6], m[7], m[8]))
       end
 
@@ -340,9 +342,10 @@ module OaTemplater
     # convert 平０９－０６０２７４ into H09-060274 or ２００８-００３７４９ into 2008-003748
     def convert_possible_heisei(hs, first, last)
       no = ""
-      if hs == "平"
+      case hs 
+      when"平"
         no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',first).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',last)
-      elsif hs == "昭"
+      when "昭"
         no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',first).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',last)
       else
         no += NKF.nkf('-m0Z1 -w',first) + "-" + NKF.nkf('-m0Z1 -w',last)
@@ -447,6 +450,7 @@ module OaTemplater
       tex.gsub!('-', 'to')
       tex.gsub!('～', 'to')
       tex.gsub!('乃至', 'to')
+      tex.gsub!('ないし', 'to')
 
       #match 備考:
       tex.gsub!('備考', 'Notes')
@@ -549,13 +553,14 @@ module OaTemplater
     end
 
     def pick_template
-      if /<TITLE>拒絶理由通知書<\/TITLE>/i =~ @data
+      case @data
+      when /<TITLE>拒絶理由通知書<\/TITLE>/i 
         @template = @templates[:kyozetsuriyu]
         @template_name = "拒絶理由"
-      elsif /<TITLE>拒絶査定<\/TITLE>/i =~ @data
+      when /<TITLE>拒絶査定<\/TITLE>/i 
         @template = @templates[:kyozetsusatei]
         @template_name = "拒絶査定"
-      elsif /<TITLE>審尋（審判官）<\/TITLE>/i =~ @data
+      when /<TITLE>審尋（審判官）<\/TITLE>/i 
         @template = @templates[:shinnen]
         @template_name = "審尋"
       else
