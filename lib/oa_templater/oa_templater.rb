@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+require "support/oa_regexes"
+
 require "nkf"
 require "fileutils"
 require "date"
@@ -15,8 +17,6 @@ module OaTemplater
     attr_accessor :outputfile
     attr_reader :props
       
-    HEADER_SEPARATOR = /\p{N}:|\p{N}：|\/|／/
-
     def initialize(sourcefile, casenumber = "11110")
       @sourcefile = sourcefile
       @casenumber = casenumber
@@ -43,14 +43,14 @@ module OaTemplater
     end
 
     def parse_appeal_drafted
-      capture_the(:appeal_drafted, /作成日p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/)  #year/month/day
+      capture_the(:appeal_drafted, R_CAPTURE_APPEAL_DRAFTED)  #year/month/day
       return if @scrapes[:appeal_drafted].nil?
 
       set_prop(:appeal_drafted, format_date("%04u/%02u/%02u", @scrapes[:appeal_drafted]))
     end
 
     def parse_drafted
-      capture_the(:drafted, /起案日\p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/)  #year/month/day
+      capture_the(:drafted, R_CAPTURE_DRAFTED)  #year/month/day
       return if @scrapes[:drafted].nil?
 
       set_prop(:drafted, format_date("%04u/%02u/%02u", @scrapes[:drafted]))
@@ -58,7 +58,7 @@ module OaTemplater
 
     def parse_mailing_date(do_dashes = false)
       @outputfile = "oa_template"
-      capture_the(:mailing_date, /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/) 
+      capture_the(:mailing_date, R_CAPTURE_MAILING_DATE) 
       return if @scrapes[:mailing_date].nil?
 
         @outputfile = do_dashes ? "ALP#{@casenumber}-#{@template_name}-#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx" 
@@ -68,31 +68,31 @@ module OaTemplater
     end
 
     def parse_satei_previous_oa
-      capture_the(:satei_previous_oa, /この出願については、\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)日付け拒絶理由通知書に記載/) 
+      capture_the(:satei_previous_oa, R_CAPTURE_PREVIOUS_OA) 
       return if @scrapes[:satei_previous_oa].nil?
 
       set_prop(:satei_previous_oa, format_date("%04u/%02u/%02u", @scrapes[:satei_previous_oa]))
 
       #set "and Amendments"
-        set_prop(:and_amendments, /なお、意見書.{0,4}?手続補正書の内容を検討しました/ =~ @data ? " and Amendments" : "")
+        set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? " and Amendments" : "")
     end
 
     def parse_retroactive
-      capture_the(:retroactive, /出願日（遡及日）\p{Z}*平成(\p{N}*)年\p{Z}*(\p{N}*)月\p{Z}*(\p{N}*)日/) 
+      capture_the(:retroactive, R_CAPTURE_RETROACTIVE) 
       return if @scrapes[:retroactive].nil?
 
       set_prop(:retroactive, format_date("\nFiling Date (Retroactive Date) \t%04u/%02u/%02u\n \n", @scrapes[:retroactive]))
     end
 
     def parse_appeal_no
-      capture_the(:appeal_no, /番号\p{Zs}*不服(\p{N}+)\S(\p{Zs}*\p{N}+)/)
+      capture_the(:appeal_no, R_CAPTURE_APPEAL_NO)
       return if @scrapes[:appeal_no].nil?
 
       set_prop(:appeal_no, NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][2]))
     end
 
     def parse_app_no
-      capture_the(:app_no, /特許出願の番号\p{Z}+特願(\p{N}+)\S(\p{N}+)/) 
+      capture_the(:app_no, R_CAPTURE_APP_NO) 
       return if @scrapes[:app_no].nil?
 
       set_prop(:app_no, NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2]))
@@ -100,7 +100,7 @@ module OaTemplater
 
     #definitely need to fix this up later, haha
     def parse_examiner(do_examiner = false)
-      capture_the(:taro, /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/) #1, 2 (codes are #3, 4)
+      capture_the(:taro, R_CAPTURE_TARO) #1, 2 (codes are #3, 4)
       return if @scrapes[:taro].nil?
 
       found = false
@@ -132,7 +132,7 @@ module OaTemplater
     end
 
     def parse_appeal_examiner
-      capture_the(:appeal_taro, /審判長(?:\p{Z}*)特許庁審判官\p{Z}+(\S+?)\p{Z}(\S+?)\p{Z}*$/) #1, 2
+      capture_the(:appeal_taro, R_CAPTURE_APPEAL_TARO) #1, 2
       return if @scrapes[:appeal_taro].nil?
 
       set_prop(:appeal_taro, @scrapes[:appeal_taro][1] + " " + @scrapes[:appeal_taro][2])
@@ -151,7 +151,7 @@ module OaTemplater
     end
 
     def parse_response_period
-      set_prop(:response_period, /、この通知書の発送の日から６０日以内に意見書を提出して/ =~ @data ? "60 days" : "three months")
+      set_prop(:response_period, R_RESPONSE_PERIOD =~ @data ? "60 days" : "three months")
     end
 
     def parse_our_lawyer
@@ -280,7 +280,7 @@ module OaTemplater
     def parse_citations
       citation_text = ""
 
-      if m = @data.match(/(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献|引用刊行(物)?).?(?:<\/CENTER>)*\s+\p{Z}*\p{N}+?(?:\.|．|：)/m)
+      if m = @data.match(R_CITATIONS_START)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
         data = @data[m.end(0)-2..-1] #end minus "1."
@@ -424,10 +424,10 @@ module OaTemplater
 
       #try to handle when Examiners put multiple groups separated by :
       #on the same line like 引用文献１：請求項１，２/ bla
-      if HEADER_SEPARATOR =~ tex
+      if R_HEADER_SEPARATOR =~ tex
         demarker = NKF.nkf('-m0Z1 -w', "#{$&} ")
         formatted_text = ""
-        tex.split(HEADER_SEPARATOR).each do |section|
+        tex.split(R_HEADER_SEPARATOR).each do |section|
           formatted_text += demarker unless formatted_text.length == 0
           formatted_text += format_headers(section, options)
         end
