@@ -254,7 +254,8 @@ module OaTemplater
       oa_headers_text = ""
 
       if dh and m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?|TEL|この拒絶理由通知の内容に関するお問い合わせ)/mi)
-        data = @data[m.begin(0)..m.end(0)]
+        #gsub to strip HTML tags from japanese text
+        data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '')
         #
         #matches stuff like this
         #（理由１）
@@ -262,11 +263,7 @@ module OaTemplater
         #・引用文献１
         #引用文献１
         #備考
-        data.scan(/( (?:..)?(?:＜|（|［|【)(?:本願)*(?:請求項|引用文献|理由|備考)(?:\p{Z}*.*\p{N}，*\p{Z}*)+(?:＞|）|］|】)  
-                    |  (?:^\p{Z}*(?:・.*))  
-                    |  (?:^(?:本願)*(?:請求項|引用文献|理由|備考).*\p{N}$)  
-                    | (?:備考) 
-                   )/x) do |result|
+        data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
 
           #added a match against unnecessary IPC lines
