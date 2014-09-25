@@ -448,6 +448,7 @@ module OaTemplater
       tex.gsub!('～', 'to')
       tex.gsub!('乃至', 'to')
       tex.gsub!('ないし', 'to')
+      tex.gsub!('について', '')
 
       #match 備考:
       tex.gsub!('備考', 'Notes')
