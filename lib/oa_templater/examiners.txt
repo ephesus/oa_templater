@@ -77,6 +77,7 @@ Hiroyuki NAGATOMI, 永冨 宏之
 Hiroyuki OKA, 岡 裕之
 Hiroyuki OOHAMA, 大濱 宏之
 Hiroyuki TAGO, 田合 弘幸
+Hisanori SATO, 佐藤 久則
 Hisashi YOSHIDA, 吉田 久
 Hishahiro CHIBA, 千葉 久博
 Hitoshi DOI, 土居 仁士
@@ -205,6 +206,7 @@ Shinya ISHIKAWA, 石川 信也
 Shogo FUKUDA, 福田 正悟
 Shoji KENMOKU, 見目 省二
 Shuhei HORIBE, 堀部 修平
+Shuichiro AKO, 赤穂 州一郎
 Shuji YASUDA, 安田 周史
 Shunsuke KURAMOCHI, 倉持 俊輔
 Shuuji YASUDA, 安田 周史
@@ -256,6 +258,7 @@ Tsutomu UDAGAWA, 宇多川 勉
 Tsuyoshi WAKIOKA, 脇岡 剛
 Wataru MASUOKA, 増岡 亘
 Yakiko MATSUURA, 松浦 安紀子
+Yasuhiro KOSHIKAWA, 越川 康弘
 Yasuharu TAKAGI, 高木 康晴
 Yasumasa MORIMOTO, 森本 康正
 Yasunobu KUNIKATA, 國方 康伸

@@ -112,7 +112,7 @@ describe OaTemplater do
   context "#headers" do 
     it "outputs some headers general check 3" do
       oa3.parse_headers true
-      expect(oa3.props[:oa_headers]).to eql("<Reason 1について>\n<Reason 2について>\n<Reasons 3 and 4について>\n・Claims 1, 24, and 25\n・Citation 1\n・Claims 1, 24, and 25\n・Citation 2\n<Reason 4について>\n・Claims 2 to 4\n・Citations 1, 3, and 4\n")
+      expect(oa3.props[:oa_headers]).to eql("<Reason 1>\n<Reason 2>\n<Reasons 3 and 4>\n・Claims 1, 24, and 25\n・Citation 1\n・Claims 1, 24, and 25\n・Citation 2\n<Reason 4>\n・Claims 2 to 4\n・Citations 1, 3, and 4\n")
     end
 
     it "outputs no headers" do

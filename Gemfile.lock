@@ -15,7 +15,7 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.2.30)
+    oa_templater (0.2.31)
       charlock_holmes
       docx_templater (~> 0.2, >= 0.2.3)
       kakasi

@@ -109,7 +109,7 @@ module OaTemplater
         last, first = @scrapes[:taro][1], @scrapes[:taro][2]
 
         CSV.foreach(@templates[:examiners]) do |r|
-          if r[1].eql? (' ' + last + ' ' + first)
+          if NKF.nkf('-m0Z1 -w', r[1]).eql? (' ' + last + ' ' + first)
             set_prop(:taro, r[0])
             found = true
             break
