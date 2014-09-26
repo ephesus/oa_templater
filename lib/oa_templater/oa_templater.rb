@@ -280,7 +280,7 @@ module OaTemplater
       if m = @data.match(R_CITATIONS_START)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
-        data = @data[m.end(0)-2..-1] #end minus "1."
+        data = @data[m.end(0)-2..-1].gsub(%r{</?[^>]+?>}, '') #end minus "1.", gsub to remove html
 
         catch :done_scanning do 
           data.each_line do |line|
@@ -288,7 +288,7 @@ module OaTemplater
             throw :done_scanning if (/^\s*$/ =~ line) or (line[0..2].eql?("－－－"))
 
             old_citation_text = citation_text
-            if /\p{N}+((?:\.|．|：).*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m =~ tex
+            if /\p{N}+((?:\.|．|：)*.*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m =~ tex
               count += 1
             end
 

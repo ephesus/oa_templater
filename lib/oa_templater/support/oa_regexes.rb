@@ -7,7 +7,7 @@ module OaTemplater
                     )/x
   R_RESPONSE_PERIOD = /、この通知書の発送の日から６０日以内に意見書を提出して/
   R_AND_AMENDMENTS = /なお、意見書.{0,4}?手続補正書の内容を検討しました/
-  R_CITATIONS_START = /(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献|引用刊行(物)?).?(?:<\/CENTER>)*\s+\p{Z}*\p{N}+?(?:\.|．|：)/m
+  R_CITATIONS_START = /(引　用　文　献　等　一　覧|引用文献(等)?一覧|引用文献等|引用文献|引用刊行(物)?).?(?:<\/CENTER>)*\s+\p{Z}*\p{N}+?(?:\.|．|：)*\p{Z}*/m
   R_CAPTURE_APPEAL_DRAFTED = /作成日p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
   R_CAPTURE_DRAFTED = /起案日\p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
   R_CAPTURE_MAILING_DATE = /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
