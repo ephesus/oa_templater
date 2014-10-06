@@ -377,7 +377,7 @@ module OaTemplater
     end
 
     def finish
-      File.open(@outputfile, 'wb') { |f| f.write(@buffer.string) } if @outputfile
+      File.open(@outputfile, 'w+') { |f| f.write(@buffer.string) } if @outputfile
     end
 
     def scan(options = {})
