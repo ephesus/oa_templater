@@ -51,3 +51,6 @@ us_pa:
 west_german: 
   english: 'West German Patent Application Publication No. CIT_NO'
   japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*独国特許出願公開第(\p{N}+?)号/'
+republish: 
+  english: 'Republished Japanese Translation No. CIT_NO of the PCT International Publication for Utility Models Applications'
+  japanese: !ruby/regexp '/\s*(再公表特許第)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/i'
