@@ -262,6 +262,7 @@ module OaTemplater
         #＜請求項１－１１＞
         #・引用文献１
         #引用文献１
+        #引用文献：１
         #備考
         data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
