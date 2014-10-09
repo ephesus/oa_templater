@@ -255,7 +255,7 @@ module OaTemplater
 
       if dh and m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?|TEL|この拒絶理由通知の内容に関するお問い合わせ)/mi)
         #gsub to strip HTML tags from japanese text
-        data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '')
+        data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
         #
         #matches stuff like this
         #（理由１）
@@ -264,9 +264,10 @@ module OaTemplater
         #引用文献１
         #引用文献：１
         #備考
+
         data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
-
+          
           #added a match against unnecessary IPC lines
           oa_headers_text += format_headers(tex)+"\n" unless (tex =~ /調査/ or /先行技術文/ =~ tex or /注意/ =~ tex)
         end
