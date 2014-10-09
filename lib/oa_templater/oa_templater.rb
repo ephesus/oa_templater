@@ -443,7 +443,7 @@ module OaTemplater
       tex.gsub!('請求項', 'Claim')
       tex.gsub!('引用文献', 'Citation')
       tex.gsub!('引用例', 'Citation')
-      tex.gsub!(/理\p{Z}*由/, 'Reason')
+      tex.gsub!(/理\p{Z}*由/, 'Reason ')
       tex.gsub!(/先\p{Z}*願/, 'Prior Application')
       tex.gsub!('－', 'to')
       tex.gsub!('-', 'to')
@@ -531,11 +531,19 @@ module OaTemplater
 
     def read_oa_data
       #read in OA data
-      @data = File.read(@sourcefile)
+      begin
+        @data = File.read(@sourcefile)
+      rescue
+        abort "can't read file"
+      end
       
-      #convert detected encoding (usually SHIFT_JIS Japanese) to UTF-8
-      detection = CharlockHolmes::EncodingDetector.detect(@data)
-      @data = CharlockHolmes::Converter.convert @data, detection[:encoding], 'UTF-8'
+      begin
+        #convert detected encoding (usually SHIFT_JIS Japanese) to UTF-8
+        detection = CharlockHolmes::EncodingDetector.detect(@data)
+        @data = CharlockHolmes::Converter.convert @data, detection[:encoding], 'UTF-8'
+      rescue
+        abort "probably wasn't a valid html file"
+      end
     end
 
     def capture_the(prop, reg, offset = 0)
