@@ -117,7 +117,7 @@ describe OaTemplater do
 
     it "outputs no headers" do
       oa5.parse_headers true
-      expect(oa5.props[:oa_headers]).to eql("\n\n\n\n\n\n\n\n\n\n\n")
+      expect(oa5.props[:oa_headers]).to eql("\n\n\n\n\n\n\n\n\n")
     end
   end
 

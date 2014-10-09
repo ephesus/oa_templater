@@ -253,7 +253,7 @@ module OaTemplater
     def parse_headers(dh)
       oa_headers_text = ""
 
-      if dh and m = @data.match(/理\p{Z}{1,2}由.*(?:^\p{Z}*先行技術文献調査結果の記録?|TEL|この拒絶理由通知の内容に関するお問い合わせ)/mi)
+      if dh and m = @data.match(/(?:理\p{Z}{1,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{1,2}由.*^－－－－－－－－－－－|理\p{Z}{1,2}由.*最後の拒絶理由通知とする理由)/mi)
         #gsub to strip HTML tags from japanese text
         data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
         #
@@ -264,7 +264,6 @@ module OaTemplater
         #引用文献１
         #引用文献：１
         #備考
-
         data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
           
@@ -534,7 +533,7 @@ module OaTemplater
       begin
         @data = File.read(@sourcefile)
       rescue
-        abort "can't read file"
+        raise "oa_templater_exception"
       end
       
       begin
@@ -542,7 +541,7 @@ module OaTemplater
         detection = CharlockHolmes::EncodingDetector.detect(@data)
         @data = CharlockHolmes::Converter.convert @data, detection[:encoding], 'UTF-8'
       rescue
-        abort "probably wasn't a valid html file"
+        raise "oa_templater_exception"
       end
     end
 
