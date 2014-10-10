@@ -10,6 +10,8 @@ describe OaTemplater do
   let(:oa3) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa3.htm"), 66666) }
   let(:oa4) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa4.htm"), 66666) }
   let(:oa5) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa5.htm"), 66666) }
+  let(:oa6) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa6.htm"), 66666) }
+  let(:oa8) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa8.htm"), 88888) }
 
   context "#new" do
     #fail fast on catastrphic error
@@ -23,6 +25,11 @@ describe OaTemplater do
 
     #do some very high level checks that nothing is super-broken
     it "captures ref_no" do
+      oa8.parse_drafted
+      expect(oa8.props[:ref_no]).to eql("F43204D1")
+    end
+
+    it "captures ref_no" do
       oa1.parse_drafted
       expect(oa1.props[:ref_no]).to eql("J64754A1")
     end
@@ -30,6 +37,16 @@ describe OaTemplater do
     it "captures blank ref_no" do
       oa5.parse_drafted
       expect(oa5.props[:ref_no]).to eql("")
+    end
+
+    it "captures mailing_no" do
+      oa8.parse_drafted
+      expect(oa8.props[:mailing_no]).to eql("295285")
+    end
+
+    it "captures mailing_no" do
+      oa6.parse_drafted
+      expect(oa6.props[:mailing_no]).to eql("503441")
     end
 
     it "captures mailing_no" do
@@ -43,6 +60,11 @@ describe OaTemplater do
     it "captures drafted date" do
       oa1.parse_drafted
       expect(oa1.props[:drafted]).to eql("2014/04/10")
+    end
+
+    it "captures drafted date" do
+      oa6.parse_drafted
+      expect(oa6.props[:drafted]).to eql("2014/09/17")
     end
   end
 
@@ -64,6 +86,11 @@ describe OaTemplater do
   end
 
   context "#examiner" do
+    it "captures examiner" do
+      oa6.parse_examiner(do_examiner: true)
+      expect(oa6.props[:taro]).to eql("Akira OGAWA")
+    end
+
     it "captures examiner" do
       oa1.parse_examiner(do_examiner: true)
       expect(oa1.props[:taro]).to eql("Atsushi OKAZAKI")
@@ -93,6 +120,11 @@ describe OaTemplater do
       oa3.parse_examiner(do_examiner: true)
       expect(oa3.props[:code]).to eql("9623 3I00")
     end
+
+    it "captures examiner code" do
+      oa6.parse_examiner(do_examiner: true)
+      expect(oa6.props[:code]).to eql("3006 2S00")
+    end
   end
 
   context "#app_no" do
@@ -115,6 +147,16 @@ describe OaTemplater do
       expect(oa3.props[:oa_headers]).to eql("\n\nReasons 2 .この出願の下記のClaimsに係る発明は,下記の点で特許法第 29 条第 and 1\n\n\n\n\n<Reason 1>\n \n\n\n<Reason 2>\n\n<Reasons 3 and 4>\n・Claims 1, 24, and 25\n・Citation 1\n\n・Claims 1, 24, and 25\n・Citation 2\n\n<Reason 4>\n・Claims 2 to 4\n・Citations 1, 3, and 4\n\n\n")
     end
 
+    it "outputs some headers general check 6" do
+      oa6.parse_headers true
+      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\nNotes\n\n\n\nReason 2\n\n\n\n\n\n\n\n\n\n")
+    end
+
+    it "outputs some headers general check 3" do
+      oa8.parse_headers true
+      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1>\n\n\n\n<Reason 2>\n\n\n\n\n<Reason 3>\n\n・Claims 1 to 4\n・Citations 1 and 2\nNotes\n\n\n")
+    end
+
     it "outputs no headers" do
       oa5.parse_headers true
       expect(oa5.props[:oa_headers]).to eql("\n\n\n\n\n\n\n\n\n")
@@ -125,6 +167,11 @@ describe OaTemplater do
     it "captures our_lawyer" do
       oa1.parse_our_lawyer
       expect(oa1.props[:our_lawyer]).to eql("Masatake SHIGA")
+    end
+
+    it "captures our_lawyer 村山" do
+      oa6.parse_our_lawyer
+      expect(oa6.props[:our_lawyer]).to eql("Yasuhiko MURAYAMA")
     end
 
     it "captures our_lawyer 村山" do
@@ -213,6 +260,11 @@ describe OaTemplater do
     it "reads citations, general check 5" do
       oas.parse_citations
       expect(oas.props[:citation_list]).to eql("")
+    end
+
+    it "reads citations, general check 6" do
+      oa6.parse_citations
+      expect(oa6.props[:citation_list]).to eql("1.  United States Patent Application, Publication No. 2010/0109945\n")
     end
   end
 
