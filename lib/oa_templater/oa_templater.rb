@@ -281,6 +281,7 @@ module OaTemplater
       if m = @data.match(R_CITATIONS_START)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
+        previous_was_numbered = 1
         data = @data[m.end(0)-2..-1].gsub(%r{</?[^>]+?>}, '') #end minus "1.", gsub to remove html
 
         catch :done_scanning do 
@@ -289,12 +290,13 @@ module OaTemplater
             throw :done_scanning if (/^\s*$/ =~ line) or (line[0..2].eql?("－－－"))
 
             old_citation_text = citation_text
-            if /\p{N}+((?:\.|．|：)*.*?)(?:(?:\p{N}+(?:\.|．|：))|(?:$)|(?:－－－+))/m =~ tex
+            if /^\p{Z}*\p{N}+((?:\.|．|：)+.*?)/m =~ tex
               count += 1
             end
 
             @cits.each do |n,a|
               if m = tex.match(a['japanese'])
+                previous_was_numbered = 1
                 if /United States/ =~ a["english"] 
                   #citation is in English (no prime needed)
                   citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
@@ -310,7 +312,10 @@ module OaTemplater
               
               #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
               #should have the correct number from the actual source (not from count variable)
+              citation_text.gsub!(/\n$/, "") if previous_was_numbered
               citation_text += "#{NKF.nkf('-m0Z1 -w', tex)}\n" 
+
+              previous_was_numbered = 0
             end
           end # each line
         end #catch
