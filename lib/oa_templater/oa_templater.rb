@@ -253,7 +253,7 @@ module OaTemplater
     def parse_headers(dh)
       oa_headers_text = ""
 
-      if dh and m = @data.match(/(?:理\p{Z}{1,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{1,2}由.*^－－－－－－－－－－－|理\p{Z}{1,2}由.*最後の拒絶理由通知とする理由)/mi)
+      if dh and m = @data.match(/(?:理\p{Z}{1,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{1,2}由.*^－－－－－－－－－－－|理\p{Z}{1,2}由.*最後の拒絶理由通知とする理由|検討しましたが.*)/mi)
         #gsub to strip HTML tags from japanese text
         data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
         #
@@ -428,8 +428,10 @@ module OaTemplater
       #try to handle when Examiners put multiple groups separated by :
       #on the same line like 引用文献１：請求項１，２/ bla
       if R_HEADER_SEPARATOR =~ tex
-        demarker = NKF.nkf('-m0Z1 -w', "#{$&} ")
         formatted_text = ""
+        #super fragile. If regex is changed
+        #demarker = NKF.nkf('-m0Z1 -w', "#{$&[1,1]} ")
+        demarker = NKF.nkf('-m0Z1 -w', "#{$&} ")
         tex.split(R_HEADER_SEPARATOR).each do |section|
           formatted_text += demarker unless formatted_text.length == 0
           formatted_text += format_headers(section, options)
@@ -444,9 +446,11 @@ module OaTemplater
     def replace_common_phrases(tex, options)
       tex = NKF.nkf('-m0Z1 -w', tex)
       tex.gsub!('、', ',')
+      tex.gsub!('，', ',')
       tex.gsub!('請求項', 'Claim')
       tex.gsub!('引用文献', 'Citation')
       tex.gsub!('引用例', 'Citation')
+      tex.gsub!('実施例', 'Embodiment')
       tex.gsub!(/理\p{Z}*由/, 'Reason ')
       tex.gsub!(/先\p{Z}*願/, 'Prior Application')
       tex.gsub!('－', 'to')
@@ -455,6 +459,8 @@ module OaTemplater
       tex.gsub!('乃至', 'to')
       tex.gsub!('ないし', 'to')
       tex.gsub!('について', '')
+      tex.gsub!('及び', ',')
+      tex.gsub!('および', ',')
 
       #match 備考:
       tex.gsub!('備考', 'Notes')
@@ -474,7 +480,7 @@ module OaTemplater
       tex = NKF.nkf('-m0Z1 -w', tex)
 
       #if no numbers (like "Notes:") then do nothing
-      if m = tex.match(/(.*?)\p{N}/)
+      if m = tex.match(/(?:...)(.*?)\p{N}/) #skip first two charcters in case it's something like "１．理由１，２について"
         #opening, numbers, close
         op = tex[0..m.end(1)-1]
         num_start = m.end(1)
@@ -505,6 +511,7 @@ module OaTemplater
         if (parsed.length > 2) or (/\p{N}to\p{N}/ =~ tex)
           tex.gsub!('Claim', 'Claims')
           tex.gsub!('Citation', 'Citations')
+          tex.gsub!('Embodiment', 'Embodiments')
           tex.gsub!('Reason', 'Reasons')
           tex.gsub!('Prior Application', 'Prior Applications')
         end
