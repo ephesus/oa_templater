@@ -268,7 +268,7 @@ module OaTemplater
           tex = result[0]
           
           #added a match against unnecessary IPC lines
-          oa_headers_text += format_headers(tex)+"\n" unless (tex =~ /調査/ or /先行技術文/ =~ tex or /注意/ =~ tex)
+          oa_headers_text += format_headers(tex)+"\n" unless (tex =~ /調査/ or /先行技術文/ =~ tex or /注意/ =~ tex and !(/検討しましたが/ =~ tex))
         end
       end
 
