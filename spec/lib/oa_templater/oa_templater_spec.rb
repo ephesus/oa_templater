@@ -149,12 +149,12 @@ describe OaTemplater do
 
     it "outputs some headers general check 6" do
       oa6.parse_headers true
-      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\nNotes\n\n よって,Citations 1 に記載の発明に基づき,Claims 1 to 3, 5 to 9, and 11 to 1\n\n\nReason 2\n\n\n\n\n 同様のReasons で,Claims 2, 5, 7, 8, 11, 13, 14, 17 to 19, and 22\n\n\n\n\n\n")
+      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\n・Notes\n\n よって,Citations 1 に記載の発明に基づき,Claims 1 to 3, 5 to 9, and 11 to 1\n\n\nReason 2\n\n\n\n\n 同様のReasons で,Claims 2, 5, 7, 8, 11, 13, 14, 17 to 19, and 22\n\n\n\n\n\n")
     end
 
     it "outputs some headers general check 3" do
       oa8.parse_headers true
-      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1>\n\n\n\n<Reason 2>\n\n\n\n\n<Reason 3>\n\n・Claims 1 to 4\n・Citations 1 and 2\nNotes\n Citations 1 (特に,段落 0012, 0014, 0015, and 0031 to 0039\n 一方,Citations 2 (特に,第 2 ページ右下欄第 7 行 to 第 3 ページ右上欄第 and 14\n\n\n")
+      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1>\n\n\n\n<Reason 2>\n\n\n\n\n<Reason 3>\n\n・Claims 1 to 4\n・Citations 1 and 2\n・Notes\n Citations 1 (特に,段落 0012, 0014, 0015, and 0031 to 0039\n 一方,Citations 2 (特に,第 2 ページ右下欄第 7 行 to 第 3 ページ右上欄第 and 14\n\n\n")
     end
 
     it "outputs no headers" do
