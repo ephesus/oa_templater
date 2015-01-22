@@ -17,7 +17,7 @@ jp_pa_up:
   japanese: !ruby/regexp '/\s*(特願)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号\p{Z}*（(特開)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
 jp_pa: 
   english: 'Japanese Patent Application No. CIT_NO'
-  japanese: !ruby/regexp '/\s*(特願)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号(?:公報)*\p{Z}*$/'
+  japanese: !ruby/regexp '/\s*(特願)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号(?:公報)*\p{Z}*/'
 jp_uma: 
   english: 'Japanese Utility Model Application No. CIT_NO (First Publication No. CIT_NO2)'
   japanese: !ruby/regexp '/\s*(実願)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号.*(?:（|\()(実開)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/'
