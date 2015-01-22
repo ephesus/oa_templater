@@ -61,6 +61,7 @@ Hiroki AKASAKA, 赤坂 祐樹
 Hiroki KITAMURA, 北村 弘樹
 Hiroki TOMIYAMA, 富山 博喜
 Hiroki WATABE, 渡部 博樹
+Hiromasa NAKAZATO, 中里 裕正
 Hiromi HASEHIRA, 馳平 裕美
 Hiromi OOISHI, 大石 博見
 Hiromi TAKAOKA, ▲高▼岡 裕美
@@ -296,6 +297,7 @@ Yoshiyuki NISHIYAMA, 西山 義之
 Yosuke KAWASAKI, 川嵜 洋祐
 Yosuke TOJIMA, 豊島 洋介
 Yuichi MIYABE, 宮部 裕一
+Yuichi TAKAHASHI, 高橋 裕一
 Yuji FUKUDA, 福田 裕司
 Yuji KINUGAWA, 衣川 裕史
 Yuji NAKANO, 中野 裕二
