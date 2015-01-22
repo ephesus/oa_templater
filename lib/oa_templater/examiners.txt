@@ -10,6 +10,7 @@ Akiko MIKAMI, 三上 晶子
 Akiko UMEMOTO, 梅本 章子
 Akio KANEZAKI, 金子 亜希
 Akio SAKAMOTO, 坂本 聡生
+Akira GOTO, 後藤 彰
 Akira HONGO, 本郷 彰
 Akira KUWAE, 桑江 晃
 Akira MURAKAMI, 村上 聡
@@ -167,6 +168,7 @@ Naoko KAMIMURA, 上村 直子
 Naoko MATSUMOTO, 松本 直子
 Naoko NAGAO, 中尾 奈穂子
 Naoko TAKAHASHI, 高橋 直子
+Naoto Iwashita, 岩下 直人
 Naoyuki MIYAZAWA, 宮澤 尚之
 Nobuo KANEMOTO, 金本 誠夫
 Nobuyo KAMIJO, 上條 のぶよ
@@ -298,8 +300,9 @@ Yuji FUKUDA, 福田 裕司
 Yuji KINUGAWA, 衣川 裕史
 Yuji NAKANO, 中野 裕二
 Yuki AKASAKA, 赤坂 祐樹
-Yukiko CHO, 長 由紀子
 Yuki ONO, 大野 友輝
+Yukiko CHO, 長 由紀子
+Yukihito ITO, 伊藤 幸仙
 Yukitake IWATA, 岩田 行剛
 Yuko MATSUZAWA, 松澤 優子
 Yumiko INOUE, 井上 由美子
