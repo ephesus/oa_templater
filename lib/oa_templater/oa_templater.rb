@@ -493,12 +493,8 @@ module OaTemplater
 
         #change ["1to2,", "3"] to ["1", "2", "3"]
         parsed.each_index do |el|
-          if /to\Z{N}/ =~ parsed[el]
+          if /to\p{N}/ =~ parsed[el]
             parts = parsed[el].split(/to/)
-            puts "tex: #{tex.inspect}"
-            puts "nums: #{nums.inspect}"
-            puts "parsed: #{parsed.inspect}"
-            puts "parts: #{parts.inspect}"
             if parts[0].to_i(10) == (parts[1].to_i(10) - 1)
               parsed[el] = parts[0]+","
               parsed.insert(el+1, parts[1])
