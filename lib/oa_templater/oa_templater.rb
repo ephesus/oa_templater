@@ -283,10 +283,8 @@ module OaTemplater
         count = 0
         data = @data[m.end(0)-2..-1].gsub(%r{</?[^>]+?>}, '') #end minus "1.", gsub to remove html
 
-     #     puts "data: #{data.inspect}"
         catch :done_scanning do 
           data.each_line do |line|
-          puts "tex: #{line.inspect}"
             tex = line
             throw :done_scanning if (/^\s*$/ =~ line) or (line[0..2].eql?("－－－"))
 
