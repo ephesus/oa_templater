@@ -11,7 +11,10 @@ describe OaTemplater do
   let(:oa4) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa4.htm"), 66666) }
   let(:oa5) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa5.htm"), 66666) }
   let(:oa6) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa6.htm"), 66666) }
+  let(:oa7) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa7.htm"), 77777) }
   let(:oa8) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa8.htm"), 88888) }
+  let(:oa9) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa9.htm"), 99999) }
+  let(:oa10) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), "test_oa10.htm"), 11010) }
 
   context "#new" do
     #fail fast on catastrphic error
@@ -265,6 +268,26 @@ describe OaTemplater do
     it "reads citations, general check 6" do
       oa6.parse_citations
       expect(oa6.props[:citation_list]).to eql("1.  United States Patent Application, Publication No. 2010/0109945\n")
+    end
+
+    it "reads citations, general check 7" do
+      oa7.parse_citations
+      expect(oa7.props[:citation_list]).to eql("1.  PCT International Publication No. WO 2009/006217\n[1'.  ]\n2.  Published Japanese Translation No. 2006-527170 of the PCT International Publication\n[2'.  ]\n3.  Published Japanese Translation No. 2005-537219 of the PCT International Publication\n[3'.  ]\n4. SYNTHESIS, 1988, V4, P274-277\n5. ORGANIC SYNTHESIS, 1990 1月 1日, V69, P238-244\n(注)法律又は契約等の制限により、提示した非特許文献の一部又は全てが送付\nされない場合があります。\n")
+    end
+
+    it "reads citations, general check 8" do
+      oa8.parse_citations
+      expect(oa8.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. H07-243344\n[1'.  ]\n2.  Japanese Unexamined Patent Application, First Publication No. H03-141835\n[2'.  ]\n")
+    end
+
+    it "reads citations, general check 9" do
+      oa9.parse_citations
+      expect(oa9.props[:citation_list]).to eql("1.  Published Japanese Translation No. 2004-538108 of the PCT International Publication\n[1'.  ]\n2.  United States Patent Application, Publication No. 2005/0053106\n3.  Japanese Unexamined Patent Application, First Publication No. 2003-066368\n[3'.  ]\n4.  Japanese Unexamined Patent Application, First Publication No. H01-099576\n[4'.  ]\n5.  Published Japanese Translation No. 2006-518610 of the PCT International Publication\n[5'.  ]\n6.  Published Japanese Translation No. 2005-518255 of the PCT International Publication\n[6'.  ]\n")
+    end
+
+    it "reads citations, general check 10" do
+      oa10.parse_citations
+      expect(oa10.props[:citation_list]).to eql("1. NAGY ZOLTAN A, NATURE MEDICINE, 2002 8月, V8 N8, P801-807\n2. VIDOVIC D, CANCER LETTERS, 米国, 1998 6月19日, V128 N2, P12\n7-135\n3.  United States Patent Application, Publication No. 2001/0053360\n4. Fukuda T.  et al. , Restoration of surface IgM-mediated apoptosis in an\n anti-IgM-resistant variant of WEHI-231 lymphoma cells by HS1,  a protein\n-tyrosine kinase substrate. , Proc. Natl. Acad. Sci. USA, 1995, Vol. 92\n, p. 7302-7306\n")
     end
   end
 
