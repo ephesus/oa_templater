@@ -47,6 +47,7 @@ Hajime AIDA, 相田 元
 Hajime KAWAHARA, 河原 肇
 Hajime MAKI, 牧 初
 Haruo WAKABAYASHI, 若林 治男
+Hideaki ENDO, 遠藤 秀明
 Hideaki MORISAKA, 森坂 英昭
 Hidehiro MISHIMAGI, 三島木 英宏
 Hidekazu KOBAYASHI, 小林 秀和
@@ -106,6 +107,7 @@ Kazuki SUZUKI, 鈴木 和樹
 Kazuo BEKKI, 戸次 一夫
 Kazuhiko TABEI, 田部井 和彦
 Kazushige ITO, 伊東 和重
+Kazuyuki ICHIJI, 伊知地 和之
 Kazuyuki IWATA, 岩田 行剛
 Kazuyuki YOSHIZUMI, 吉住 和之
 Keiji NAGAI, 永井 啓司
