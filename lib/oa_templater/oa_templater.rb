@@ -460,6 +460,7 @@ module OaTemplater
       tex.gsub!('乃至', 'to')
       tex.gsub!('ないし', 'to')
       tex.gsub!('について', '')
+      tex.gsub!('のいずれか', 'any one of')
       tex.gsub!('及び', ',')
       tex.gsub!('および', ',')
 
