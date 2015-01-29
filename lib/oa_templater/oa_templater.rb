@@ -445,7 +445,7 @@ module OaTemplater
         formatted_text = "#{replace_common_phrases(tex, options)}"
       end
 
-      return formatted_text.gsub('( ', ' (')
+      return formatted_text
     end
 
     def replace_common_phrases(tex, options = {})
@@ -472,7 +472,7 @@ module OaTemplater
       tex.gsub!('のいずれか', 'any one of')
       tex.gsub!('及び', ',')
       tex.gsub!('および', ',')
-
+      
       #match 備考:
       tex.gsub!('備考', 'Notes')
 
@@ -531,6 +531,9 @@ module OaTemplater
         #remove extra spaces
         tex.gsub!(/\p{Z}+/, ' ')
       end
+
+      #dont feel like trackign this bug down, cludge
+      tex.gsub!('( ', ' (')
 
       return tex
     end
