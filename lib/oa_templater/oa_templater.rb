@@ -257,7 +257,7 @@ module OaTemplater
     def parse_headers(dh)
       oa_headers_text = ''
 
-      if dh and m = @data.match(/(?:理\p{Z}{1,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{1,2}由.*^－－－－－－－－－－－|理\p{Z}{1,2}由.*最後の拒絶理由通知とする理由|検討しましたが.*)/mi)
+      if dh and m = @data.match(/(?:理\p{Z}{1,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{1,2}由.*^－－－－－－－－－－－|理\p{Z}{1,2}由.*引\p{Z}?用\p{Z}?文\p{Z}?献\p{Z}?等\p{Z}?一\p{Z}?覧|理\p{Z}{1,2}由.*最後の拒絶理由通知とする理由|検討しましたが.*)/mi)
         # gsub to strip HTML tags from japanese text
         data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
         #
