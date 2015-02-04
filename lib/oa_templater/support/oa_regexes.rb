@@ -22,4 +22,3 @@ module OaTemplater
   R_CAPTURE_APPEAL_TARO = /審判長(?:\p{Z}*)特許庁審判官\p{Z}+(\S+?)\p{Z}(\S+?)\p{Z}*$/
   R_CAPTURE_NO_REJECT_CLAIMS = /拒絶の理由を発見しない請求項＞.{1,5}(請求項.*)に\s*係\s*る\s*発\s*明\s*に\s*つ\s*い\s*て\s*/m
 end
-

@@ -1,23 +1,23 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-require "support/oa_regexes"
+require 'support/oa_regexes'
 
-require "nkf"
-require "fileutils"
-require "date"
-require "docx_templater"
-require "yaml"
-require "csv"
-require "charlock_holmes"
-require "kakasi"
+require 'nkf'
+require 'fileutils'
+require 'date'
+require 'docx_templater'
+require 'yaml'
+require 'csv'
+require 'charlock_holmes'
+require 'kakasi'
 
 module OaTemplater
   class OA
     attr_accessor :outputfile
     attr_reader :props
-      
-    def initialize(sourcefile, casenumber = "11110")
+
+    def initialize(sourcefile, casenumber = '11110')
       @sourcefile = sourcefile
       @casenumber = casenumber
       read_oa_data
@@ -26,59 +26,59 @@ module OaTemplater
       set_reasons_file
     end
 
-    #require template files, not included because of NDA
+    # require template files, not included because of NDA
     def set_templates(options = {})
-      defaults = {  kyozetsuriyu: File.join(File.dirname(__FILE__), "default_riyu.docx"),
-                    kyozetsusatei: File.join(File.dirname(__FILE__), "default_satei.docx"),
-                    shinnen: File.join(File.dirname(__FILE__), "default_shinnen.docx"),
-                    examiners: File.join(File.dirname(__FILE__), "examiners.txt")
+      defaults = {  kyozetsuriyu: File.join(File.dirname(__FILE__), 'default_riyu.docx'),
+                    kyozetsusatei: File.join(File.dirname(__FILE__), 'default_satei.docx'),
+                    shinnen: File.join(File.dirname(__FILE__), 'default_shinnen.docx'),
+                    examiners: File.join(File.dirname(__FILE__), 'examiners.txt')
                   }
       @templates = defaults.merge(options)
       pick_template
     end
 
-    #require reason file, not included because of NDA
-    def set_reasons_file(r = File.join(File.dirname(__FILE__), "reasons.yml"))
+    # require reason file, not included because of NDA
+    def set_reasons_file(r = File.join(File.dirname(__FILE__), 'reasons.yml'))
       @reasons = YAML.load_file(r)
     end
 
     def parse_appeal_drafted
-      capture_the(:appeal_drafted, R_CAPTURE_APPEAL_DRAFTED)  #year/month/day
+      capture_the(:appeal_drafted, R_CAPTURE_APPEAL_DRAFTED)  # year/month/day
       return if @scrapes[:appeal_drafted].nil?
 
-      set_prop(:appeal_drafted, format_date("%04u/%02u/%02u", @scrapes[:appeal_drafted]))
+      set_prop(:appeal_drafted, format_date('%04u/%02u/%02u', @scrapes[:appeal_drafted]))
     end
 
     def parse_drafted
-      capture_the(:drafted, R_CAPTURE_DRAFTED)  #year/month/day
+      capture_the(:drafted, R_CAPTURE_DRAFTED)  # year/month/day
       return if @scrapes[:drafted].nil?
 
-      set_prop(:drafted, format_date("%04u/%02u/%02u", @scrapes[:drafted]))
+      set_prop(:drafted, format_date('%04u/%02u/%02u', @scrapes[:drafted]))
     end
 
     def parse_mailing_date(do_dashes = false)
-      @outputfile = "oa_template"
-      capture_the(:mailing_date, R_CAPTURE_MAILING_DATE) 
+      @outputfile = 'oa_template'
+      capture_the(:mailing_date, R_CAPTURE_MAILING_DATE)
       return if @scrapes[:mailing_date].nil?
 
-        @outputfile = do_dashes ? "ALP#{@casenumber}-#{@template_name}-#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx" 
-                                : "ALP#{@casenumber}.#{@template_name}.#{format_date("%04u%02u%02u", @scrapes[:mailing_date])}.docx"
+      @outputfile = do_dashes ? "ALP#{@casenumber}-#{@template_name}-#{format_date('%04u%02u%02u', @scrapes[:mailing_date])}.docx"
+                              : "ALP#{@casenumber}.#{@template_name}.#{format_date('%04u%02u%02u', @scrapes[:mailing_date])}.docx"
 
-      set_prop(:mailing_date, format_date("%04u/%02u/%02u", @scrapes[:mailing_date]))
+      set_prop(:mailing_date, format_date('%04u/%02u/%02u', @scrapes[:mailing_date]))
     end
 
     def parse_satei_previous_oa
-      capture_the(:satei_previous_oa, R_CAPTURE_PREVIOUS_OA) 
+      capture_the(:satei_previous_oa, R_CAPTURE_PREVIOUS_OA)
       return if @scrapes[:satei_previous_oa].nil?
 
-      set_prop(:satei_previous_oa, format_date("%04u/%02u/%02u", @scrapes[:satei_previous_oa]))
+      set_prop(:satei_previous_oa, format_date('%04u/%02u/%02u', @scrapes[:satei_previous_oa]))
 
-      #set "and Amendments"
-        set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? " and Amendments" : "")
+      # set "and Amendments"
+      set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? ' and Amendments' : '')
     end
 
     def parse_retroactive
-      capture_the(:retroactive, R_CAPTURE_RETROACTIVE) 
+      capture_the(:retroactive, R_CAPTURE_RETROACTIVE)
       return if @scrapes[:retroactive].nil?
 
       set_prop(:retroactive, format_date("\nFiling Date (Retroactive Date) \t%04u/%02u/%02u\n \n", @scrapes[:retroactive]))
@@ -88,19 +88,19 @@ module OaTemplater
       capture_the(:appeal_no, R_CAPTURE_APPEAL_NO)
       return if @scrapes[:appeal_no].nil?
 
-      set_prop(:appeal_no, NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][2]))
+      set_prop(:appeal_no, NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][1]) + '-' + NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][2]))
     end
 
     def parse_app_no
-      capture_the(:app_no, R_CAPTURE_APP_NO) 
+      capture_the(:app_no, R_CAPTURE_APP_NO)
       return if @scrapes[:app_no].nil?
 
-      set_prop(:app_no, NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + "-" + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2]))
+      set_prop(:app_no, NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + '-' + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2]))
     end
 
-    #definitely need to fix this up later, haha
+    # definitely need to fix this up later, haha
     def parse_examiner(do_examiner = false)
-      capture_the(:taro, R_CAPTURE_TARO) #1, 2 (codes are #3, 4)
+      capture_the(:taro, R_CAPTURE_TARO) # 1, 2 (codes are #3, 4)
       return if @scrapes[:taro].nil?
 
       found = false
@@ -116,30 +116,30 @@ module OaTemplater
           end
         end
 
-        if !found
+        unless found
           found = true
           first, last = Kakasi.kakasi('-Ja', first).capitalize, Kakasi.kakasi('-Ja', last).upcase
 
-          #use kakashi to romajify the Examiner names
+          # use kakashi to romajify the Examiner names
           set_prop(:taro, "#{first} #{last} #{@scrapes[:taro][1]} #{@scrapes[:taro][2]}")
         end
       end
 
-      set_prop(:taro, @scrapes[:taro][1] + " " + @scrapes[:taro][2]) unless found
+      set_prop(:taro, @scrapes[:taro][1] + ' ' + @scrapes[:taro][2]) unless found
 
-      #always set examiners numbers
-      set_prop(:code, NKF.nkf('-m0Z1 -w', @scrapes[:taro][3]) + " " + NKF.nkf('-m0Z1 -w', @scrapes[:taro][4]))
+      # always set examiners numbers
+      set_prop(:code, NKF.nkf('-m0Z1 -w', @scrapes[:taro][3]) + ' ' + NKF.nkf('-m0Z1 -w', @scrapes[:taro][4]))
     end
 
     def parse_appeal_examiner
-      capture_the(:appeal_taro, R_CAPTURE_APPEAL_TARO) #1, 2
+      capture_the(:appeal_taro, R_CAPTURE_APPEAL_TARO) # 1, 2
       return if @scrapes[:appeal_taro].nil?
 
-      set_prop(:appeal_taro, @scrapes[:appeal_taro][1] + " " + @scrapes[:appeal_taro][2])
+      set_prop(:appeal_taro, @scrapes[:appeal_taro][1] + ' ' + @scrapes[:appeal_taro][2])
     end
 
     def parse_final_oa
-      set_prop(:reason_for_final, "")
+      set_prop(:reason_for_final, '')
       capture_the(:final_oa, /＜＜＜＜　　最　　後　　＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
       set_prop(:final_oa, "\n<<<<    FINAL    >>>>\n \n")
@@ -147,38 +147,38 @@ module OaTemplater
     end
 
     def parse_see_list
-      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n \r\n" : "")
+      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n \r\n" : '')
     end
 
     def parse_response_period
-      set_prop(:response_period, R_RESPONSE_PERIOD =~ @data ? "60 days" : "three months")
+      set_prop(:response_period, R_RESPONSE_PERIOD =~ @data ? '60 days' : 'three months')
     end
 
     def parse_our_lawyer
-      capture_the(:our_lawyer, /[特許出願人]*代理人[弁理士]*[弁護士]*\p{Zs}+(\S+?)\p{Zs}(\S+?)/) 
+      capture_the(:our_lawyer, /[特許出願人]*代理人[弁理士]*[弁護士]*\p{Zs}+(\S+?)\p{Zs}(\S+?)/)
       return if @scrapes[:our_lawyer].nil?
 
-      #only check last name
-      case @scrapes[:our_lawyer][1] 
-      when "村山" 
-        set_prop(:our_lawyer, "Yasuhiko MURAYAMA")
-      when "志賀"
-        set_prop(:our_lawyer, "Masatake SHIGA")
-      when "佐伯"
-        set_prop(:our_lawyer, "Yoshifumi SAEKI")
-      when "渡邊"
-        set_prop(:our_lawyer, "Takashi WATANABE")
-      when "実広"
-        set_prop(:our_lawyer, "Shinya JITSUHIRO")
-      when "棚井"
-        set_prop(:our_lawyer, "Sumio TANAI")
+      # only check last name
+      case @scrapes[:our_lawyer][1]
+      when '村山'
+        set_prop(:our_lawyer, 'Yasuhiko MURAYAMA')
+      when '志賀'
+        set_prop(:our_lawyer, 'Masatake SHIGA')
+      when '佐伯'
+        set_prop(:our_lawyer, 'Yoshifumi SAEKI')
+      when '渡邊'
+        set_prop(:our_lawyer, 'Takashi WATANABE')
+      when '実広'
+        set_prop(:our_lawyer, 'Shinya JITSUHIRO')
+      when '棚井'
+        set_prop(:our_lawyer, 'Sumio TANAI')
       else
-        set_prop(:our_lawyer, "Taro TOKKYO")
+        set_prop(:our_lawyer, 'Taro TOKKYO')
       end
     end
 
     def parse_currently_known
-      case @data 
+      case @data
       when /拒絶の理由を発見しない請求項/
         if m = @data.match(R_CAPTURE_NO_REJECT_CLAIMS)
           set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for #{format_headers(m[1])} which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
@@ -186,20 +186,20 @@ module OaTemplater
           set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
         end
       when /拒絶の理由が通知される/
-        set_prop(:currently_known, "The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+        set_prop(:currently_known, 'The applicant will be notified of new reasons for rejection if such reasons for rejection are found.')
       else
-        set_prop(:currently_known, "")
+        set_prop(:currently_known, '')
       end
     end
 
     def parse_ipc
-      ipc_text = ""
+      ipc_text = ''
 
       if m = @data.match(/先行技術文献(?:等{0,1})調査結果(.*?)..先行技術文献/m)
         data = m[1]
         ipc_list_end = m.end(0)
         if m = data.match(/(Ｉ|I)(Ｐ|P)(Ｃ|C)/)
-          data = data[m.begin(0)..-2] 
+          data = data[m.begin(0)..-2]
           ipc_text = NKF.nkf('-m0Z1 -w', data).gsub('IPC', 'IPC:').gsub('DB名', "\tDB Name:").gsub('^\p{Z}{3,8}', "\t ")
           parse_ipc_references(ipc_list_end)
         end
@@ -209,7 +209,7 @@ module OaTemplater
     end
 
     def parse_ipc_references(ipc_list_end)
-      ipc_reference_text = ""
+      ipc_reference_text = ''
       data = @data[ipc_list_end..-1]
 
       if m = data.match(/(^.*先行技術文献調査結果|この拒絶理由通知の内容)/)
@@ -220,21 +220,21 @@ module OaTemplater
 
         data.each_line do |line|
           match = false
-          @cits.each do |n,a|
+          @cits.each do |_n, a|
             if m = line.match(a['japanese'])
               match = true
-              ipc_reference_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
+              ipc_reference_text += "#{count}.  #{convert_pub_no(m, a['english'])}\n"
             end
-          end #cits.each
-            
-          #increase count
+          end # cits.each
+
+          # increase count
           count += 1
 
-          if !match
-            #if no match, change 全角 to 半角 
+          unless match
+            # if no match, change 全角 to 半角
             line = NKF.nkf('-m0Z1 -w', line)
 
-            #first line of non-match
+            # first line of non-match
             if oldmatch and (!match)
               line.gsub(/^/, "#{count}. ")
             end
@@ -244,7 +244,7 @@ module OaTemplater
               count -= 1
             end
 
-            ipc_reference_text += line 
+            ipc_reference_text += line
           end
 
           oldmatch = match
@@ -255,24 +255,24 @@ module OaTemplater
     end
 
     def parse_headers(dh)
-      oa_headers_text = ""
+      oa_headers_text = ''
 
       if dh and m = @data.match(/(?:理\p{Z}{1,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{1,2}由.*^－－－－－－－－－－－|理\p{Z}{1,2}由.*最後の拒絶理由通知とする理由|検討しましたが.*)/mi)
-        #gsub to strip HTML tags from japanese text
+        # gsub to strip HTML tags from japanese text
         data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
         #
-        #matches stuff like this
-        #（理由１）
-        #＜請求項１－１１＞
-        #・引用文献１
-        #引用文献１
-        #引用文献：１
-        #備考
+        # matches stuff like this
+        # （理由１）
+        # ＜請求項１－１１＞
+        # ・引用文献１
+        # 引用文献１
+        # 引用文献：１
+        # 備考
         data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
-          
-          #added a match against unnecessary IPC lines
-          oa_headers_text += format_headers(tex)+"\n" unless (tex =~ /調査/ or /先行技術文/ =~ tex or /注意/ =~ tex and !(/検討しましたが/ =~ tex))
+
+          # added a match against unnecessary IPC lines
+          oa_headers_text += format_headers(tex) + "\n" unless tex =~ /調査/ || /先行技術文/ =~ tex || /注意/ =~ tex and !(/検討しましたが/ =~ tex)
         end
       end
 
@@ -280,53 +280,51 @@ module OaTemplater
     end
 
     def parse_citations
-      citation_text = ""
+      citation_text = ''
 
       if m = @data.match(R_CITATIONS_START)
         @cits ||= YAML.load_file(CITATIONS_FILE)
         count = 0
-        data = @data[m.end(0)-2..-1].gsub(%r{</?[^>]+?>}, '') #end minus "1.", gsub to remove html
+        data = @data[m.end(0) - 2..-1].gsub(%r{</?[^>]+?>}, '') # end minus '1.', gsub to remove html
 
-        catch :done_scanning do 
+        catch :done_scanning do
           data.each_line do |line|
             tex = line
-            throw :done_scanning if (/^\s*$/ =~ line) or (line[0..2].eql?("－－－"))
+            throw :done_scanning if (/^\s*$/ =~ line) || (line[0..2].eql?('－－－'))
 
             old_citation_text = citation_text
             if /^\p{Z}*\p{N}+((?:\.|．|：)+.*?)/m =~ tex
               count += 1
             end
 
-            @cits.each do |n,a|
+            @cits.each do |_n, a|
               if m = tex.match(a['japanese'])
-                if /United States/ =~ a["english"] 
-                  #citation is in English (no prime needed)
-                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n"
-                else #normal
-                  citation_text += "#{count}.  #{convert_pub_no(m, a["english"])}\n[#{count}'.  ]\n"
+                if /United States/ =~ a['english']
+                  # citation is in English (no prime needed)
+                  citation_text += "#{count}.  #{convert_pub_no(m, a['english'])}\n"
+                else # normal
+                  citation_text += "#{count}.  #{convert_pub_no(m, a['english'])}\n[#{count}'.  ]\n"
                 end
               end
-            end #cits
+            end # cits
 
             if old_citation_text == citation_text
               tex = NKF.nkf('-m0Z1 -w', tex)
-              #strip blank dos lines
+              # strip blank dos lines
               tex.gsub!(/\p{Z}*\r\n/, '')
-              #add space after period, add space after comma, remove year kanji
+              # add space after period, add space after comma, remove year kanji
               tex.gsub!(/\./, '. ')
               tex.gsub!(/\,/, ', ')
               tex.gsub!(/年/, '')
               tex.gsub!(/p{Z}*/, ' ')
-              
-              #if no match was found, just copy the japanese, skip first character (it's a period from the regex)
-              #should have the correct number from the actual source (not from count variable)
+
+              # if no match was found, just copy the japanese, skip first character (it's a period from the regex)
+              # should have the correct number from the actual source (not from count variable)
               citation_text += "#{tex}\n"
             end
           end # each line
-        end #catch
-      end #if citations found
-
-
+        end # catch
+      end # if citations found
 
       set_prop(:citation_list, citation_text)
     end
@@ -334,13 +332,13 @@ module OaTemplater
     def convert_pub_no(m, eng)
       case m.length
       when 2
-        pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]).to_i.commas) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w',m[1]))
+        pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]).to_i.commas) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]))
       when 3
-        pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w',m[1]) + "/" + NKF.nkf('-m0Z1 -w',m[2])))
+        pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w', m[1]) + '/' + NKF.nkf('-m0Z1 -w', m[2])))
       when 4, 5
         pub = eng.gsub('CIT_NO', convert_possible_heisei(m[2], m[3], m[4]))
       when 9
-        pub = eng.gsub(/CIT_NO /, convert_possible_heisei(m[2], m[3], m[4])+' ').gsub('CIT_NO2', convert_possible_heisei(m[6], m[7], m[8]))
+        pub = eng.gsub(/CIT_NO /, convert_possible_heisei(m[2], m[3], m[4]) + ' ').gsub('CIT_NO2', convert_possible_heisei(m[6], m[7], m[8]))
       end
 
       pub
@@ -349,14 +347,14 @@ module OaTemplater
     # matches /([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号/
     # convert 平０９－０６０２７４ into H09-060274 or ２００８-００３７４９ into 2008-003748
     def convert_possible_heisei(hs, first, last)
-      no = ""
-      case hs 
-      when"平"
-        no += 'H' + sprintf("%02u", NKF.nkf('-m0Z1 -w',first).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',last)
-      when "昭"
-        no += 'S' + sprintf("%02u", NKF.nkf('-m0Z1 -w',first).to_i(10)) + "-" + NKF.nkf('-m0Z1 -w',last)
+      no = ''
+      case hs
+      when'平'
+        no += 'H' + sprintf('%02u', NKF.nkf('-m0Z1 -w', first).to_i(10)) + '-' + NKF.nkf('-m0Z1 -w', last)
+      when '昭'
+        no += 'S' + sprintf('%02u', NKF.nkf('-m0Z1 -w', first).to_i(10)) + '-' + NKF.nkf('-m0Z1 -w', last)
       else
-        no += NKF.nkf('-m0Z1 -w',first) + "-" + NKF.nkf('-m0Z1 -w',last)
+        no += NKF.nkf('-m0Z1 -w', first) + '-' + NKF.nkf('-m0Z1 -w', last)
       end
 
       no
@@ -364,23 +362,22 @@ module OaTemplater
 
     def parse_articles
       data, count = @data, 1
-      articles_text = reasons_for_text = ""
+      articles_text = reasons_for_text = ''
 
-      @reasons.each do |r,a|
+      @reasons.each do |_r, a|
         if data =~ a['japanese']
-          #skip tab on first reason
+          # skip tab on first reason
           articles_text += "\t" unless articles_text.length < 1
-          #only add short text once
-          articles_text += a["short"] + "\n" unless /#{a["short"]}/ =~ articles_text
+          # only add short text once
+          articles_text += a['short'] + "\n" unless /#{a["short"]}/ =~ articles_text
 
           reasons_for_text += "#{count}.\t#{a['english']}\n\n"
 
           count += 1
         end
-
       end
 
-      #remove number if only 1 article listed
+      # remove number if only 1 article listed
       reasons_for_text.gsub!(/^1./, '') if count == 2
 
       set_prop(:articles, articles_text)
@@ -419,7 +416,7 @@ module OaTemplater
       parse_headers options[:do_headers]
 
       @buffer = @doc.replace_file_with_content(@template, @props)
-      return @buffer
+      @buffer
     end
 
     private
@@ -430,12 +427,12 @@ module OaTemplater
                   }
       options = defaults.merge(options)
 
-      #try to handle when Examiners put multiple groups separated by :
-      #on the same line like 引用文献１：請求項１，２/ bla
+      # try to handle when Examiners put multiple groups separated by :
+      # on the same line like 引用文献１：請求項１，２/ bla
       if R_HEADER_SEPARATOR =~ tex
-        formatted_text = ""
-        #super fragile. If regex is changed
-        #demarker = NKF.nkf('-m0Z1 -w', "#{$&[1,1]} ")
+        formatted_text = ''
+        # super fragile. If regex is changed
+        # demarker = NKF.nkf('-m0Z1 -w', '#{$&[1,1]} ')
         demarker = NKF.nkf('-m0Z1 -w', "#{$&} ")
         tex.split(R_HEADER_SEPARATOR).each do |section|
           formatted_text += demarker unless formatted_text.length == 0
@@ -445,7 +442,7 @@ module OaTemplater
         formatted_text = "#{replace_common_phrases(tex, options)}"
       end
 
-      return formatted_text
+      formatted_text
     end
 
     def replace_common_phrases(tex, options = {})
@@ -472,54 +469,54 @@ module OaTemplater
       tex.gsub!('のいずれか', 'any one of')
       tex.gsub!('及び', ',')
       tex.gsub!('および', ',')
-      
-      #match 備考:
+
+      # match 備考:
       tex.gsub!('備考', 'Notes')
 
       tex.gsub!('等', '') if options[:ignore_toh]
       tex.gsub!('等', ', etc.') if options[:replace_toh]
 
-      #strip abberant \r characters
+      # strip abberant \r characters
       tex.gsub!("\r", '')
-        
-      return format_number_listing(tex)
+
+      format_number_listing(tex)
     end
 
-    #formats a number listing assuming only one list in the string
-    #ex: 請求項３，１７，３１，４５
+    # formats a number listing assuming only one list in the string
+    # ex: 請求項３，１７，３１，４５
     def format_number_listing(tex)
       tex = NKF.nkf('-m0Z1 -w', tex)
 
-      #if no numbers (like "Notes:") then do nothing
-      if m = tex.match(/(?:...)(.*?)\p{N}/) #skip first two charcters in case it's something like "１．理由１，２について"
-        #opening, numbers, close
-        op = tex[0..m.end(1)-1]
+      # if no numbers (like 'Notes:') then do nothing
+      if m = tex.match(/(?:...)(.*?)\p{N}/) # skip first two charcters in case it's something like '１．理由１，２について'
+        # opening, numbers, close
+        op = tex[0..m.end(1) - 1]
         num_start = m.end(1)
         m = tex.match(/\p{N}(?!.*\p{N})/)
         cl = tex[m.end(0)..-1]
-        nums = tex[num_start..m.end(0)-1]
+        nums = tex[num_start..m.end(0) - 1]
 
         parsed = nums.split(/((?:～|-)*\p{N}+(?:to\p{N}+)*,*)/).reject(&:empty?)
 
-        #change ["1to2,", "3"] to ["1", "2", "3"]
+        # change ['1to2,', '3'] to ['1', '2', '3']
         parsed.each_index do |el|
           if /to\p{N}/ =~ parsed[el]
             parts = parsed[el].split(/to/)
             if parts[0].to_i(10) == (parts[1].to_i(10) - 1)
-              parsed[el] = parts[0]+","
-              parsed.insert(el+1, parts[1])
+              parsed[el] = parts[0] + ','
+              parsed.insert(el + 1, parts[1])
             end
           end
         end
 
-        if (parsed.length > 1) 
+        if parsed.length > 1
           parsed.insert(-2, 'and')
           parsed[0].gsub!(',', '') if parsed.length == 3
         end
 
         tex = "#{op} #{parsed.join(' ')}#{cl}"
-        
-        if (parsed.length > 2) or (/\p{N}to\p{N}/ =~ tex)
+
+        if (parsed.length > 2) || (/\p{N}to\p{N}/ =~ tex)
           tex.gsub!('Claim', 'Claims')
           tex.gsub!('Citation', 'Citations')
           tex.gsub!('Embodiment', 'Embodiments')
@@ -527,81 +524,80 @@ module OaTemplater
           tex.gsub!('Prior Application', 'Prior Applications')
         end
         tex.gsub!('to', ' to ')
-       
-        #remove extra spaces
+
+        # remove extra spaces
         tex.gsub!(/\p{Z}+/, ' ')
       end
 
-      #dont feel like trackign this bug down, cludge
+      # dont feel like trackign this bug down, cludge
       tex.gsub!('( ', ' (')
 
-      return tex
+      tex
     end
 
-    #the @props hash is passed to docx_templater gem
+    # the @props hash is passed to docx_templater gem
     def set_prop(prop, value)
-      @props[prop] = value 
+      @props[prop] = value
     end
 
     def init_instance_vars
       @doc = DocxTemplater.new
-      @props = Hash.new
-      @scrapes = Hash.new
-      @props[:citaton_list] = ""
+      @props = {}
+      @scrapes = {}
+      @props[:citaton_list] = ''
       capture_the(:mailing_no, /発送番号\p{Z}+(\S+)/)
       capture_the(:ref_no, /整理番号\p{Z}+(\S+)/)
       capture_the(:ipc_list, /調査した分野$/)
-      set_prop(:ipc_reference_text, "")
+      set_prop(:ipc_reference_text, '')
     end
 
     def read_oa_data
-      #read in OA data
+      # read in OA data
       begin
         @data = File.read(@sourcefile)
       rescue
-        raise "oa_templater_exception"
+        raise 'oa_templater_exception'
       end
-      
+
       begin
-        #convert detected encoding (usually SHIFT_JIS Japanese) to UTF-8
+        # convert detected encoding (usually SHIFT_JIS Japanese) to UTF-8
         detection = CharlockHolmes::EncodingDetector.detect(@data)
         @data = CharlockHolmes::Converter.convert @data, detection[:encoding], 'UTF-8'
       rescue
-        raise "oa_templater_exception"
+        raise 'oa_templater_exception'
       end
     end
 
     def capture_the(prop, reg, offset = 0)
       matches = @data.match(reg, offset)
       @scrapes[prop] = matches ? matches : nil
-      @props[prop] = matches ? matches[1] : ""
+      @props[prop] = matches ? matches[1] : ''
     end
 
     def format_date(format, date)
-      return "" if date.nil?
-      y = (NKF.nkf('-m0Z1 -w',date[1]).to_i + 1988).to_s
-      m = (NKF.nkf('-m0Z1 -w',date[2]).to_i).to_s 
-      d = (NKF.nkf('-m0Z1 -w',date[3]).to_i).to_s 
-      return sprintf(format, y, m, d)
+      return '' if date.nil?
+      y = (NKF.nkf('-m0Z1 -w', date[1]).to_i + 1988).to_s
+      m = (NKF.nkf('-m0Z1 -w', date[2]).to_i).to_s
+      d = (NKF.nkf('-m0Z1 -w', date[3]).to_i).to_s
+      sprintf(format, y, m, d)
     end
 
     def pick_template
       case @data
-      when /<TITLE>拒絶理由通知書<\/TITLE>/i 
+      when /<TITLE>拒絶理由通知書<\/TITLE>/i
         @template = @templates[:kyozetsuriyu]
-        @template_name = "拒絶理由"
-      when /<TITLE>拒絶査定<\/TITLE>/i 
+        @template_name = '拒絶理由'
+      when /<TITLE>拒絶査定<\/TITLE>/i
         @template = @templates[:kyozetsusatei]
-        @template_name = "拒絶査定"
-      when /<TITLE>審尋（審判官）<\/TITLE>/i 
+        @template_name = '拒絶査定'
+      when /<TITLE>審尋（審判官）<\/TITLE>/i
         @template = @templates[:shinnen]
-        @template_name = "審尋"
+        @template_name = '審尋'
       else
-        #not satei or riyu, default to riyu
+        # not satei or riyu, default to riyu
         @template = @templates[:kyozetsuriyu]
-        @template_name = "拒絶理由"
+        @template_name = '拒絶理由'
       end
     end
   end
 end
-

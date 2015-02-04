@@ -4,11 +4,11 @@ Gem::Specification.new do |s|
   s.name        = 'oa_templater'
   s.version     = OaTemplater::VERSION
   s.date        = '2014-06-05'
-  s.summary     = "JPO OA Templater"
+  s.summary     = 'JPO OA Templater'
   s.description = "A gem to parse out and \"translate\" elements of Japanese Patent Office Actions"
-  s.authors     = ["James Rubingh"]
+  s.authors     = ['James Rubingh']
   s.email       = 'james@wrive.com'
-  s.files       = `git ls-files`.split($/).grep(%r{^lib/})
+  s.files       = `git ls-files`.split($INPUT_RECORD_SEPARATOR).grep(%r{^lib/})
   s.require_paths = ['lib']
   s.homepage    = 'https://github.com/ephesus/oa_templater'
   s.license     = 'GPLv2+'
