@@ -16,9 +16,9 @@ PATH
   remote: .
   specs:
     oa_templater (0.2.68)
-      charlock_holmes
+      charlock_holmes (~> 0)
       docx_templater (~> 0.2, >= 0.2.3)
-      kakasi
+      kakasi (~> 1.0.0)
 
 GEM
   remote: https://rubygems.org/
