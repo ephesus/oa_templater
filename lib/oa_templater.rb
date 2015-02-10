@@ -23,6 +23,14 @@ class Bignum
     end
     int.reverse + dec
   end
+
+  def eurostyle
+    to_s =~ /([^\.]*)(\..*)?/
+    int, dec = Regexp.last_match[1].reverse, Regexp.last_match[2] ? Regexp.last_match[2] : ''
+    while int.gsub!(/( |\.|^)(\d{3})(\d)/, '\1\2 \3')
+    end
+    int.reverse + dec
+  end
 end
 
 class Float
@@ -33,6 +41,14 @@ class Float
     end
     int.reverse + dec
   end
+
+  def eurostyle
+    to_s =~ /([^\.]*)(\..*)?/
+    int, dec = Regexp.last_match[1].reverse, Regexp.last_match[2] ? Regexp.last_match[2] : ''
+    while int.gsub!(/( |\.|^)(\d{3})(\d)/, '\1\2 \3')
+    end
+    int.reverse + dec
+  end
 end
 
 class Fixnum
@@ -40,6 +56,14 @@ class Fixnum
     to_s =~ /([^\.]*)(\..*)?/
     int, dec = Regexp.last_match[1].reverse, Regexp.last_match[2] ? Regexp.last_match[2] : ''
     while int.gsub!(/(,|\.|^)(\d{3})(\d)/, '\1\2,\3')
+    end
+    int.reverse + dec
+  end
+
+  def eurostyle
+    to_s =~ /([^\.]*)(\..*)?/
+    int, dec = Regexp.last_match[1].reverse, Regexp.last_match[2] ? Regexp.last_match[2] : ''
+    while int.gsub!(/( |\.|^)(\d{3})(\d)/, '\1\2 \3')
     end
     int.reverse + dec
   end

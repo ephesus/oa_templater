@@ -332,7 +332,7 @@ module OaTemplater
     def convert_pub_no(m, eng)
       case m.length
       when 2
-        pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]).to_i.commas) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]))
+        pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]).to_i.commas) : (eng =~ /European Patent/ ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]).to_i.eurostyle) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1])))
       when 3
         pub = eng.gsub('CIT_NO', (NKF.nkf('-m0Z1 -w', m[1]) + '/' + NKF.nkf('-m0Z1 -w', m[2])))
       when 4, 5

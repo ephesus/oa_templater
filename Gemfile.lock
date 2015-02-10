@@ -15,10 +15,10 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.2.68)
+    oa_templater (0.2.69)
       charlock_holmes (~> 0)
       docx_templater (~> 0.2, >= 0.2.3)
-      kakasi (~> 1.0.0)
+      kakasi (~> 1.0, >= 1.0.0)
 
 GEM
   remote: https://rubygems.org/
