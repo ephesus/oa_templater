@@ -458,7 +458,7 @@ module OaTemplater
       tex.gsub!('引用文献', 'Citation')
       tex.gsub!(/引\p{Z}*用\p{Z}*例/, 'Citation')
       tex.gsub!(/実\p{Z}*施\p{Z}*例/, 'Embodiment')
-      tex.gsub!(/理\p{Z}*由/, 'Reason ')
+      tex.gsub!(/理\p{Z}*由/, 'Reason')
       tex.gsub!(/先\p{Z}*願/, 'Prior Application')
       tex.gsub!('－', 'to')
       tex.gsub!('-', 'to')
