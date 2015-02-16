@@ -14,7 +14,8 @@ describe OaTemplater do
   let(:oa7) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa7.htm'), 77_777) }
   let(:oa8) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa8.htm'), 88_888) }
   let(:oa9) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa9.htm'), 99_999) }
-  let(:oa10) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa10.htm'), 11_010) }
+  let(:oa10) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa10.htm'), 10_010) }
+  let(:oa11) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa10.htm'), 11_010) }
 
   context '#new' do
     # fail fast on catastrphic error
@@ -151,7 +152,7 @@ describe OaTemplater do
 
     it 'outputs some headers general check 6' do
       oa6.parse_headers true
-      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\n・Notes\n\n よって,Citations 1 に記載の発明に基づき,Claims 1 to 3, 5 to 9, and 11 to 1\n\n\nReason 2\n\n\n\n\n 同様のReasons で,Claims 2, 5, 7, 8, 11, 13, 14, 17 to 19, and 22\n\n\n\n\n\n")
+      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\n・Notes\n\n よって,Citations 1 に記載の発明に基づき,Claims 1 to 3, 5 to 9, and 11 to 1\n\n\nReason 2\n\n\n\n\n 同様のReasonsで,Claims 2, 5, 7, 8, 11, 13, 14, 17 to 19, and 22\n\n\n\n\n\n")
     end
 
     it 'outputs some headers general check 3' do
