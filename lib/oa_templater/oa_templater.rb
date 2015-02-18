@@ -177,6 +177,13 @@ module OaTemplater
       end
     end
 
+    def parse_note_to_applicant
+      capture_the(:note_to_applicant, /本願出願時に公開されており、/)
+      return if @scrapes[:note_to_applicant].nil?
+
+      set_prop(:note_to_applicant, "\t• Request to the Applicant\r\n\tCitation 1 was already published at the time of filing of the present application and has a common applicant or inventor with the present application.  Citation 1 alone would be a bar to the novelty or inventive step of more than one claim of the present application.\r\n\tBased on this type of citation, appropriately evaluating the invention in advance can be thought to be beneficial to the applicant while creating appropriate claims, as well as helpful to the Examiner for an efficient and accurate examination.  We request that the applicant disclose this type of citation that the applicant is already aware of when filing the application or a request for examination, as well as requesting that the applicant evaluates whether or not the invention for which a patent is sought has patentability based on this type of citation. ")
+    end
+
     def parse_currently_known
       case @data
       when /拒絶の理由を発見しない請求項/
@@ -412,6 +419,7 @@ module OaTemplater
       parse_appeal_drafted
       parse_appeal_no
       parse_retroactive
+      parse_note_to_applicant
 
       parse_headers options[:do_headers]
 

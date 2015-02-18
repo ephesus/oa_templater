@@ -8,14 +8,14 @@ GIT
 
 GIT
   remote: https://github.com/knu/kakasi_ffi.git
-  revision: 4a7632ae272e41b6719ee249919d2d18d72d7025
+  revision: bb0fa1e290f6cf8f19489b34f75fe8eeef72d076
   specs:
-    kakasi (1.0.1)
+    kakasi (1.0.2)
 
 PATH
   remote: .
   specs:
-    oa_templater (0.2.69)
+    oa_templater (0.2.70)
       charlock_holmes (~> 0)
       docx_templater (~> 0.2, >= 0.2.3)
       kakasi (~> 1.0, >= 1.0.0)
@@ -28,23 +28,24 @@ GEM
       debugger-linecache (~> 1.2)
       slop (~> 3.6)
     charlock_holmes (0.7.3)
-    columnize (0.8.9)
+    columnize (0.9.0)
     debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
-    htmlentities (4.3.2)
-    rspec (3.1.0)
-      rspec-core (~> 3.1.0)
-      rspec-expectations (~> 3.1.0)
-      rspec-mocks (~> 3.1.0)
-    rspec-core (3.1.5)
-      rspec-support (~> 3.1.0)
-    rspec-expectations (3.1.2)
+    htmlentities (4.3.3)
+    rspec (3.2.0)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+    rspec-core (3.2.0)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.1.0)
-    rspec-mocks (3.1.2)
-      rspec-support (~> 3.1.0)
-    rspec-support (3.1.1)
-    rubyzip (1.1.6)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.1)
+    rubyzip (1.1.7)
     slop (3.6.0)
 
 PLATFORMS
