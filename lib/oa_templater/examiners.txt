@@ -91,6 +91,7 @@ Hiroshi YAMAGUCHI, 山口 大志
 Hiroyuki HAYAGAWA, 早川 裕之
 Hiroyuki MIYAKUBO, 宮久保 博幸
 Hiroyuki NAGATOMI, 永冨 宏之
+Hiroyuki NARUSE, 成瀬 博之
 Hiroyuki OKA, 岡 裕之
 Hiroyuki OOHAMA, 大濱 宏之
 Hiroyuki TAGO, 田合 弘幸
@@ -162,6 +163,7 @@ Masafumi SUZUKI, 鈴木 理文
 Masahiro HIRATSUKA, 平塚 政宏
 Masahiro HIRAZUKA, 平塚 政宏
 Masahiro YAMAMOTO, 山本 昌広
+Masakazu KURISU, 栗栖 正和
 Masakazu UCHIDA, 内田 正和
 Masaki EMA, 江間 正起
 Masaki EZAMA, 江間 正起
@@ -180,6 +182,7 @@ Masuji YAMADA, 山田 倍司
 Mchihiro KUBO, 久保 道弘
 Michiaki KOGURE, 小暮 道明
 Michiru MIURA, 三浦 みちる
+Mika KIKUCHI, 菊池 美香
 Mikaho SHIRAI, 白井 美香保
 Minako MITSUMOTO, 光本 美奈子
 Minoru MATSUNAGA, 松永 稔
@@ -370,7 +373,7 @@ Yukihito YAMAMOTO, 山本 元彦
 Yukiko CHO, 長 由紀子
 Yukiko YAMADA, 山田 由希子
 Yuki ONO, 大野 友輝
-Yukitake IWATA, 岩田 行剛
+Yukitaka IWATA, 岩田 行剛
 Yuko MATSUZAWA, 松澤 優子
 Yumiko INOUE, 井上 由美子
 Yumiko ISHII, 石井 裕美子
