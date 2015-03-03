@@ -29,6 +29,7 @@ module OaTemplater
     # require template files, not included because of NDA
     def set_templates(options = {})
       defaults = {  kyozetsuriyu: File.join(File.dirname(__FILE__), 'default_riyu.docx'),
+                    shinpankyozetsuriyu: File.join(File.dirname(__FILE__), 'default_shinpankyozetsuriyu.docx'),
                     kyozetsusatei: File.join(File.dirname(__FILE__), 'default_satei.docx'),
                     shinnen: File.join(File.dirname(__FILE__), 'default_shinnen.docx'),
                     examiners: File.join(File.dirname(__FILE__), 'examiners.txt')
@@ -93,6 +94,10 @@ module OaTemplater
 
     def parse_app_no
       capture_the(:app_no, R_CAPTURE_APP_NO)
+      if @scrapes[:app_no].nil?
+        #try for the appeal format if nothing came up
+        capture_the(:app_no, R_CAPTURE_APPEAL_APP_NO)
+      end
       return if @scrapes[:app_no].nil?
 
       set_prop(:app_no, NKF.nkf('-m0Z1 -w', @scrapes[:app_no][1]) + '-' + NKF.nkf('-m0Z1 -w', @scrapes[:app_no][2]))
@@ -101,6 +106,12 @@ module OaTemplater
     # definitely need to fix this up later, haha
     def parse_examiner(do_examiner = false)
       capture_the(:taro, R_CAPTURE_TARO) # 1, 2 (codes are #3, 4)
+
+      #if there was no normal appeal examiner, try an appeal examiner
+      if @scrapes[:taro].nil?
+        capture_the(:taro, R_CAPTURE_APPEAL_TARO)
+      end
+
       return if @scrapes[:taro].nil?
 
       found = false
@@ -592,6 +603,9 @@ module OaTemplater
 
     def pick_template
       case @data
+      when /審判請求の番.*不服.*特許出願の番号.*特願.*起案日.*審判長.*代理人弁理士/m
+        @template = @templates[:shinpankyozetsuriyu]
+        @template_name = '審判拒絶理由'
       when /<TITLE>拒絶理由通知書<\/TITLE>/i
         @template = @templates[:kyozetsuriyu]
         @template_name = '拒絶理由'
