@@ -448,11 +448,11 @@ module OaTemplater
 
       # try to handle when Examiners put multiple groups separated by :
       # on the same line like 引用文献１：請求項１，２/ bla
-      if R_HEADER_SEPARATOR =~ tex
+      if R_HEADER_SEPARATOR_DETECT =~ tex
         formatted_text = ''
         # super fragile. If regex is changed
         # demarker = NKF.nkf('-m0Z1 -w', '#{$&[1,1]} ')
-        demarker = NKF.nkf('-m0Z1 -w', "#{$&} ")
+        demarker = NKF.nkf('-m0Z1 -w', "#{$1} ") #$~ is last matchdata
         tex.split(R_HEADER_SEPARATOR).each do |section|
           formatted_text += demarker unless formatted_text.length == 0
           formatted_text += format_headers(section, options)

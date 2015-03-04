@@ -147,7 +147,7 @@ describe OaTemplater do
   context '#headers' do
     it 'outputs some headers general check 3' do
       oa3.parse_headers true
-      expect(oa3.props[:oa_headers]).to eql("\n\nReasons 2 .この出願の下記のClaimsに係る発明は,下記の点で特許法第 29 条第 and 1\n\n\n\n\n<Reason 1>\n \n それに対して,Claims 5 to 8 に係る発明の技術的特徴は「血管導管の前記第 and 1\n\n\n<Reason 2>\n\n<Reasons 3 and 4>\n・Claims 1, 24, and 25\n・Citation 1\n\n・Claims 1, 24, and 25\n・Citation 2\n\n<Reason 4>\n・Claims 2 to 4\n・Citations 1, 3, and 4\n\n\n")
+      expect(oa3.props[:oa_headers]).to eql("\nReasons 1 .この出願は,下記の点で特許法第 and 37\n\nReasons 2 .この出願の下記のClaimsに係る発明は,下記の点で特許法第 29 条第 and 1\n\nReason 3\n\nReason 4\n\n\n<Reason 1\n Claims 1 に係る発明は,Citations 1, and 2\nる,Claims 3, 4, and 26 to 31\n \n Claims 24 and 25\n Claims 1 に係る発明は,周知技術にすぎないものであることから,上記 (and 1\n,Claim 1\n それに対して,Claims 5 to 8 に係る発明の技術的特徴は「血管導管の前記第 and 1\nClaims 22 and 23\n\n\n<Reason 2\n Claims 26 to 31\n\n<Reasons 3 and 4\n・Claims 1, 24, and 25\n・Citation 1\n Citations 1 に記載された「中空器官固定用器具 (and 51\n\n・Claims 1, 24, and 25\n・Citation 2\n Citation 2\n\n<Reason 4\n・Claims 2 to 4\n・Citations 1, 3, and 4\n Citation 1\n\n\n")
     end
 
     it 'outputs some headers general check 6' do
@@ -157,12 +157,12 @@ describe OaTemplater do
 
     it 'outputs some headers general check 3' do
       oa8.parse_headers true
-      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1>\n\n\n\n<Reason 2>\n\n\n\n\n<Reason 3>\n\n・Claims 1 to 4\n・Citations 1 and 2\n・Notes\n Citations 1 (特に,段落 0012, 0014, 0015, and 0031 to 0039\n 一方,Citations 2 (特に,第 2 ページ右下欄第 7 行 to 第 3 ページ右上欄第 and 14\n\n\n")
+      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1\n\n\n・Claim 1\n\n<Reason 2\n\n・Claim 5\n\n\n\n<Reason 3\n\n・Claims 1 to 4\n・Citations 1 and 2\n・Notes\n Citations 1 (特に,段落 0012, 0014, 0015, and 0031 to 0039\n 一方,Citations 2 (特に,第 2 ページ右下欄第 7 行 to 第 3 ページ右上欄第 and 14\n\n\n")
     end
 
     it 'outputs no headers' do
       oa5.parse_headers true
-      expect(oa5.props[:oa_headers]).to eql("\n\n\n\n\n\n\n\n\n")
+      expect(oa5.props[:oa_headers]).to eql("\n Claim 11\n\n\n\n\n\n\n Claims 12 and 15 to 18\n\n Claims (1 to 10, 13, and 14\n\n")
     end
   end
 
