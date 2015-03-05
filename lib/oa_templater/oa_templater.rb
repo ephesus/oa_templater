@@ -32,6 +32,7 @@ module OaTemplater
                     shinpankyozetsuriyu: File.join(File.dirname(__FILE__), 'default_shinpankyozetsuriyu.docx'),
                     kyozetsusatei: File.join(File.dirname(__FILE__), 'default_satei.docx'),
                     shinnen: File.join(File.dirname(__FILE__), 'default_shinnen.docx'),
+                    shireisho: File.join(File.dirname(__FILE__), 'default_shireisho.docx'),
                     examiners: File.join(File.dirname(__FILE__), 'examiners.txt')
                   }
       @templates = defaults.merge(options)
@@ -615,6 +616,9 @@ module OaTemplater
       when /<TITLE>審尋（審判官）<\/TITLE>/i
         @template = @templates[:shinnen]
         @template_name = '審尋'
+      when /<TITLE>同一出願人による同日出願通知書<\/TITLE>/i
+        @template = @templates[:shireisho]
+        @template_name = '指令書'
       else
         # not satei or riyu, default to riyu
         @template = @templates[:kyozetsuriyu]
