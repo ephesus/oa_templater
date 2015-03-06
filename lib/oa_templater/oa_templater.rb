@@ -80,6 +80,13 @@ module OaTemplater
       set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? ' and Amendments' : '')
     end
 
+    def parse_amendments_date
+      capture_the(:amendments_date, R_CAPTURE_AMENDMENTS_DATE)
+      return if @scrapes[:amendments_date].nil?
+
+      set_prop(:amendments_date, format_date('%04u/%02u/%02u', @scrapes[:amendments_date]))
+    end
+
     def parse_retroactive
       capture_the(:retroactive, R_CAPTURE_RETROACTIVE)
       return if @scrapes[:retroactive].nil?
@@ -428,6 +435,7 @@ module OaTemplater
       parse_response_period
       parse_see_list
       parse_final_oa
+      parse_amendments_date
       parse_satei_previous_oa
       parse_articles
       parse_currently_known

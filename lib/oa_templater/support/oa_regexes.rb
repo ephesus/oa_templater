@@ -19,6 +19,7 @@ module OaTemplater
   R_CAPTURE_DRAFTED = /起案日\p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
   R_CAPTURE_MAILING_DATE = /発送日\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
   R_CAPTURE_PREVIOUS_OA = /この出願については、\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)日付け拒絶理由通知書に記載/
+  R_CAPTURE_AMENDMENTS_DATE = /\p{Z}*平成\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)日付け手続補正書でした/
   R_CAPTURE_RETROACTIVE = /出願日（遡及日）\p{Z}*平成(\p{N}*)年\p{Z}*(\p{N}*)月\p{Z}*(\p{N}*)日/
   R_CAPTURE_NO_REJECT_CLAIMS = /拒絶の理由を発見しない請求項＞.{1,5}(請求項.*)に\s*係\s*る\s*発\s*明\s*に\s*つ\s*い\s*て\s*/m
   R_CAPTURE_TARO = /特許庁審査官\p{Zs}+(\S+?)\p{Zs}(\S+?)\p{Zs}+(\p{N}+)\p{Zs}+(\S+)/
