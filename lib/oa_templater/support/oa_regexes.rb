@@ -26,4 +26,6 @@ module OaTemplater
   R_CAPTURE_APPEAL_NO = /番号\p{Zs}*不服(\p{N}+)\S(\p{Zs}*\p{N}+)/
   R_CAPTURE_APPEAL_DRAFTED = /作成日p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
   R_CAPTURE_APPEAL_APP_NO = /（特許出願の番号）\p{Z}+（特願(\p{N}+)\S(\p{N}+)）/
+  R_CAPTURE_SHIREISHO_CODE = //
+  R_CAPTURE_SHIREISHO_APP = //
 end

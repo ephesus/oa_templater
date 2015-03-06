@@ -33,6 +33,7 @@ module OaTemplater
                     kyozetsusatei: File.join(File.dirname(__FILE__), 'default_satei.docx'),
                     shinnen: File.join(File.dirname(__FILE__), 'default_shinnen.docx'),
                     shireisho: File.join(File.dirname(__FILE__), 'default_shireisho.docx'),
+                    rejectamendments: File.join(File.dirname(__FILE__), 'default_rejectamendments.docx'),
                     examiners: File.join(File.dirname(__FILE__), 'examiners.txt')
                   }
       @templates = defaults.merge(options)
@@ -111,6 +112,11 @@ module OaTemplater
       #if there was no normal appeal examiner, try an appeal examiner
       if @scrapes[:taro].nil?
         capture_the(:taro, R_CAPTURE_APPEAL_TARO)
+      end
+
+      #still nothing, try for code-only in shireisho
+      if @scrapes[:taro].nil?
+        capture_the(:taro, R_CAPTURE_SHIREISHO_CODE)
       end
 
       return if @scrapes[:taro].nil?
@@ -610,6 +616,9 @@ module OaTemplater
       when /<TITLE>拒絶理由通知書<\/TITLE>/i
         @template = @templates[:kyozetsuriyu]
         @template_name = '拒絶理由'
+      when /<TITLE>補正の却下の決定<\/TITLE>/i
+        @template = @templates[:rejectamendments]
+        @template_name = '補正の却下の決定'
       when /<TITLE>拒絶査定<\/TITLE>/i
         @template = @templates[:kyozetsusatei]
         @template_name = '拒絶査定'
