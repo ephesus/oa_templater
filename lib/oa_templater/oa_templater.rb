@@ -101,6 +101,20 @@ module OaTemplater
       set_prop(:appeal_no, NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][1]) + '-' + NKF.nkf('-m0Z1 -w', @scrapes[:appeal_no][2]))
     end
 
+    def parse_shireisho_app
+      capture_the(:shireisho_num, R_CAPTURE_SHIREISHO_APP)
+      return if @scrapes[:shireisho_num].nil?
+
+      set_prop(:shireisho_num, NKF.nkf('-m0Z1 -w', @scrapes[:shireisho_num][1]) + '-' + NKF.nkf('-m0Z1 -w', @scrapes[:shireisho_num][2]))
+    end
+
+    def parse_shireisho_code
+      capture_the(:scode, R_CAPTURE_SHIREISHO_CODE)
+      return if @scrapes[:scode].nil?
+
+      set_prop(:scode, NKF.nkf('-m0Z1 -w', @scrapes[:scode][1]) + ' ' + NKF.nkf('-m0Z1 -w', @scrapes[:scode][2]))
+    end
+
     def parse_app_no
       capture_the(:app_no, R_CAPTURE_APP_NO)
       if @scrapes[:app_no].nil?
@@ -119,11 +133,6 @@ module OaTemplater
       #if there was no normal appeal examiner, try an appeal examiner
       if @scrapes[:taro].nil?
         capture_the(:taro, R_CAPTURE_APPEAL_TARO)
-      end
-
-      #still nothing, try for code-only in shireisho
-      if @scrapes[:taro].nil?
-        capture_the(:taro, R_CAPTURE_SHIREISHO_CODE)
       end
 
       return if @scrapes[:taro].nil?
@@ -446,6 +455,8 @@ module OaTemplater
       parse_appeal_no
       parse_retroactive
       parse_note_to_applicant
+      parse_shireisho_app
+      parse_shireisho_code
 
       parse_headers options[:do_headers]
 
