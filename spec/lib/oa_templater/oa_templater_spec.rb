@@ -15,7 +15,8 @@ describe OaTemplater do
   let(:oa8) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa8.htm'), 88_888) }
   let(:oa9) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa9.htm'), 99_999) }
   let(:oa10) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa10.htm'), 10_010) }
-  let(:oa11) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa10.htm'), 11_010) }
+  let(:oa11) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa11.htm'), 11_010) }
+  let(:oa12) { OaTemplater::OA.new(File.join(File.dirname(__FILE__), 'test_oa12.htm'), 12_010) }
 
   context '#new' do
     # fail fast on catastrphic error
@@ -147,22 +148,32 @@ describe OaTemplater do
   context '#headers' do
     it 'outputs some headers general check 3' do
       oa3.parse_headers true
-      expect(oa3.props[:oa_headers]).to eql("\nReasons 1 .この出願は,下記の点で特許法第 and 37\n\nReasons 2 .この出願の下記のClaimsに係る発明は,下記の点で特許法第 29 条第 and 1\n\nReason 3\n\nReason 4\n\n\n<Reason 1\n Claims 1 に係る発明は,Citations 1, and 2\nる,Claims 3, 4, and 26 to 31\n \n Claims 24 and 25\n Claims 1 に係る発明は,周知技術にすぎないものであることから,上記 (and 1\n,Claim 1\n それに対して,Claims 5 to 8 に係る発明の技術的特徴は「血管導管の前記第 and 1\nClaims 22 and 23\n\n\n<Reason 2\n Claims 26 to 31\n\n<Reasons 3 and 4\n・Claims 1, 24, and 25\n・Citation 1\n Citations 1 に記載された「中空器官固定用器具 (and 51\n\n・Claims 1, 24, and 25\n・Citation 2\n Citation 2\n\n<Reason 4\n・Claims 2 to 4\n・Citations 1, 3, and 4\n Citation 1\n\n\n")
+      expect(oa3.props[:oa_headers]).to eql("\nReasons 1 .この出願は,下記の点で特許法第 and 37\n\nReasons 2 .この出願の下記のClaimsに係る発明は,下記の点で特許法第 29 条第 and 1\n\nReason 3\n\nReason 4\n\n\n<Reason 1>\nClaims 1 に係る発明は,Citations 1, and 2\nる,Claims 3, 4, and 26 to 31\n\nClaims 24 and 25\nClaims 1 に係る発明は,周知技術にすぎないものであることから,上記 (and 1)\n,Claim 1\nそれに対して,Claims 5 to 8 に係る発明の技術的特徴は「血管導管の前記第 and 1\nClaims 22 and 23\n\n\n<Reason 2>\nClaims 26 to 31\n\n<Reasons 3 and 4>\n・Claims 1, 24, and 25\n・Citation 1\nCitations 1 に記載された「中空器官固定用器具 (and 51)\n\n・Claims 1, 24, and 25\n・Citation 2\nCitation 2\n\n<Reason 4>\n・Claims 2 to 4\n・Citations 1, 3, and 4\nCitation 1\n\n\n")
     end
 
     it 'outputs some headers general check 6' do
       oa6.parse_headers true
-      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\n・Notes\n\n よって,Citations 1 に記載の発明に基づき,Claims 1 to 3, 5 to 9, and 11 to 1\n\n\nReason 2\n\n\n\n\n 同様のReasonsで,Claims 2, 5, 7, 8, 11, 13, 14, 17 to 19, and 22\n\n\n\n\n\n")
+      expect(oa6.props[:oa_headers]).to eql("\nReason 1\n\n\n・Claims 1 to 3, 5 to 9, 11 to 15, and 17 to 22\n・Citation 1\n・Notes\n\nよって,Citations 1 に記載の発明に基づき,Claims 1 to 3, 5 to 9, and 11 to 1\n\n\nReason 2\n\n\n\n\n同様のReasonsで,Claims 2, 5, 7, 8, 11, 13, 14, 17 to 19, and 22\n\n\n\n\n\n")
     end
 
     it 'outputs some headers general check 3' do
       oa8.parse_headers true
-      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1\n\n\n・Claim 1\n\n<Reason 2\n\n・Claim 5\n\n\n\n<Reason 3\n\n・Claims 1 to 4\n・Citations 1 and 2\n・Notes\n Citations 1 (特に,段落 0012, 0014, 0015, and 0031 to 0039\n 一方,Citations 2 (特に,第 2 ページ右下欄第 7 行 to 第 3 ページ右上欄第 and 14\n\n\n")
+      expect(oa8.props[:oa_headers]).to eql("\n\n\n\n\n<Reason 1>\n\n\n・Claim 1\n\n<Reason 2>\n\n・Claim 5\n\n\n\n<Reason 3>\n\n・Claims 1 to 4\n・Citations 1 and 2\n・Notes\nCitations 1 (特に,段落 0012, 0014, 0015, and 0031 to 0039\n一方,Citations 2 (特に,第 2 ページ右下欄第 7 行 to 第 3 ページ右上欄第 and 14\n\n\n")
     end
 
     it 'outputs no headers' do
       oa5.parse_headers true
-      expect(oa5.props[:oa_headers]).to eql("\n Claim 11\n\n\n\n\n\n\n Claims 12 and 15 to 18\n\n Claims (1 to 10, 13, and 14\n\n")
+      expect(oa5.props[:oa_headers]).to eql("\nClaim 11\n\n\n\n\n\n\nClaims 12 and 15 to 18\n\nClaims (1 to 10, 13, and 14)\n\n")
+    end
+
+    it 'outputs no headers' do
+      oa11.parse_headers true
+      expect(oa11.props[:oa_headers]).to eql("\n【Reason 1】\n\n\n・Claims: 1, 4, 6, and 12\n・Citation: 1\n・Notes\nCitations 1 には,相対的に比透磁率が小さい第 1 磁性体層と,第 and 1\n\n\n【Reason 2】\n\n\n・Claims: 1, 4, 6, and 12\n・Citation: 1\n・Notes\n上記【Reason 1】\n,Citation 1\nCitation 1\n\n・Claims: 2, 3, and 7 to 10\n・Citations: 1 and 2\n・Notes\n\n・Claim: 5\n・Citations: 1 to 3\n・Notes\n\n・Claim: 11\n・Citations: 1 to 3\n・Notes\n\n\n\n【Reason 3】\n\n\n・Claims: 6, 11, and 12\n・Notes\n\n\n")
+    end
+
+    it 'outputs no headers' do
+      oa12.parse_headers true
+      expect(oa12.props[:oa_headers]).to eql("\n\n・Claims 1, 2, 6 to 9, 13 to 16, 20 to 23, 27 to 30, 34 to 37, 41 to 44, 48 to 51, 55, and 56\n・Citation 1\n・Notes\nCitations 1 には,そのclaim 1 to 8, FIG. 2 A to FIG. and 5\n\n\n\nClaims 1, 2, 6, 7 に係る発明と各々対応するClaims 8, 9, and 13 to 16\n\nClaims (3 to 5, 10 to 12, 17 to 19, 24 to 26, 31 to 33, 38 to 40, 45 to 47, and 52 to 54)\n\n\n")
     end
   end
 
@@ -288,6 +299,16 @@ describe OaTemplater do
     it 'reads citations, general check 10' do
       oa10.parse_citations
       expect(oa10.props[:citation_list]).to eql("1. NAGY ZOLTAN A, NATURE MEDICINE, 2002 8月, V8 N8, P801-807\n2. VIDOVIC D, CANCER LETTERS, 米国, 1998 6月19日, V128 N2, P12\n7-135\n3.  United States Patent Application, Publication No. 2001/0053360\n4. Fukuda T.  et al. , Restoration of surface IgM-mediated apoptosis in an\n anti-IgM-resistant variant of WEHI-231 lymphoma cells by HS1,  a protein\n-tyrosine kinase substrate. , Proc. Natl. Acad. Sci. USA, 1995, Vol. 92\n, p. 7302-7306\n")
+    end
+
+    it 'reads citations, general check 11' do
+      oa11.parse_citations
+      expect(oa11.props[:citation_list]).to eql("1.  Japanese Unexamined Patent Application, First Publication No. 2008-219614\n[1'.  ]\n2.  Japanese Unexamined Patent Application, First Publication No. 2005-142984\n[2'.  ]\n3.  Japanese Unexamined Patent Application, First Publication No. 2008-153925\n[3'.  ]\n")
+    end
+
+    it 'reads citations, general check 12' do
+      oa12.parse_citations
+      expect(oa12.props[:citation_list]).to eql("1.  United States Patent Application, Publication No. 2009/0204819\n")
     end
   end
 

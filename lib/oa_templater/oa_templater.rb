@@ -466,11 +466,19 @@ module OaTemplater
 
     private
 
+    def squish!(t)
+      t.gsub!(/\A[[:space:]]+/, '')
+      t.gsub!(/[[:space:]]+\z/, '')
+      t.gsub!(/[[:space:]]+/, ' ')
+    end
+
     def format_headers(tex, options = {})
       defaults = {  replace_toh: false,
                     ignore_toh: true
                   }
       options = defaults.merge(options)
+
+      squish! tex
 
       # try to handle when Examiners put multiple groups separated by :
       # on the same line like 引用文献１：請求項１，２/ bla
