@@ -63,3 +63,6 @@ republish:
 ca_patent: 
   english: 'Chinese Patent Application, Publication No. CIT_NO'
   japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*中国特許出願公開第(\p{N}+?)号/'
+ja_uma:
+  english: 'Japanese Examined Utility Model Application, Second Publication No. CIT_NO'
+  japanese: !ruby/regexp '/\s*(実公)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号公報/i'
