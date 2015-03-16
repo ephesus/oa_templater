@@ -283,7 +283,11 @@ module OaTemplater
             # >1st line of non-match
             if (!oldmatch) and (!match)
               count -= 1
+              #remove newlines since it's probably a big english title
+              ipc_reference_text.gsub!(/\r\n$/,'')
             end
+
+            line = pad_spaces(line)
 
             ipc_reference_text += line
           end
@@ -353,11 +357,7 @@ module OaTemplater
               tex = NKF.nkf('-m0Z1 -w', tex)
               # strip blank dos lines
               tex.gsub!(/\p{Z}*\r\n/, '')
-              # add space after period, add space after comma, remove year kanji
-              tex.gsub!(/\./, '. ')
-              tex.gsub!(/\,/, ', ')
-              tex.gsub!(/年/, '')
-              tex.gsub!(/p{Z}*/, ' ')
+              tex = pad_spaces(tex)
 
               # if no match was found, just copy the japanese, skip first character (it's a period from the regex)
               # should have the correct number from the actual source (not from count variable)
@@ -370,7 +370,18 @@ module OaTemplater
       set_prop(:citation_list, citation_text)
     end
 
+    def pad_spaces (tex)
+      # add space after period, add space after comma, remove year kanji
+      tex.gsub!(/\./, '. ')
+      tex.gsub!(/\,/, ', ')
+      tex.gsub!(/年/, '')
+      tex.gsub!(/p{Z}*/, ' ')
+      tex
+    end
+
     def convert_pub_no(m, eng)
+      #m is MatchData object, handle different styles of citations
+      #by using the number of captures
       case m.length
       when 2
         pub = (eng =~ /United States Patent No/) ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]).to_i.commas) : (eng =~ /European Patent/ ? eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1]).to_i.eurostyle) : eng.gsub('CIT_NO', NKF.nkf('-m0Z1 -w', m[1])))
@@ -409,7 +420,7 @@ module OaTemplater
         if data =~ a['japanese']
           # skip tab on first reason
           articles_text += "\t" unless articles_text.length < 1
-          # only add short text once
+          # only add short text once (36 shows up multiple times)
           articles_text += a['short'] + "\n" unless /#{a["short"]}/ =~ articles_text
 
           reasons_for_text += "#{count}.\t#{a['english']}\n\n"
@@ -480,7 +491,7 @@ module OaTemplater
 
       squish! tex
 
-      # try to handle when Examiners put multiple groups separated by :
+      # try to handle when Examiners put multiple groups separated by : or /
       # on the same line like 引用文献１：請求項１，２/ bla
       if R_HEADER_SEPARATOR_DETECT =~ tex
         formatted_text = ''
@@ -505,6 +516,18 @@ module OaTemplater
       options = defaults.merge(options)
 
       tex = NKF.nkf('-m0Z1 -w', tex)
+      tex = swap_words(tex)
+      tex.gsub!('等', '') if options[:ignore_toh]
+      tex.gsub!('等', ', etc.') if options[:replace_toh]
+
+      # strip abberant \r characters
+      tex.gsub!("\r", '')
+
+      format_number_listing(tex)
+    end
+
+    #do actual swapping of japanese and english words
+    def swap_words(tex)
       tex.gsub!('、', ',')
       tex.gsub!('，', ',')
       tex.gsub!(/請\p{Z}*求\p{Z}*項/, 'Claim')
@@ -526,13 +549,7 @@ module OaTemplater
       # match 備考:
       tex.gsub!('備考', 'Notes')
 
-      tex.gsub!('等', '') if options[:ignore_toh]
-      tex.gsub!('等', ', etc.') if options[:replace_toh]
-
-      # strip abberant \r characters
-      tex.gsub!("\r", '')
-
-      format_number_listing(tex)
+      tex
     end
 
     # formats a number listing assuming only one list in the string
@@ -628,6 +645,8 @@ module OaTemplater
     end
 
     def format_date(format, date)
+      #date is MatchData object with three captures, the first being Heisei year
+      #convert from 全角文字 to normal ascii 
       return '' if date.nil?
       y = (NKF.nkf('-m0Z1 -w', date[1]).to_i + 1988).to_s
       m = (NKF.nkf('-m0Z1 -w', date[2]).to_i).to_s
