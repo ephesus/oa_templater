@@ -147,9 +147,25 @@ describe OaTemplater do
 
   context '#headers' do
     it 'outputs some headers general check 3' do
+      oa1.parse_headers true
+      expect(oa1.props[:oa_headers]).to eql("\n\n\n\n1.Reasons 1 and 2\n・Claims 1 to 6 and 9 to 13\n・Citation 1\n・Notes\nCitations 1 の【Claims 1 】 to 【Claims 7 】,【 0001 】,【 and 0006】\n\nCitations 1 には,一般式:HdRe(OR 1 )fSiO (and 4\n\n\n2.Reason 2\n・Claims 7 and 8\n・Citations 1 and 2\n・Notes\nCitation 1\nCitations 2 の【 and 0002】\n\nClaims 7, 8 に係る発明と,Citations and 1\n\n\n")
+    end
+
+    it 'outputs some headers general check 2' do
+      oa2.parse_headers true
+      expect(oa2.props[:oa_headers]).to eql("\n\n\n(A)Reason 1: Claims 1 and 5 to 11: Citation 1\nReason 2: Claims 1 to 11: Citations 1 to 7\n(Notes)\nCitation 1\n\n献2(Claims 6, Embodiments and 1)\n),Citations 6 (特許請求の範囲,段落【 0037 】,段落【 0067 】 to 【 and 0137】\n\n(B)Reason 1: Claims 1 to 11: Citations 2 and 3\nReason 2: Claims 1 to 11: Citations 1 to 7\n(Notes)\nCitations 2 には,本願Claims and 2 to 4\n,Embodiment 1\nCitations 3 には,本願Claims and 2 to 4\n\n\n(C)Reasons 1 and 2: Claims 1 to 9: Citation 8\n(Notes)\nCitation 8\n\n(D)Reason 3\nよって,Claims 5, 7, 10 (,これらを引用するClaims 6, 8, 9, and 11\n\n\n")
+    end
+
+    it 'outputs some headers general check 3' do
       oa3.parse_headers true
       expect(oa3.props[:oa_headers]).to eql("\nReasons 1 .この出願は,下記の点で特許法第 and 37\n\nReasons 2 .この出願の下記のClaimsに係る発明は,下記の点で特許法第 29 条第 and 1\n\nReason 3\n\nReason 4\n\n\n<Reason 1>\nClaims 1 に係る発明は,Citations 1, and 2\nる,Claims 3, 4, and 26 to 31\n\nClaims 24 and 25\nClaims 1 に係る発明は,周知技術にすぎないものであることから,上記 (and 1)\n,Claim 1\nそれに対して,Claims 5 to 8 に係る発明の技術的特徴は「血管導管の前記第 and 1\nClaims 22 and 23\n\n\n<Reason 2>\nClaims 26 to 31\n\n<Reasons 3 and 4>\n・Claims 1, 24, and 25\n・Citation 1\nCitations 1 に記載された「中空器官固定用器具 (and 51)\n\n・Claims 1, 24, and 25\n・Citation 2\nCitation 2\n\n<Reason 4>\n・Claims 2 to 4\n・Citations 1, 3, and 4\nCitation 1\n\n\n")
     end
+
+    it 'outputs no headers' do
+      oa5.parse_headers true
+      expect(oa5.props[:oa_headers]).to eql("\nClaim 11\n\n\n\n\n\n\nClaims 12 and 15 to 18\n\nClaims (1 to 10, 13, and 14)\n\n")
+    end
+
 
     it 'outputs some headers general check 6' do
       oa6.parse_headers true
@@ -162,8 +178,8 @@ describe OaTemplater do
     end
 
     it 'outputs no headers' do
-      oa5.parse_headers true
-      expect(oa5.props[:oa_headers]).to eql("\nClaim 11\n\n\n\n\n\n\nClaims 12 and 15 to 18\n\nClaims (1 to 10, 13, and 14)\n\n")
+      oa9.parse_headers true
+      expect(oa9.props[:oa_headers]).to eql("\n\n\n・Claims 1 and 3\n・Citations 1 and 2\n・Notes\nCitations 1 には,レーザエネルギ源 and 11\nCitations 2 には,ダイオード and 2\nCitation 2\n\n・Claim 2\n・Citations 1 to 3\n・Notes\nCitations 3 には,長尺方向と短尺方向で曲率が異なるトロイダルレンズ and 150\nてCitation 3\n\n・Claims 4 to 6\n・Citations 1 to 4\n・Notes\nCitations 4 には,ガイド用可視光半導体レーザ and 10\nら,Citations 1 to 3 におけるレーザ装置にCitations and 4\n\n\n・Claims 7 and 9\n・Citations 1 to 5\n・Notes\nCitations 5 には, and 18\n\n・Claims 8 and 10 to 15\n・Citations 1 to 6\n・Notes\nCitation 6\n\n")
     end
 
     it 'outputs no headers' do
@@ -331,6 +347,21 @@ describe OaTemplater do
     it 'reads ipc, group text check' do
       oa4.parse_ipc
       expect(oa4.props[:ipc_list]).to eql("IPC: G06F13/00\r\n             G06F12/00\r\n")
+    end
+
+    it 'reads ipc, group text check' do
+      oa10.parse_ipc
+      expect(oa10.props[:ipc_list]).to eql("IPC: A61K38/00-38/58\r\n             A61K39/00-39/44\r\n             A61K45/00-45/08\r\n             A61K48/00\r\n                     C07K1/00-19/00\r\n         \tDB Name: CAPLUS/BIOSIS/MEDLINE (STN)  \r\n")
+    end
+
+    it 'reads ipc, group text check' do
+      oa11.parse_ipc
+      expect(oa11.props[:ipc_list]).to eql("IPC: H01Q  1/00-13/28、\r\n                  21/00-25/04\r\n         ")
+    end
+
+    it 'reads ipc, group text check' do
+      oa12.parse_ipc
+      expect(oa12.props[:ipc_list]).to eql("IPC: G06F21/30-21/46\r\n         \tDB Name: ")
     end
   end # context parse_ipc
 end
