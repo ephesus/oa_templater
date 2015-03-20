@@ -78,6 +78,13 @@ module OaTemplater
 
       # set "and Amendments"
       set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? ' and Amendments' : '')
+      
+      # set the reason
+      # default
+      set_prop(:satei_reasons, 'the reasons')
+      r = @data.match(R_SATEI_REASONS)
+      m = r[1].gsub!(/\s+/, '')
+      set_prop(:satei_reasons, m == '理由' ? 'the reasons' : format_headers(m))
     end
 
     def parse_amendments_date
