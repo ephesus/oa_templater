@@ -328,7 +328,9 @@ module OaTemplater
         end
       end
 
-      oa_headers_text.gsub!(/\n\n\n/, "\n").gsub!(/\n\n\n/, "\n")
+      if oa_headers_text.gsub!(/\n\n\n/, "\n")
+        oa_headers_text.gsub!(/\n\n\n/, "\n")
+      end
 
       set_prop(:oa_headers, oa_headers_text)
     end
