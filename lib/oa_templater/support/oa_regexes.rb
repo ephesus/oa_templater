@@ -27,7 +27,7 @@ module OaTemplater
   R_CAPTURE_APPEAL_TARO = /審判長(?:\p{Z}*)特許庁審判官\p{Z}+(\p{L}+?)\p{Z}(((\p{L}+)))/
   R_CAPTURE_APPEAL_NO = /番号\p{Zs}*不服(\p{N}+)\S(\p{Zs}*\p{N}+)/
   R_CAPTURE_APPEAL_DRAFTED = /作成日p{Z}+\p{Z}*(?:平成)*\p{Z}*(\p{N}+)年\p{Z}*(\p{N}+)月\p{Z}*(\p{N}+)/
-  R_CAPTURE_APPEAL_APP_NO = /（特許出願の番号）\p{Z}+（特願(\p{N}+)\S(\p{N}+)）/
+  R_CAPTURE_APPEAL_APP_NO = /（特許出願の番号）\p{Z}+（特願(\p{N}+)\S\p{Z}{0,3}(\p{N}+)）/
   R_CAPTURE_SHIREISHO_CODE = /特許庁長官\p{Zs}+(\p{N}+)\p{Zs}+(\S+).{1,20}特許出願人代理人/m
   R_CAPTURE_SHIREISHO_APP = /特許庁長官\p{Zs}+.+記.+特願(\p{N}+)\S(\p{N}+)/m
 end
