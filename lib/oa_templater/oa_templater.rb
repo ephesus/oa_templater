@@ -185,11 +185,11 @@ module OaTemplater
       capture_the(:final_oa, /＜＜＜＜\p{Z}+最\p{Z}{0,6}後\p{Z}+＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
       set_prop(:final_oa, "\n<<<<    FINAL    >>>>\n \n")
-      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final\r\n\r\n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\r\n")
+      set_prop(:reason_for_final, "Reason for Making the Notice of Reasons for Rejection Final  \n  \n\tThis Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection made necessary by the amendments made in response to the previous Notice of Reasons for Rejection.\r\n\r\n This Notice of Reasons for Rejection only gives notification of the existence of reasons for rejection relating to slight deficiencies in the descriptions that still remain because no notification was previously given of reasons for rejection regarding such slight deficiencies in the descriptions even though these deficiencies were present.\r\n \r\n This Notice of Reasons for Rejection only gives notification of the following reasons for rejection.\r\n\r\n 1. Reasons for rejection for which notification was made necessary by the amendments made in response to the first Notice of Reasons for Rejection (corresponding to \"A\" among the reasons for rejection mentioned above).\r\n 2. Reasons for rejection relating to the fact that, although slight deficiencies in the descriptions existed, since notification was not given of the reasons for rejection relating to those deficiencies, such slight deficiencies in the descriptions still remain (corresponding to \"B\" among the reasons for rejection mentioned above).\r\n")
     end
 
     def parse_see_list
-      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "\r\n(See the List of Citations for the cited publications)\r\n \r\n" : '')
+      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "  \n(See the List of Citations for the cited publications)  \n   \n" : '')
     end
 
     def parse_response_period
@@ -333,7 +333,10 @@ module OaTemplater
         oa_headers_text.gsub!(/\n\n\n/, "\n")
       end
 
-      set_prop(:oa_headers, oa_headers_text)
+      #replace newlines with markdown newlines
+      oa_headers_text.gsub!(/\n/, "\n  \n")
+
+      set_prop(:oa_headers, Sablon.content(:markdown, oa_headers_text))
     end
 
     def parse_citations
@@ -513,7 +516,8 @@ module OaTemplater
 
     def format_headers(tex, options = {})
       defaults = {  replace_toh: false,
-                    ignore_toh: true
+                    ignore_toh: true,
+                    markdown: false
                   }
       options = defaults.merge(options)
 
