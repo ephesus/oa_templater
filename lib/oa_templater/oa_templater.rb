@@ -7,6 +7,7 @@ require 'nkf'
 require 'fileutils'
 require 'date'
 require 'docx_templater'
+require 'sablon'
 require 'yaml'
 require 'csv'
 require 'charlock_holmes'
@@ -447,14 +448,25 @@ module OaTemplater
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
     end
 
-    def finish
-      File.open(@outputfile, 'w+') { |f| f.write(@buffer.string) } if @outputfile
+    def finish(options = {})
+      defaults = {  sablon: false
+                  }
+      options = defaults.merge(options)
+
+      #use sablon or docx_templater
+      if options[:sablon]
+        stemplate = Sablon.template(@template)
+        stemplate.render_to_file @outputfile, @props
+      else
+        File.open(@outputfile, 'w+') { |f| f.write(@buffer.string) } if @outputfile
+      end
     end
 
     def scan(options = {})
       defaults = {  do_headers: false,
                     do_dashes: false,
-                    do_examiner: false
+                    do_examiner: false,
+                    sablon: false
                   }
       options = defaults.merge(options)
 
@@ -482,8 +494,13 @@ module OaTemplater
 
       parse_headers options[:do_headers]
 
-      @buffer = @doc.replace_file_with_content(@template, @props)
-      @buffer
+      #use sablon or docx_templater
+      if options[:sablon]
+      else
+        @doc = DocxTemplater.new
+        @buffer = @doc.replace_file_with_content(@template, @props)
+        @buffer
+      end
     end
 
     private
@@ -622,7 +639,6 @@ module OaTemplater
     end
 
     def init_instance_vars
-      @doc = DocxTemplater.new
       @props = {}
       @scrapes = {}
       @props[:citaton_list] = ''
