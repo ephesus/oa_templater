@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/ephesus/oa_templater'
   s.license     = 'GPLv2+'
   s.add_runtime_dependency 'charlock_holmes', '~> 0'
-  s.add_runtime_dependency 'docx_templater', '~> 0.2', '>= 0.2.3'
+  s.add_runtime_dependency 'sablon', '~> 0'
   s.add_runtime_dependency 'kakasi', '~> 1.0', '>= 1.0.0'
 
 end

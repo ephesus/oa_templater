@@ -1,59 +1,59 @@
 GIT
-  remote: https://github.com/BaseCampOps/docx_templater.git
-  revision: 24bd563de1d6bcb3d81529e925da1d0edaabde07
-  specs:
-    docx_templater (0.2.3)
-      htmlentities (~> 4.3.1)
-      rubyzip (~> 1.1)
-
-GIT
   remote: https://github.com/knu/kakasi_ffi.git
   revision: bb0fa1e290f6cf8f19489b34f75fe8eeef72d076
   specs:
     kakasi (1.0.2)
 
+GIT
+  remote: https://github.com/senny/sablon.git
+  revision: 4848e76b4d1d38a32b4e28dae489a787a0014ef5
+  specs:
+    sablon (0.0.14)
+      nokogiri (>= 1.6.0)
+      redcarpet (>= 3.2)
+      rubyzip (>= 1.1)
+
 PATH
   remote: .
   specs:
-    oa_templater (0.2.72)
+    oa_templater (0.2.73)
       charlock_holmes (~> 0)
-      docx_templater (~> 0.2, >= 0.2.3)
       kakasi (~> 1.0, >= 1.0.0)
+      sablon (~> 0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    byebug (3.5.1)
-      columnize (~> 0.8)
-      debugger-linecache (~> 1.2)
-      slop (~> 3.6)
+    byebug (4.0.5)
+      columnize (= 0.9.0)
     charlock_holmes (0.7.3)
     columnize (0.9.0)
-    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
-    htmlentities (4.3.3)
+    mini_portile (0.6.2)
+    nokogiri (1.6.6.2)
+      mini_portile (~> 0.6.0)
+    redcarpet (3.2.3)
     rspec (3.2.0)
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
       rspec-mocks (~> 3.2.0)
-    rspec-core (3.2.0)
+    rspec-core (3.2.3)
       rspec-support (~> 3.2.0)
-    rspec-expectations (3.2.0)
+    rspec-expectations (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-mocks (3.2.0)
+    rspec-mocks (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-support (3.2.1)
+    rspec-support (3.2.2)
     rubyzip (1.1.7)
-    slop (3.6.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   byebug
-  docx_templater!
   kakasi!
   oa_templater!
   rspec
+  sablon!

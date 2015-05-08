@@ -6,7 +6,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'oa_templater')
 require 'nkf'
 require 'fileutils'
 require 'date'
-require 'docx_templater'
 require 'yaml'
 
 require 'oa_templater/oa_templater' unless defined? OaTemplater::OA
