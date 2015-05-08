@@ -429,15 +429,16 @@ module OaTemplater
 
     def parse_articles
       data, count = @data, 1
-      articles_text = ''
+      articles_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:b/><w:noProof/></w:rPr><w:t>Cited Articles:</w:t><w:tab/><w:tab/><w:tab/>'
       reasons_for_text = ''
+      original_length = articles_text.length
 
       @reasons.each do |_r, a|
         if data =~ a['japanese']
           # skip tab on first reason
-          articles_text += "\t\t\t" unless articles_text.length < 1
+          articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
           # only add short text once (36 shows up multiple times)
-          articles_text += a['short'] + "\n" unless /#{a["short"]}/ =~ articles_text
+          articles_text += "<w:t>#{a['short']}</w:t><w:br/>" unless /#{a["short"]}/ =~ articles_text
 
           reasons_for_text += "#{count}.\t#{a['english']}\n"
 
@@ -448,7 +449,9 @@ module OaTemplater
       # remove number if only 1 article listed
       reasons_for_text.gsub!(/^1./, '') if count == 2
 
-      set_prop(:articles, articles_text)
+      #close the paragraph
+      reasons_for_text += '</w:r></w:p>'
+      set_prop(:articles, Sablon.content(:word_ml, articles_text))
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
     end
 
