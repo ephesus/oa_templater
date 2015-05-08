@@ -2,11 +2,11 @@
 # encoding: UTF-8
 
 require 'support/oa_regexes'
+require 'support/formats'
 
 require 'nkf'
 require 'fileutils'
 require 'date'
-require 'docx_templater'
 require 'sablon'
 require 'yaml'
 require 'csv'
@@ -361,9 +361,9 @@ module OaTemplater
               if m = tex.match(a['japanese'])
                 if /United States/ =~ a['english']
                   # citation is in English (no prime needed)
-                  citation_text += "#{count}.  #{convert_pub_no(m, a['english'])}\n"
+                  citation_text += sprintf(CIT_SIMPLE, count, convert_pub_no(m, a['english']))
                 else # normal
-                  citation_text += "#{count}.  #{convert_pub_no(m, a['english'])}\n[#{count}'.  ]\n"
+                  citation_text += sprintf(CIT_WITH_PRIME, count, convert_pub_no(m, a['english']), count)
                 end
               end
             end # cits
@@ -382,7 +382,7 @@ module OaTemplater
         end # catch
       end # if citations found
 
-      set_prop(:citation_list, citation_text)
+      set_prop(:citation_list, Sablon.content(:word_ml, citation_text))
     end
 
     def pad_spaces (tex)
@@ -429,16 +429,17 @@ module OaTemplater
 
     def parse_articles
       data, count = @data, 1
-      articles_text = reasons_for_text = ''
+      articles_text = ''
+      reasons_for_text = ''
 
       @reasons.each do |_r, a|
         if data =~ a['japanese']
           # skip tab on first reason
-          articles_text += "\t" unless articles_text.length < 1
+          articles_text += "\t\t\t" unless articles_text.length < 1
           # only add short text once (36 shows up multiple times)
           articles_text += a['short'] + "\n" unless /#{a["short"]}/ =~ articles_text
 
-          reasons_for_text += "#{count}.\t#{a['english']}\n\n"
+          reasons_for_text += "#{count}.\t#{a['english']}\n"
 
           count += 1
         end
@@ -452,24 +453,19 @@ module OaTemplater
     end
 
     def finish(options = {})
-      defaults = {  sablon: false
+      defaults = {  sablon: true
                   }
       options = defaults.merge(options)
 
-      #use sablon or docx_templater
-      if options[:sablon]
-        stemplate = Sablon.template(@template)
-        stemplate.render_to_file @outputfile, @props
-      else
-        File.open(@outputfile, 'w+') { |f| f.write(@buffer.string) } if @outputfile
-      end
+      stemplate = Sablon.template(@template)
+      stemplate.render_to_file @outputfile, @props
     end
 
     def scan(options = {})
       defaults = {  do_headers: false,
                     do_dashes: false,
                     do_examiner: false,
-                    sablon: false
+                    sablon: true
                   }
       options = defaults.merge(options)
 
@@ -496,14 +492,6 @@ module OaTemplater
       parse_shireisho_code
 
       parse_headers options[:do_headers]
-
-      #use sablon or docx_templater
-      if options[:sablon]
-      else
-        @doc = DocxTemplater.new
-        @buffer = @doc.replace_file_with_content(@template, @props)
-        @buffer
-      end
     end
 
     private
