@@ -450,7 +450,8 @@ module OaTemplater
       reasons_for_text.gsub!(/^1./, '') if count == 2
 
       #close the paragraph
-      reasons_for_text += '</w:r></w:p>'
+      articles_text += '</w:r></w:p>'
+
       set_prop(:articles, Sablon.content(:word_ml, articles_text))
       set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
     end
