@@ -376,7 +376,7 @@ module OaTemplater
 
               # if no match was found, just copy the japanese, skip first character (it's a period from the regex)
               # should have the correct number from the actual source (not from count variable)
-              citation_text += "#{tex}\n"
+              citation_text += sprintf(CIT_MISS, tex)
             end
           end # each line
         end # catch
