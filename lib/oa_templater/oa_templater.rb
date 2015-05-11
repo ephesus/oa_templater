@@ -333,10 +333,10 @@ module OaTemplater
         oa_headers_text.gsub!(/\n\n\n/, "\n")
       end
 
-      #replace newlines with markdown newlines
-      oa_headers_text.gsub!(/\n/, "\n  \n")
+      #replace newlines with word_ml newlines
+      oa_headers_text.gsub!(/\n/, STOPSTARTP) 
 
-      set_prop(:oa_headers, Sablon.content(:markdown, oa_headers_text))
+      set_prop(:oa_headers, Sablon.content(:word_ml, sprintf(HEADERS_FMT, oa_headers_text)))
     end
 
     def parse_citations
