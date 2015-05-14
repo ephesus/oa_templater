@@ -189,7 +189,7 @@ module OaTemplater
     end
 
     def parse_see_list
-      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "  \n(See the List of Citations for the cited publications)  \n   \n" : '')
+      set_prop(:see_list, /引用文献等については引用文献等一覧参照/ =~ @data ? "  \n(See the List of Citations for the cited publications)  \n" : '')
     end
 
     def parse_response_period
