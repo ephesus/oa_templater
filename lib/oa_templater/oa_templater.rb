@@ -184,7 +184,7 @@ module OaTemplater
       set_prop(:reason_for_final, '')
       capture_the(:final_oa, /＜＜＜＜\p{Z}+最\p{Z}{0,6}後\p{Z}+＞＞＞＞/)
       return if @scrapes[:final_oa].nil?
-      set_prop(:final_oa, "<<<<    FINAL    >>>>\n")
+      set_prop(:final_oa, "\n<<<<    FINAL    >>>>\n")
       set_prop(:reason_for_final, Sablon.content(:word_ml, FINALWML))
     end
 
@@ -434,7 +434,7 @@ module OaTemplater
     def parse_articles
       data, count = @data, 1
       articles_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:b/><w:noProof/></w:rPr><w:t>Cited Articles:</w:t><w:tab/><w:tab/><w:tab/>'
-      reasons_for_text = ''
+      reasons_for_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:noProof/></w:rPr>'
       original_length = articles_text.length
 
       @reasons.each do |_r, a|
@@ -444,20 +444,25 @@ module OaTemplater
           # only add short text once (36 shows up multiple times)
           articles_text += "<w:t>#{a['short']}</w:t><w:br/>" unless /#{a["short"]}/ =~ articles_text
 
-          reasons_for_text += "#{count}.\t#{a['english']}\n"
+          reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/>"
 
           count += 1
         end
       end
 
       # remove number if only 1 article listed
-      reasons_for_text.gsub!(/^1./, '') if count == 2
+      reasons_for_text.gsub!(/<w:t>1.<\/w:t><w:tab\/><w:t>/, '<w:tab\/><w:t>') if count == 2
+
+      #remove final word_ml newline
+      reasons_for_text.gsub!(/<w:br\/>$/, '')
+      articles_text.gsub!(/<w:br\/>$/, '')
 
       #close the paragraph
       articles_text += '</w:r></w:p>'
+      reasons_for_text += '</w:r></w:p>'
 
       set_prop(:articles, Sablon.content(:word_ml, articles_text))
-      set_prop(:reasons_for, reasons_for_text.length > 3 ? reasons_for_text[0..-2] : reasons_for_text)
+      set_prop(:reasons_for, Sablon.content(:word_ml, reasons_for_text))
     end
 
     def finish(options = {})
