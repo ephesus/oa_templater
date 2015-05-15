@@ -444,7 +444,7 @@ module OaTemplater
           # only add short text once (36 shows up multiple times)
           articles_text += "<w:t>#{a['short']}</w:t><w:br/>" unless /#{a["short"]}/ =~ articles_text
 
-          reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/>"
+          reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/><w:br/>"
 
           count += 1
         end
@@ -454,7 +454,7 @@ module OaTemplater
       reasons_for_text.gsub!(/<w:t>1.<\/w:t><w:tab\/><w:t>/, '<w:tab\/><w:t>') if count == 2
 
       #remove final word_ml newline
-      reasons_for_text.gsub!(/<w:br\/>$/, '')
+      reasons_for_text.gsub!(/<w:br\/><w:br\/>$/, '')
       articles_text.gsub!(/<w:br\/>$/, '')
 
       #close the paragraph
