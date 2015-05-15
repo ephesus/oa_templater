@@ -78,7 +78,7 @@ module OaTemplater
       set_prop(:satei_previous_oa, format_date('%04u/%02u/%02u', @scrapes[:satei_previous_oa]))
 
       # set "and Amendments"
-      set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? ' and Amendments' : '')
+      set_prop(:and_amendments, R_AND_AMENDMENTS =~ @data ? 'Remarks and Amendments' : 'Remarks')
       
       # set the reason
       # default
