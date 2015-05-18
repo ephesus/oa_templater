@@ -380,11 +380,15 @@ module OaTemplater
 
               # if no match was found, just copy the japanese, skip first character (it's a period from the regex)
               # should have the correct number from the actual source (not from count variable)
+              # REMOVE brackets to avoid misformed XML, thoguh.
+              tex.gsub!(/<|>/, '') if tex
               citation_text += sprintf(CIT_MISS, tex)
             end
           end # each line
         end # catch
       end # if citations found
+
+      citation_text.gsub!('<URL:', 'URL')
 
       set_prop(:citation_list, Sablon.content(:word_ml, citation_text))
     end

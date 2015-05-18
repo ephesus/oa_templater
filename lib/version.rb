@@ -1,3 +1,3 @@
 module OaTemplater
-  VERSION = '0.3.00'
+  VERSION = '0.3.01'
 end
