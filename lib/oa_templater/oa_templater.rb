@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+
 # encoding: UTF-8
 
 require 'support/oa_regexes'
@@ -335,6 +335,7 @@ module OaTemplater
 
       #replace newlines with word_ml newlines
       oa_headers_text.gsub!(/\n/, STOPSTARTP) 
+      oa_headers_text.encode!(:xml => :text) if oa_headers_text
 
       set_prop(:oa_headers, Sablon.content(:word_ml, sprintf(HEADERS_FMT, oa_headers_text)))
     end
@@ -386,8 +387,6 @@ module OaTemplater
           end # each line
         end # catch
       end # if citations found
-
-      citation_text.gsub!('<URL:', 'URL')
 
       set_prop(:citation_list, Sablon.content(:word_ml, citation_text))
     end
