@@ -323,6 +323,7 @@ module OaTemplater
         # 備考
         data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
+          tex.encode!(:xml => :text) if tex
 
           # added a match against unnecessary IPC lines
           oa_headers_text += format_headers(tex) + "\n" unless tex =~ /調査/ || /先行技術文/ =~ tex || /注意/ =~ tex and !(/検討しましたが/ =~ tex)
@@ -335,7 +336,6 @@ module OaTemplater
 
       #replace newlines with word_ml newlines
       oa_headers_text.gsub!(/\n/, STOPSTARTP) 
-      oa_headers_text.encode!(:xml => :text) if oa_headers_text
 
       set_prop(:oa_headers, Sablon.content(:word_ml, sprintf(HEADERS_FMT, oa_headers_text)))
     end
