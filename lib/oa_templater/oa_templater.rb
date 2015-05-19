@@ -441,10 +441,12 @@ module OaTemplater
 
       @reasons.each do |_r, a|
         if data =~ a['japanese']
-          # skip tab on first reason
-          articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
-          # only add short text once (36 shows up multiple times)
-          articles_text += "<w:t>#{a['short']}</w:t><w:br/>" unless /#{a["short"]}/ =~ articles_text
+          unless /#{a["short"]}/ =~ articles_text
+            # skip tab on first reason
+            articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
+            # only add short text once (36 shows up multiple times)
+            articles_text += "<w:t>#{a['short']}</w:t><w:br/>" 
+          end
 
           reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/><w:br/>"
 
