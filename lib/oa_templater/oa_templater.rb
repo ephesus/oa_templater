@@ -276,21 +276,18 @@ module OaTemplater
             end
           end # cits.each
 
-          # increase count
-          count += 1
-
           unless match
             # if no match, change 全角 to 半角
             line = NKF.nkf('-m0Z1 -w', line)
 
             # first line of non-match
             if oldmatch and (!match)
-              line.gsub(/^/, "#{count}. ")
+              line.gsub!(/^/, "#{count}. ")
             end
 
             # >1st line of non-match
             if (!oldmatch) and (!match)
-              count -= 1
+              count -= 1 #decrease count to that it stays the same after being increased below
               #remove newlines since it's probably a big english title
               ipc_reference_text.gsub!(/\r\n$/,'')
             end
@@ -299,6 +296,9 @@ module OaTemplater
 
             ipc_reference_text += line
           end
+
+          # increase count
+          count += 1
 
           oldmatch = match
         end
