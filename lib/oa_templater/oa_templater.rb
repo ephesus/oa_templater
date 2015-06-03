@@ -582,6 +582,11 @@ module OaTemplater
       tex.gsub!('のいずれか', 'any one of')
       tex.gsub!('及び', ',')
       tex.gsub!('および', ',')
+      tex.gsub!('進歩性', 'Inventive Step')
+      tex.gsub!('実施可能要件', 'Enablement Requirements')
+      tex.gsub!('明確性', 'Clarity')
+      tex.gsub!('拡大先願', 'Expansion of Application')
+      tex.gsub!('新規性', 'Novelty')
 
       # match 備考:
       tex.gsub!('備考', 'Notes')
