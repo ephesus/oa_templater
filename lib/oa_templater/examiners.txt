@@ -180,7 +180,7 @@ Masatoshi ISHIDA, 石田 昌敏
 Masatoshi NINOYU, 二之湯 正俊
 Masayoshi OMACHI, 大町 真義
 Masuji YAMADA, 山田 倍司
-Mchihiro KUBO, 久保 道弘
+Michihiro KUBO, 久保 道弘
 Michiaki KOGURE, 小暮 道明
 Michiru MIURA, 三浦 みちる
 Mika KIKUCHI, 菊池 美香
@@ -189,7 +189,6 @@ Minako MITSUMOTO, 光本 美奈子
 Minoru MATSUNAGA, 松永 稔
 Minoru TAGA, 多賀 実
 Mitsuharu YANO, 矢野 光治
-Mitsuhiro MURATA, 村田 充裕
 Mitsuhiro MURATA, 村田 充裕　
 Mitsuru AKAMA, 赤間 充
 Mitsuyo AOYAGI, 青柳 光代
