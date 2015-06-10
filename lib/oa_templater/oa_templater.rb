@@ -282,7 +282,7 @@ module OaTemplater
 
             # first line of non-match
             if oldmatch and (!match)
-              line.gsub!(/^/, "#{count}. ")
+              line.gsub!(/^/, "#{count}. ") if line.length > 4
             end
 
             # >1st line of non-match
