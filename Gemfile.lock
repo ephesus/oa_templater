@@ -57,3 +57,6 @@ DEPENDENCIES
   oa_templater!
   rspec
   sablon!
+
+BUNDLED WITH
+   1.10.4
