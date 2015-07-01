@@ -33,6 +33,9 @@ japanese_patent:
 france_pa: 
   english: 'French Patent Application, Publication No. CIT_NO'
   japanese: !ruby/regexp '/\s*仏国特許出願公開第(\p{N}+?)号/'
+ger_pat: 
+  english: 'German Patent No. CIT_NO'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*独国特許発明第(\p{N}+?)号/'
 ger_pa: 
   english: 'German Patent Application, Publication No. CIT_NO'
   japanese: !ruby/regexp '/(?:\.|．|\p{Z}|）)\s*独国特許出願公開第(\p{N}+?)号/'
