@@ -588,6 +588,8 @@ module OaTemplater
       tex.gsub!('明確性', 'Clarity')
       tex.gsub!('拡大先願', 'Expansion of Application')
       tex.gsub!('新規性', 'Novelty')
+      tex.gsub!('特許法第', 'Japanese Patent Law, Article ')
+      tex.gsub!('条第', ', Paragraph ')
 
       # match 備考:
       tex.gsub!('備考', 'Notes')
