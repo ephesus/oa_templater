@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/lib/version'
 Gem::Specification.new do |s|
   s.name        = 'oa_templater'
   s.version     = OaTemplater::VERSION
-  s.date        = '2015-02-23'
+  s.date        = Date.today.to_s
   s.summary     = 'JPO OA Templater'
   s.description = "A gem to parse out and \"translate\" elements of Japanese Patent Office Actions"
   s.authors     = ['James Rubingh']
