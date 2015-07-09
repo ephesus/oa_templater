@@ -4,3 +4,6 @@ rvm:
     - 2.2.2
     - ree
 script: bundle exec rspec spec
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y kakasi
