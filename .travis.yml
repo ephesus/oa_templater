@@ -6,4 +6,4 @@ rvm:
 script: bundle exec rspec spec
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y kakasi
+  - sudo apt-get install -y kakasi libkakasi2-dev libkakasi2 kakasi-dic
