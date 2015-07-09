@@ -19,7 +19,7 @@ PATH
     oa_templater (0.3.01)
       charlock_holmes (~> 0)
       kakasi (~> 1.0, >= 1.0.0)
-      sablon (~> 0)
+      sablon
 
 GEM
   remote: https://rubygems.org/
