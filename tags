@@ -1,0 +1,62 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Bignum	lib/oa_templater.rb	/^class Bignum$/;"	c
+Fixnum	lib/oa_templater.rb	/^class Fixnum$/;"	c
+Float	lib/oa_templater.rb	/^class Float$/;"	c
+OA	lib/oa_templater/oa_templater.rb	/^  class OA$/;"	c	class:OaTemplater
+OaTemplater	lib/oa_templater.rb	/^module OaTemplater$/;"	m
+OaTemplater	lib/oa_templater/oa_templater.rb	/^module OaTemplater$/;"	m
+OaTemplater	lib/oa_templater/support/oa_regexes.rb	/^module OaTemplater$/;"	m
+OaTemplater	lib/version.rb	/^module OaTemplater$/;"	m
+capture_the	lib/oa_templater/oa_templater.rb	/^    def capture_the(prop, reg, offset = 0)$/;"	f	class:OaTemplater.OA
+commas	lib/oa_templater.rb	/^  def commas$/;"	f	class:Bignum
+commas	lib/oa_templater.rb	/^  def commas$/;"	f	class:Fixnum
+commas	lib/oa_templater.rb	/^  def commas$/;"	f	class:Float
+convert_possible_heisei	lib/oa_templater/oa_templater.rb	/^    def convert_possible_heisei(hs, first, last)$/;"	f	class:OaTemplater.OA
+convert_pub_no	lib/oa_templater/oa_templater.rb	/^    def convert_pub_no(m, eng)$/;"	f	class:OaTemplater.OA
+eurostyle	lib/oa_templater.rb	/^  def eurostyle$/;"	f	class:Bignum
+eurostyle	lib/oa_templater.rb	/^  def eurostyle$/;"	f	class:Fixnum
+eurostyle	lib/oa_templater.rb	/^  def eurostyle$/;"	f	class:Float
+finish	lib/oa_templater/oa_templater.rb	/^    def finish(options = {})$/;"	f	class:OaTemplater.OA
+format_date	lib/oa_templater/oa_templater.rb	/^    def format_date(format, date)$/;"	f	class:OaTemplater.OA
+format_headers	lib/oa_templater/oa_templater.rb	/^    def format_headers(tex, options = {})$/;"	f	class:OaTemplater.OA
+format_number_listing	lib/oa_templater/oa_templater.rb	/^    def format_number_listing(tex)$/;"	f	class:OaTemplater.OA
+init_instance_vars	lib/oa_templater/oa_templater.rb	/^    def init_instance_vars$/;"	f	class:OaTemplater.OA
+initialize	lib/oa_templater/oa_templater.rb	/^    def initialize(sourcefile, casenumber = '11110')$/;"	f	class:OaTemplater.OA
+pad_spaces	lib/oa_templater/oa_templater.rb	/^    def pad_spaces (tex)$/;"	f	class:OaTemplater.OA
+parse_amendments_date	lib/oa_templater/oa_templater.rb	/^    def parse_amendments_date$/;"	f	class:OaTemplater.OA
+parse_app_no	lib/oa_templater/oa_templater.rb	/^    def parse_app_no$/;"	f	class:OaTemplater.OA
+parse_appeal_drafted	lib/oa_templater/oa_templater.rb	/^    def parse_appeal_drafted$/;"	f	class:OaTemplater.OA
+parse_appeal_examiner	lib/oa_templater/oa_templater.rb	/^    def parse_appeal_examiner$/;"	f	class:OaTemplater.OA
+parse_appeal_no	lib/oa_templater/oa_templater.rb	/^    def parse_appeal_no$/;"	f	class:OaTemplater.OA
+parse_articles	lib/oa_templater/oa_templater.rb	/^    def parse_articles$/;"	f	class:OaTemplater.OA
+parse_citations	lib/oa_templater/oa_templater.rb	/^    def parse_citations$/;"	f	class:OaTemplater.OA
+parse_currently_known	lib/oa_templater/oa_templater.rb	/^    def parse_currently_known$/;"	f	class:OaTemplater.OA
+parse_drafted	lib/oa_templater/oa_templater.rb	/^    def parse_drafted$/;"	f	class:OaTemplater.OA
+parse_examiner	lib/oa_templater/oa_templater.rb	/^    def parse_examiner(do_examiner = false)$/;"	f	class:OaTemplater.OA
+parse_final_oa	lib/oa_templater/oa_templater.rb	/^    def parse_final_oa$/;"	f	class:OaTemplater.OA
+parse_headers	lib/oa_templater/oa_templater.rb	/^    def parse_headers(dh)$/;"	f	class:OaTemplater.OA
+parse_ipc	lib/oa_templater/oa_templater.rb	/^    def parse_ipc$/;"	f	class:OaTemplater.OA
+parse_ipc_references	lib/oa_templater/oa_templater.rb	/^    def parse_ipc_references(ipc_list_end)$/;"	f	class:OaTemplater.OA
+parse_mailing_date	lib/oa_templater/oa_templater.rb	/^    def parse_mailing_date(do_dashes = false)$/;"	f	class:OaTemplater.OA
+parse_note_to_applicant	lib/oa_templater/oa_templater.rb	/^    def parse_note_to_applicant$/;"	f	class:OaTemplater.OA
+parse_our_lawyer	lib/oa_templater/oa_templater.rb	/^    def parse_our_lawyer$/;"	f	class:OaTemplater.OA
+parse_response_period	lib/oa_templater/oa_templater.rb	/^    def parse_response_period$/;"	f	class:OaTemplater.OA
+parse_retroactive	lib/oa_templater/oa_templater.rb	/^    def parse_retroactive$/;"	f	class:OaTemplater.OA
+parse_satei_previous_oa	lib/oa_templater/oa_templater.rb	/^    def parse_satei_previous_oa$/;"	f	class:OaTemplater.OA
+parse_see_list	lib/oa_templater/oa_templater.rb	/^    def parse_see_list$/;"	f	class:OaTemplater.OA
+parse_shireisho_app	lib/oa_templater/oa_templater.rb	/^    def parse_shireisho_app$/;"	f	class:OaTemplater.OA
+parse_shireisho_code	lib/oa_templater/oa_templater.rb	/^    def parse_shireisho_code$/;"	f	class:OaTemplater.OA
+pick_template	lib/oa_templater/oa_templater.rb	/^    def pick_template$/;"	f	class:OaTemplater.OA
+read_oa_data	lib/oa_templater/oa_templater.rb	/^    def read_oa_data$/;"	f	class:OaTemplater.OA
+replace_common_phrases	lib/oa_templater/oa_templater.rb	/^    def replace_common_phrases(tex, options = {})$/;"	f	class:OaTemplater.OA
+scan	lib/oa_templater/oa_templater.rb	/^    def scan(options = {})$/;"	f	class:OaTemplater.OA
+set_prop	lib/oa_templater/oa_templater.rb	/^    def set_prop(prop, value)$/;"	f	class:OaTemplater.OA
+set_reasons_file	lib/oa_templater/oa_templater.rb	/^    def set_reasons_file(r = File.join(File.dirname(__FILE__), 'reasons.yml'))$/;"	f	class:OaTemplater.OA
+set_templates	lib/oa_templater/oa_templater.rb	/^    def set_templates(options = {})$/;"	f	class:OaTemplater.OA
+squish!	lib/oa_templater/oa_templater.rb	/^    def squish!(t)$/;"	f	class:OaTemplater.OA
+swap_words	lib/oa_templater/oa_templater.rb	/^    def swap_words(tex)$/;"	f	class:OaTemplater.OA
