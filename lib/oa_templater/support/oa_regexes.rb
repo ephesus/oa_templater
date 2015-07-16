@@ -1,4 +1,5 @@
 module OaTemplater
+  R_ARTICLE_SECTION = /この出願は、次の理由.*?(?:(?:\p{Z}記\p{Z})|備考)/m
   R_HEADER_SEPARATOR_DETECT = /\p{N}(\s*:|\s*：|\s*\/|\s*／|\s*・| |　)(?:請求項|引用文献|理由|先願|実施例)/ #spaces last
   R_HEADER_SEPARATOR = /\s*:|\s*：|\s*・|\/|／| |　/
   R_HEADER_TYPES = /(

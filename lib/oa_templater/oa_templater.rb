@@ -435,23 +435,38 @@ module OaTemplater
     end
 
     def parse_articles
-      data, count = @data, 1
+      count = 1
       articles_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:b/><w:noProof/></w:rPr><w:t>Cited Articles:</w:t><w:tab/><w:tab/><w:tab/>'
       reasons_for_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:noProof/></w:rPr>'
       original_length = articles_text.length
+      m = @data.match(R_ARTICLE_SECTION)
+      target_data = m ? m[0] : @data
 
-      @reasons.each do |_r, a|
-        if data =~ a['japanese']
-          unless /#{a["short"]}/ =~ articles_text
-            # skip tab on first reason
-            articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
-            # only add short text once (36 shows up multiple times)
-            articles_text += "<w:t>#{a['short']}</w:t><w:br/>" 
+      line_num = 0
+
+      while (line = target_data.lines[line_num..line_num+1]) do
+        if line
+          line = line.join.gsub(/\r\n|\r|\n/,'')
+        else
+          break
+        end
+
+        line_num += 1
+
+        @reasons.each do |_r, a|
+          if line =~ a['japanese']
+            unless /#{a["short"]}/ =~ articles_text
+              # skip tab on first reason
+              articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
+              # only add short text once (36 shows up multiple times)
+              articles_text += "<w:t>#{a['short']}</w:t><w:br/>" 
+            end
+
+            unless /#{Regexp.quote(a["english"])}/m =~ reasons_for_text 
+              reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/><w:br/>"
+              count += 1
+            end
           end
-
-          reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/><w:br/>"
-
-          count += 1
         end
       end
 
