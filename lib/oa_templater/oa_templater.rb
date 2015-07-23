@@ -547,8 +547,8 @@ module OaTemplater
 
       # try to handle when Examiners put multiple groups separated by : or /
       # on the same line like 引用文献１：請求項１，２/ bla
+      formatted_text = ''
       if R_HEADER_SEPARATOR_DETECT =~ tex
-        formatted_text = ''
         # super fragile. If regex is changed
         # demarker = NKF.nkf('-m0Z1 -w', '#{$&[1,1]} ')
         demarker = NKF.nkf('-m0Z1 -w', "#{$1} ") #$~ is last matchdata
@@ -557,7 +557,19 @@ module OaTemplater
           formatted_text += format_headers(section, options)
         end
       else
-        formatted_text = "#{replace_common_phrases(tex, options)}"
+        if /#{R_HEADER_REASONS}/x =~ tex
+          #handle special Reason lines
+          if /及び|、/ =~ tex
+            tex.split(/及び|、/).each do |section|
+              formatted_text += ' and ' unless formatted_text.length == 0
+              formatted_text += "#{replace_common_phrases(section, options)}"
+            end
+          else
+            formatted_text = "#{replace_common_phrases(tex, options)}"
+          end
+        else
+          formatted_text = "#{replace_common_phrases(tex, options)}"
+        end
       end
 
       formatted_text
@@ -601,6 +613,7 @@ module OaTemplater
       tex.gsub!('および', ',')
       tex.gsub!('進歩性', 'Inventive Step')
       tex.gsub!('実施可能要件', 'Enablement Requirements')
+      tex.gsub!('発明の単一性', 'Unity of Invention')
       tex.gsub!('明確性', 'Clarity')
       tex.gsub!('拡大先願', 'Expansion of Application')
       tex.gsub!('新規性', 'Novelty')
