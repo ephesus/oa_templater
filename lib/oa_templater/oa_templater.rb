@@ -445,8 +445,9 @@ module OaTemplater
       line_num = 0
 
       while (line = target_data.lines[line_num..line_num+1]) do
+        #last line+1 will return nil
         if line
-          line = line.join.gsub(/\r\n|\r|\n/,'')
+          line = line.join.gsub(/\r\n|\r|\n/,'') #merge 2 lines and remove newline
         else
           break
         end
