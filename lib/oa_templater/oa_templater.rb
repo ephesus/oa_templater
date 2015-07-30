@@ -562,10 +562,10 @@ module OaTemplater
           if /及び|、/ =~ tex
             tex.split(/及び|、/).each do |section|
               formatted_text += ' and ' unless formatted_text.length == 0
-              formatted_text += "#{replace_common_phrases(section, options)}"
+              formatted_text += "#{replace_common_phrases(section, options)}".gsub('(', ' (') #add space before quote
             end
           else
-            formatted_text = "#{replace_common_phrases(tex, options)}"
+            formatted_text = "#{replace_common_phrases(tex, options)}".gsub('(', ' (') #add space before quote
           end
         else
           formatted_text = "#{replace_common_phrases(tex, options)}"
