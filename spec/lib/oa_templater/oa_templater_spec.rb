@@ -75,17 +75,17 @@ describe OaTemplater do
 
   context '#mailing_date' do
     it 'captures mailing_date' do
-      oa1.parse_mailing_date(1)
+      oa1.parse_mailing_date('.')
       expect(oa1.props[:mailing_date]).to eql('2014/04/15')
     end
 
     it 'sets the outputfile' do
-      oa1.parse_mailing_date(1)
+      oa1.parse_mailing_date('.')
       expect(oa1.outputfile).to eql('ALP66666.拒絶理由.20140415.docx') 
     end
 
     it 'sets the outputfile' do
-      oa5.parse_mailing_date(1)
+      oa5.parse_mailing_date('.')
       expect(oa5.outputfile).to eql('ALP66666.拒絶理由.20140520.docx')
     end
   end

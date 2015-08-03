@@ -60,18 +60,10 @@ module OaTemplater
       set_prop(:drafted, format_date('%04u/%02u/%02u', @scrapes[:drafted]))
     end
 
-    def parse_mailing_date(do_dashes = 0)
+    def parse_mailing_date(demarker = '-')
       @outputfile = 'oa_template'
       capture_the(:mailing_date, R_CAPTURE_MAILING_DATE)
       return if @scrapes[:mailing_date].nil?
-
-      if do_dashes == 1
-        demarker = '.'
-      elsif do_dashes == 2
-        demarker = '_'
-      else
-        demarker = '-'
-      end
 
       @outputfile = "ALP#{@casenumber}#{demarker}#{@template_name}#{demarker}#{format_date('%04u%02u%02u', @scrapes[:mailing_date])}.docx"
 
