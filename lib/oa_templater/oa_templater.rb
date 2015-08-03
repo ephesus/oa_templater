@@ -392,7 +392,7 @@ module OaTemplater
 
     def pad_spaces (tex)
       # add space after period, add space after comma, remove year kanji, reduce multiple spaces to 1
-      tex.gsub!(/\./, '. ')
+      tex.gsub!(/\.(\p{N})/, '. \1')
       tex.gsub!(/\,/, ', ')
       tex.gsub!(/年/, '')
       tex.gsub!(/p{Z}*/, ' ')
