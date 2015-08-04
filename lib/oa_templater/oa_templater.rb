@@ -341,8 +341,7 @@ module OaTemplater
     def mistaken_header?(tex)
       val = false
       val = true if tex =~ /調査/ || /先行技術文/ =~ tex || /注意/ =~ tex and !(/検討しましたが/ =~ tex)
-      val = true if (tex =~ /段/) || (tex =~/段/) || (tex =~ /に/) || (tex =~ /は/) || (tex =~ /が/)
-      val = true if (tex =~ /\p{Hiragana}/)
+      val = true if (tex =~ /段/) || (tex =~/段/) || (tex =~ /には/) || (tex =~ /が/)
       val
     end
 
