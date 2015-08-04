@@ -443,7 +443,10 @@ module OaTemplater
       count = 1
       articles_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:b/><w:noProof/></w:rPr><w:t>Cited Articles:</w:t><w:tab/><w:tab/><w:tab/>'
       reasons_for_text = '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:noProof/></w:rPr>'
+
+      found_articles = []
       original_length = articles_text.length
+
       m = @data.match(R_ARTICLE_SECTION)
       target_data = m ? m[0] : @data
 
@@ -461,12 +464,7 @@ module OaTemplater
 
         @reasons.each do |_r, a|
           if line =~ a['japanese']
-            unless /#{a["short"]}/ =~ articles_text
-              # skip tab on first reason
-              articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
-              # only add short text once (36 shows up multiple times)
-              articles_text += "<w:t>#{a['short']}</w:t><w:br/>" 
-            end
+            found_articles << a['short']
 
             unless /#{Regexp.quote(a["english"])}/m =~ reasons_for_text 
               reasons_for_text += "<w:t>#{count}.</w:t><w:tab/><w:t>#{a['english']}</w:t><w:br/><w:br/>"
@@ -474,6 +472,13 @@ module OaTemplater
             end
           end
         end
+      end
+
+      found_articles.uniq.sort.each do |a|
+        # skip tab on first reason
+        articles_text += "<w:tab/><w:tab/><w:tab/><w:tab/><w:tab/>" unless articles_text.length == original_length
+        # only add short text once (36 shows up multiple times)
+        articles_text += "<w:t>#{a}</w:t><w:br/>" 
       end
 
       # remove number if only 1 article listed
