@@ -1,4 +1,3 @@
-
 # encoding: UTF-8
 
 require 'support/oa_regexes'
@@ -325,7 +324,7 @@ module OaTemplater
           tex.encode!(:xml => :text) if tex
 
           # added a match against unnecessary IPC lines
-          oa_headers_text += format_headers(tex) + "\n" unless tex =~ /調査/ || /先行技術文/ =~ tex || /注意/ =~ tex and !(/検討しましたが/ =~ tex)
+          oa_headers_text += format_headers(tex) + "\n" unless mistaken_header?(tex)
         end
       end
 
@@ -337,6 +336,14 @@ module OaTemplater
       oa_headers_text.gsub!(/\n/, STOPSTARTP) 
 
       set_prop(:oa_headers, Sablon.content(:word_ml, sprintf(HEADERS_FMT, oa_headers_text)))
+    end
+
+    def mistaken_header?(tex)
+      val = false
+      val = true if tex =~ /調査/ || /先行技術文/ =~ tex || /注意/ =~ tex and !(/検討しましたが/ =~ tex)
+      val = true if (tex =~ /段/) || (tex =~/段/) || (tex =~ /に/) || (tex =~ /は/) || (tex =~ /が/)
+      val = true if (tex =~ /\p{Hiragana}/)
+      val
     end
 
     def parse_citations
@@ -553,21 +560,36 @@ module OaTemplater
         demarker = NKF.nkf('-m0Z1 -w', "#{$1} ") #$~ is last matchdata
         tex.split(R_HEADER_SEPARATOR).each do |section|
           formatted_text += demarker unless formatted_text.length == 0
-          formatted_text += format_headers(section, options)
+
+          if section =~ R_JPL_DETECT
+            formatted_text += handle_jpl(section)
+          else
+            #no jpl to handle
+            formatted_text += format_headers(section, options)
+          end
+
         end
       else
         if /#{R_HEADER_REASONS}/x =~ tex
           #handle special Reason lines
           if /及び|、/ =~ tex
             tex.split(/及び|、/).each do |section|
+              section = format_number_listing(section)
+
               formatted_text += ' and ' unless formatted_text.length == 0
-              formatted_text += "#{replace_common_phrases(section, options)}".gsub('(', ' (') #add space before quote
+              formatted_text += "#{replace_common_phrases(section, options)}".gsub('(', ' (') #add space before parenthasis
             end
           else
             formatted_text = "#{replace_common_phrases(tex, options)}".gsub('(', ' (') #add space before quote
           end
         else
+          if tex =~ R_JPL_DETECT
+            formatted_text += handle_jpl(tex)
           formatted_text = "#{replace_common_phrases(tex, options)}"
+          else
+            #no jpl to handle
+          formatted_text = "#{replace_common_phrases(tex, options)}"
+          end
         end
       end
 
@@ -577,7 +599,7 @@ module OaTemplater
     def replace_common_phrases(tex, options = {})
       defaults = {  replace_toh: false,
                     ignore_toh: true
-                  }
+      }
       options = defaults.merge(options)
 
       tex = NKF.nkf('-m0Z1 -w', tex)
@@ -588,7 +610,20 @@ module OaTemplater
       # strip abberant \r characters
       tex.gsub!("\r", '')
 
-      format_number_listing(tex)
+      tex = format_number_listing(tex)
+    end
+
+    def handle_jpl(tex)
+      #comes in looking something like "（Ａ）理由１（特許法２９条１項３号）"
+      jpl = ''
+      tex = NKF.nkf('-m0Z1 -w', tex)
+      jpl = tex.gsub(/(.*)特許法(\p{N}+)条(\p{N}+)項(?:(\p{N}+.*)号)*/){ 
+        format_headers($1) + "Japanese Patent Law, Article #{$2}, Paragraph #{$3}, Number #{$4}"
+      }
+      jpl.gsub!(/, Number\p{Z}+\)$/, ')') #if it doesnt have a \4
+      jpl.gsub!(')R', ') R')
+      jpl.gsub!(/(\p{N})\(/, '\1 (')
+      jpl
     end
 
     #do actual swapping of japanese and english words
@@ -605,6 +640,7 @@ module OaTemplater
       tex.gsub!('-', 'to')
       tex.gsub!('～', 'to')
       tex.gsub!('乃至', 'to')
+      tex.gsub!('理由', 'Reason')
       tex.gsub!('ないし', 'to')
       tex.gsub!('について', '')
       tex.gsub!('のいずれか', 'any one of')
@@ -616,8 +652,6 @@ module OaTemplater
       tex.gsub!('明確性', 'Clarity')
       tex.gsub!('拡大先願', 'Expansion of Application')
       tex.gsub!('新規性', 'Novelty')
-      tex.gsub!('特許法第', 'Japanese Patent Law, Article ')
-      tex.gsub!('条第', ', Paragraph ')
 
       # match 備考:
       tex.gsub!('備考', 'Notes')
@@ -626,6 +660,7 @@ module OaTemplater
     end
 
     # formats a number listing assuming only one list in the string
+    # one level up, format_headers breaks single lines into a plurality of these
     # ex: 請求項３，１７，３１，４５
     def format_number_listing(tex)
       tex = NKF.nkf('-m0Z1 -w', tex)
