@@ -332,6 +332,7 @@ module OaTemplater
         oa_headers_text.gsub!(/\n\n\n/, "\n")
       end
 
+      oa_headers_text.encode!(:xml => :text)
       #replace newlines with word_ml newlines
       oa_headers_text.gsub!(/\n/, STOPSTARTP) 
 
