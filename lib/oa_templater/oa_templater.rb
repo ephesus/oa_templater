@@ -584,15 +584,20 @@ module OaTemplater
               formatted_text += "#{replace_common_phrases(section, options)}".gsub('(', ' (') #add space before parenthasis
             end
           else
-            formatted_text = "#{replace_common_phrases(tex, options)}".gsub('(', ' (') #add space before quote
+            if tex =~ R_JPL_DETECT
+              formatted_text += handle_jpl(tex)
+            else
+              #no jpl to handle
+              formatted_text = "#{replace_common_phrases(tex, options)}"
+            end
           end
         else
           if tex =~ R_JPL_DETECT
+            #note : it cant get here
             formatted_text += handle_jpl(tex)
-          formatted_text = "#{replace_common_phrases(tex, options)}"
           else
             #no jpl to handle
-          formatted_text = "#{replace_common_phrases(tex, options)}"
+            formatted_text = "#{replace_common_phrases(tex, options)}"
           end
         end
       end
@@ -621,11 +626,12 @@ module OaTemplater
       #comes in looking something like "（Ａ）理由１（特許法２９条１項３号）"
       jpl = ''
       tex = NKF.nkf('-m0Z1 -w', tex)
-      jpl = tex.gsub(/(.*)特許法(\p{N}+)条(\p{N}+)項(?:(\p{N}+.*)号)*/){ 
-        format_headers($1) + "Japanese Patent Law, Article #{$2}, Paragraph #{$3}, Number #{$4}"
+      jpl = tex.gsub(/(.*)特許法第?(\p{N}+)条第?(\p{N}+)項(?:第?(\p{N}+.*)号)*/){ 
+        replace_common_phrases(format_number_listing($1)) + "Japanese Patent Law, Article #{$2}, Paragraph #{$3}, Number #{$4}"
       }
-      jpl.gsub!(/, Number\p{Z}+\)$/, ')') #if it doesnt have a \4
+      jpl.gsub!(/, Number\p{Z}+\)(?:について)?$/, ')') #if it doesnt have a \4
       jpl.gsub!(')R', ') R')
+      jpl.gsub!('Reason(', 'Reason (')
       jpl.gsub!(/(\p{N})\(/, '\1 (')
       jpl
     end
