@@ -592,6 +592,7 @@ module OaTemplater
               formatted_text = "#{replace_common_phrases(tex, options)}"
             end
           end
+          formatted_text.gsub!('Reason(', 'Reason (')
         else
           if tex =~ R_JPL_DETECT
             #note : it cant get here
