@@ -593,6 +593,7 @@ module OaTemplater
             end
           end
           formatted_text.gsub!('Reason(', 'Reason (')
+          formatted_text.gsub!(/(\p{N})\(/, '\1 (')
         else
           if tex =~ R_JPL_DETECT
             #note : it cant get here
