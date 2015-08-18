@@ -77,8 +77,8 @@ Atsuhide SATO, 佐藤 当秀
 Atsuhiro FURUTA, 古田 敦浩
 Atsuhiro NISHIJIMA, 西島 篤宏
 Atsuki KOKUBO, 小久保 敦規
-Atsuo HASEGAWA, 長谷川 篤男
 Atsunori KOKUBO, 小久保 敦規
+Atsuo HASEGAWA, 長谷川 篤男
 Atsushi HIRUTA, 蛭田 敦
 Atsushi ICHIKAWA, 市川 篤
 Atsushi ISHINO, 石野 忠志
@@ -246,7 +246,6 @@ Hiroaki HORII, 堀井 啓明
 Hiroaki ISHIZAKA, 石坂 博明
 Hiroaki SUZUKI, 鈴木 洋昭
 Hiroe JOBOJI, 上坊寺 宏枝
-Hiroe SAITO, 齋藤 浩兵
 Hirofumi AOKI, 青木 博文
 Hirofumi MURAMORI, 村守 宏文
 Hirofumi SEKI, 関 博文
@@ -1573,7 +1572,6 @@ Tsuneo KOIKE, 小池 堂夫
 Tsutomi NISHINA, 仁科 努
 Tsutomu  KOSUGO, 越河 勉
 Tsutomu IWAMOTO, 岩本 勉
-Tsutomu TOKIWA, 常盤 務
 Tsutomu KOSUGO, 越河 勉
 Tsutomu NAKAGI, 中木 努
 Tsutomu NAKAI, 中木 努
