@@ -319,6 +319,9 @@ module OaTemplater
         # 引用文献１
         # 引用文献：１
         # 備考
+
+
+
         data.scan(R_HEADER_TYPES) do |result|
           tex = result[0]
           tex.encode!(:xml => :text) if tex
@@ -664,6 +667,7 @@ module OaTemplater
       tex.gsub!('発明の単一性', 'Unity of Invention')
       tex.gsub!('明確性', 'Clarity')
       tex.gsub!('拡大先願', 'Expansion of Application')
+      tex.gsub!('サポート要件', 'Support Requirements')
       tex.gsub!('新規性', 'Novelty')
 
       # match 備考:
