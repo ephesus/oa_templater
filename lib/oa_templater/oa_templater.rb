@@ -24,6 +24,7 @@ module OaTemplater
       set_templates
       init_instance_vars
       set_reasons_file
+      read_templatable_file #chunks of text for swapping
     end
 
     # require template files, not included because of NDA
@@ -43,6 +44,11 @@ module OaTemplater
     # require reason file, not included because of NDA
     def set_reasons_file(r = File.join(File.dirname(__FILE__), 'reasons.yml'))
       @reasons = YAML.load_file(r)
+    end
+
+    # A bunch of set phrases that can be swapped out
+    def read_templatable_file(r = File.join(File.dirname(__FILE__), 'support', 'templatable.yml'))
+      @templatables = YAML.load_file(r)
     end
 
     def parse_appeal_drafted
@@ -287,7 +293,7 @@ module OaTemplater
             if (!oldmatch) and (!match)
               count -= 1 #decrease count to that it stays the same after being increased below
               #remove newlines since it's probably a big english title
-              ipc_reference_text.gsub!(/\r\n$/,'')
+              ipc_reference_text.gsub!(/\r\n$/,"\n") if line.length > 4
             end
 
             line = pad_spaces(line)
@@ -310,7 +316,7 @@ module OaTemplater
 
       if dh and m = @data.match(/(?:理\p{Z}{0,2}由.*^\p{Z}*先行技術文献調査結果の記録|理\p{Z}{0,2}由.*^－－－－－－－－－－－|\p{Z}記\p{Z}.*引\p{Z}?用\p{Z}?文\p{Z}?献\p{Z}?等\p{Z}?一\p{Z}?覧|\p{Z}記\p{Z}.*^－－－－－－－－－－－|理\p{Z}{0,2}由.*引\p{Z}?用\p{Z}?文\p{Z}?献\p{Z}?等\p{Z}?一\p{Z}?覧|理\p{Z}{0,2}由.*最後の拒絶理由通知とする理由|検討しましたが.*|\p{Z}理\p{Z}{0,2}由.*この通知に関するお問い合わせがございましたら)/mi)
         # gsub to strip HTML tags from japanese text
-        data = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
+        tdata = @data[m.begin(0)..m.end(0)].gsub(%r{</?[^>]+?>}, '').gsub("\r\n", "\n")
         #
         # matches stuff like this
         # （理由１）
@@ -320,26 +326,54 @@ module OaTemplater
         # 引用文献：１
         # 備考
 
+        line = ''
+        until tdata.nil? do
+          m = tdata.match(/^(.*?)\n/)
+          break if m.nil?
+
+          line = m[1] =~ /^\s*$/ ? "\n" : m[1] #save a newline if it's empty
+
+          tdata = tdata[m.end(0)..-1]
+
+          if res = check_for_templatable_portion(line, tdata)
+            tex, tdata = res
+            # added a match against unnecessary IPC lines
+            oa_headers_text += tex
+          elsif m = line.match(R_HEADER_TYPES)
+            tex = m[1]
+
+            oa_headers_text += tex =~ /^\s*$/ ? "\n" : format_headers(tex) + "\n" unless mistaken_header?(tex)
+          end
+        end
+
+        3.times { oa_headers_text.gsub!("\n\n\n", "\n") }
+
+        oa_headers_text.encode!(:xml => :text)
+        #replace OAOA_TEMPLATER_TAB with word_ml newline + tab
+        oa_headers_text.gsub!(/OAOA_TEMPLATER_TAB/, STOPSTARTTAB) 
+        #replace newlines with word_ml newlines
+        oa_headers_text.gsub!(/\n/, STOPSTARTP) 
 
 
-        data.scan(R_HEADER_TYPES) do |result|
-          tex = result[0]
-          tex.encode!(:xml => :text) if tex
+        set_prop(:oa_headers, Sablon.content(:word_ml, sprintf(HEADERS_FMT, oa_headers_text)))
+      end
+    end
 
-          # added a match against unnecessary IPC lines
-          oa_headers_text += format_headers(tex) + "\n" unless mistaken_header?(tex)
+    def check_for_templatable_portion(line, tdata)
+      odata = [line, tdata].join.gsub("\n", '') #unshift the first line back to tdata
+      @templatables.each do |t, a|
+        if line =~ a['detect'] 
+          if m = odata.match(a['full'])
+            #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
+            tdata = tdata[m.end(0) - line.length .. -1]  
+            tex = odata[m.begin(0)..m.end(0)]
+            tex.gsub!(a['full'], a['text'])
+            return  [tex, tdata]
+          end
         end
       end
 
-      if oa_headers_text.gsub!(/\n\n\n/, "\n")
-        oa_headers_text.gsub!(/\n\n\n/, "\n")
-      end
-
-      oa_headers_text.encode!(:xml => :text)
-      #replace newlines with word_ml newlines
-      oa_headers_text.gsub!(/\n/, STOPSTARTP) 
-
-      set_prop(:oa_headers, Sablon.content(:word_ml, sprintf(HEADERS_FMT, oa_headers_text)))
+      return nil
     end
 
     def mistaken_header?(tex)
