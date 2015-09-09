@@ -367,14 +367,19 @@ module OaTemplater
             #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
             tdata = tdata[m.end(0) - line.length .. -1]  
             tex = odata[m.begin(0)..m.end(0)]
-            #tex.gsub!(a['full'], a['text'])
-            #tex.gsub!(a['full']) do |match|
-            #  if match =~ /^(?:請求項\p{N})/
-            #    match
-            #  else
-            #    a['text']
-            #  end
-            #end
+            tex.gsub!(a['full']) do 
+              res = a['text']
+              Regexp.last_match.captures.each_with_index do |match, i|
+                if match =~ /^請求項[\p{N},～、－及びおよ]+$/
+                  res = res.gsub(/\\#{i+1}/, format_headers(match))
+                elsif match =~ /^請求項[\p{N},～、－及びおよ]+に係る発明$/
+                  res = res.gsub(/\\#{i+1}/, format_headers(match.gsub('に係る発明','').gsub('請求項', 'the invention according to 請求項')))
+                else
+                  res = res.gsub(/\\#{i+1}/, match)
+                end
+              end
+              res
+            end
             return  [tex, tdata]
           end
         end
