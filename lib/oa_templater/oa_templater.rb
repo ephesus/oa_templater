@@ -367,7 +367,14 @@ module OaTemplater
             #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
             tdata = tdata[m.end(0) - line.length .. -1]  
             tex = odata[m.begin(0)..m.end(0)]
-            tex.gsub!(a['full'], a['text'])
+            #tex.gsub!(a['full'], a['text'])
+            #tex.gsub!(a['full']) do |match|
+            #  if match =~ /^(?:請求項\p{N})/
+            #    match
+            #  else
+            #    a['text']
+            #  end
+            #end
             return  [tex, tdata]
           end
         end
@@ -750,6 +757,7 @@ module OaTemplater
           tex.gsub!('Citation', 'Citations')
           tex.gsub!('Embodiment', 'Embodiments')
           tex.gsub!('Reason', 'Reasons')
+          tex.gsub!('invention', 'inventions')
           tex.gsub!('Prior Application', 'Prior Applications')
         end
         tex.gsub!('to', ' to ')
