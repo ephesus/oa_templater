@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: https://github.com/senny/sablon.git
-  revision: 2bf7449011a9a8b37e4ee3cebf7e26c88553d8d2
+  revision: 910867ecf0d84f2b04d2dc5acb3315bfcdeb4c17
   specs:
-    sablon (0.0.14)
+    sablon (0.0.16)
       nokogiri (>= 1.6.0)
       redcarpet (>= 3.2)
       rubyzip (>= 1.1)
@@ -16,7 +16,7 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.5.2)
+    oa_templater (0.5.3)
       charlock_holmes (~> 0)
       kakasi (~> 1.0, >= 1.0.0)
       sablon
@@ -24,10 +24,8 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    byebug (5.0.0)
-      columnize (= 0.9.0)
+    byebug (6.0.2)
     charlock_holmes (0.7.3)
-    columnize (0.9.0)
     diff-lcs (1.2.5)
     mini_portile (0.6.2)
     nokogiri (1.6.6.2)

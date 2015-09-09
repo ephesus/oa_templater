@@ -7,7 +7,7 @@ productbyprocess0a:
 productbyprocess0:
   detect: !ruby/regexp '/請求項[\p{N},～、－及びおよ]+に係る発明は、「?/'
   full: !ruby/regexp '/(請求項[\p{N},～、－及びおよ]+に係る発明)は、「?([^」]+?)」?(?:（物の発明）|という、?物の発明)であるが、当該請求項には、「(.+?)」という、その物の製造方法が記載されているものと認められる。/m'
-  text: 'OAOA_TEMPLATER_TABAlthough \1 is a “\2” (product invention), the claim is deemed to recite a process for manufacturing the product of “\3”.'
+  text: 'OAOA_TEMPLATER_TABAlthough \1 a “\2” (product invention), the claim is deemed to recite a process for manufacturing the product of “\3”.'
 productbyprocess1:
   detect: !ruby/regexp '/ここで、物の発明に係る請求項にその物の製造方法が/'
   full: !ruby/regexp '/ここで、物の発明に係る.{150,180}相当である.{15,45}しかしながら、不可能・非実際的事情が.{25,65}は見いだせない。/m'

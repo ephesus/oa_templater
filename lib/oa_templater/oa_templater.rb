@@ -373,7 +373,7 @@ module OaTemplater
                 if match =~ /^請求項[\p{N},～、－及びおよ]+$/
                   res = res.gsub(/\\#{i+1}/, format_headers(match))
                 elsif match =~ /^請求項[\p{N},～、－及びおよ]+に係る発明$/
-                  res = res.gsub(/\\#{i+1}/, format_headers(match.gsub('に係る発明','').gsub('請求項', 'the invention according to 請求項')))
+                  res = res.gsub(/\\#{i+1}/, format_invention_according_to(match))
                 else
                   res = res.gsub(/\\#{i+1}/, match)
                 end
@@ -386,6 +386,11 @@ module OaTemplater
       end
 
       return nil
+    end
+
+    def format_invention_according_to(str)
+      res = format_headers(str.gsub('に係る発明','').gsub('請求項', 'the invention according to 請求項'))
+      res += res =~ /inventions/ ? ' are' : ' is'
     end
 
     def mistaken_header?(tex)
