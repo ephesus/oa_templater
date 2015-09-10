@@ -1,5 +1,5 @@
 module OaTemplater
-  R_JPL_DETECT = /理\p{Z}?由.*\p{N}?(?:（|\()[^\)）\nに引性]*(?:）|\))+?/
+  R_JPL_DETECT = /理\p{Z}?由.*\p{N}?(?:（|\()[^\)）\nに可サ拡引性]*(?:）|\))+?/
   R_HEADER_SEPARATOR_DETECT = /\p{N}(?:（|\()*[^\)）\n]*(?:）|\))*(\s*:|\s*：|\s*\/|\s*／|\s*・| |　)(?:請求項|引用文献|理由|先願|実施例)/
   R_ARTICLE_SECTION = /この出願は、次の理由.*?(?:(?:\p{Z}記\p{Z})|備考)/m
   R_HEADER_SEPARATOR = /\s*:|\s*：|\s*・|\/|／| |　/
