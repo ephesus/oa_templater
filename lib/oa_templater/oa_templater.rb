@@ -365,7 +365,8 @@ module OaTemplater
         if line =~ a['detect'] 
           if m = odata.match(a['full'])
             #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
-            tdata = tdata[m.end(0) - line.length .. -1]  
+            offset = m.end(0) >= line.length ? m.end(0) - line.length : 0
+            tdata = tdata[offset .. -1]  
             tex = odata[m.begin(0)..m.end(0)]
             tex.gsub!(a['full']) do 
               res = a['text']
@@ -375,7 +376,7 @@ module OaTemplater
                 elsif match =~ /^請求項[\p{N},～、－及びおよ]+に係る発明$/
                   res = res.gsub(/\\#{i+1}/, format_invention_according_to(match))
                 else
-                  res = res.gsub(/\\#{i+1}/, match)
+                  res = res.gsub(/\\#{i+1}/, NKF.nkf('-m0Z1 -w', match))
                 end
               end
               res
