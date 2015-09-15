@@ -88,7 +88,7 @@ module OaTemplater
       # default
       set_prop(:satei_reasons, 'the reasons')
       r = @data.match(R_SATEI_REASONS)
-      m = r[1].gsub!(/\s+/, '')
+      m = r.nil? ? '理由' : r[1].gsub!(/\s+/, '')
       set_prop(:satei_reasons, m == '理由' ? 'the reasons' : format_headers(m))
     end
 
@@ -365,8 +365,8 @@ module OaTemplater
         if line =~ a['detect'] 
           if m = odata.match(a['full'])
             #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
-            offset = m.end(0) >= line.length ? m.end(0) - line.length : 0
-            tdata = tdata[offset .. -1]  
+            tdata = [line, "\n", tdata].join
+            tdata = tdata[m.end(0) .. -1]  
             tex = odata[m.begin(0)..m.end(0)]
             tex.gsub!(a['full']) do 
               res = a['text']
