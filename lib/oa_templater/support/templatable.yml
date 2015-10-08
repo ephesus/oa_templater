@@ -36,5 +36,8 @@ subjectsdueto3:
   detect: !ruby/regexp '/そして、?請求項[\p{N},～、－及びおよ]+/'
   full: !ruby/regexp '/そして、(請求項[\p{N},～、－及びおよ]+に係る発明)は、特別な技術的特徴に基づいて審査対象とされた発明を審査した結果、実質的.{40,70}まとめて審査を行うことが効率的であるといえる他の事情も無い。/'
   text: "Furthermore, \\1 are not inventions for which an examination can be carried out without substantive additional prior art search and judgment, as a result of the examination of the inventions determined to be targets of the examination based on the special technical feature, and no other conditions exist wherein carrying out a collective examination of the inventions can be said to be efficient."
-
+bis159:
+  detect: !ruby/regexp '/この補正は同法第１７条の２第６項/'
+  full: !ruby/regexp '/この補正は同法第１７条の２第６項において準用する同法第１２６条第７項.{0,20}第１５９条第１項.{0,20}第５３条第１項の規定により却下されるべき...../'
+  text: "OAOA_TEMPLATER_TABTherefore, the Amendments violate the provisions of Article 126, Paragraph 7 as applied mutatis mutandis to Article 17bis, Paragraph 6.  Therefore, the Amendments should be rejected under the provisions of Article 53, Paragraph 1 as applied mutatis mutandis to Article 159, Paragraph 1."
 
