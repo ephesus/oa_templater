@@ -1,5 +1,8 @@
 OA Templater
 ==============
+
+[![Build Status](https://travis-ci.org/ephesus/oa_templater.svg?branch=master)](https://travis-ci.org/ephesus/oa_templater)
+
 Helps me with translations at work.
 Pulls out relevant data from an Office Action from the Japanese Patent Office.
 
