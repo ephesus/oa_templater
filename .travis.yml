@@ -1,9 +1,7 @@
 language: ruby
 rvm:
-    - 2.1.0
-    - 2.2.2
-    - ree
-script: bundle exec rspec spec
+  - 2.2.2
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y kakasi libkakasi2-dev libkakasi2 kakasi-dic
+  - sudo apt-get install -y libxml2-dev kakasi kakasi-dev libtext-kakasi-perl
+
