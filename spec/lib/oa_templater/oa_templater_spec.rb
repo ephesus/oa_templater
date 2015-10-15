@@ -242,14 +242,6 @@ describe OaTemplater do
     end
   end
 
-  context '#articles' do
-    it 'captures articles' do
-      oa1.set_reasons_file(File.expand_path('~') + "/code/easy_oa/config/templates/reasons.yml")
-      oa1.parse_articles
-      expect(oa1.props[:articles]).to eql(Sablon.content(:word_ml, '<w:p><w:pPr><w:kinsoku w:val="0"/><w:spacing w:line="360" w:lineRule="atLeast"/></w:pPr><w:r w:rsidR="006A661C"><w:rPr><w:b/><w:noProof/></w:rPr><w:t>Cited Articles:</w:t><w:tab/><w:tab/><w:tab/><w:t>Article 29, Paragraph 1</w:t><w:br/><w:tab/><w:tab/><w:tab/><w:tab/><w:tab/><w:t>Article 29, Paragraph 2</w:t></w:r></w:p>'))
-    end
-  end
-
   context '#currently_known' do
     it 'captures no currently_known' do
       oa1.parse_currently_known
