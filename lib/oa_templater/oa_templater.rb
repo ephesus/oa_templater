@@ -421,6 +421,7 @@ module OaTemplater
 
             @cits.each do |_n, a|
               if m = tex.match(a['japanese'])
+                count = 1 if count == 0
                 if /United States/ =~ a['english']
                   # citation is in English (no prime needed)
                   citation_text += sprintf(CIT_SIMPLE, count, convert_pub_no(m, a['english']))
