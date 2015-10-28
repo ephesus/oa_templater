@@ -706,6 +706,7 @@ module OaTemplater
       tex.gsub!('及び', ',')
       tex.gsub!('および', ',')
       tex.gsub!('進歩性', 'Inventive Step')
+      tex.gsub!('新規事項', 'New Matter')
       tex.gsub!('実施可能要件', 'Enablement Requirements')
       tex.gsub!('産業上の利用可能性', 'Industrial Applicability')
       tex.gsub!('発明の単一性', 'Unity of Invention')
