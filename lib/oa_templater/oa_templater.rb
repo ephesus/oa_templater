@@ -422,8 +422,8 @@ module OaTemplater
             @cits.each do |_n, a|
               if m = tex.match(a['japanese'])
                 count = 1 if count == 0
-                wellknown_text = tex =~ /（周知技術を示す文献）/ ? ' (Publication showing well-known technology)' : ''
-                newlyadd_text = tex =~ /(追加した文献)/ ? ' (Newly added publication)' : ''
+                wellknown_text = tex =~ /周知技術/ ? ' (Publication showing well-known technology)' : ''
+                newlyadd_text = ((tex =~ /追加した文献）/) || (tex =~ /新たに引/)) ? ' (Newly added publication)' : ''
                 if /United States/ =~ a['english']
                   # citation is in English (no prime needed)
                   citation_text += sprintf(CIT_SIMPLE, count, convert_pub_no(m, a['english']) + newlyadd_text + wellknown_text)
