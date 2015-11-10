@@ -16,7 +16,7 @@ GIT
 PATH
   remote: .
   specs:
-    oa_templater (0.5.7)
+    oa_templater (0.5.9)
       charlock_holmes (~> 0)
       kakasi (~> 1.0, >= 1.0.0)
       sablon

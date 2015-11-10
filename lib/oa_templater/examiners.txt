@@ -1237,8 +1237,8 @@ Shin NAGAOKA, 長岡 真
 Shingo BABA, 馬場 進吾
 Shingo TSUBOUCHI, 壺内 信吾
 Shingo TSUCHIYA, 土谷 慎吾
-Shingo Tsubouchi, 壷内 信吾
-Shingo Tsubouchi, 壺内 信吾
+Shingo TSUBOUCHI, 壷内 信吾
+Shingo TSUBOUCHI, 壺内 信吾
 Shinichi HASEGAWA, 長谷川 真一
 Shinichi KAWAGUCHI, 川口 真一
 Shinichi NAGAI, 長井 真一
