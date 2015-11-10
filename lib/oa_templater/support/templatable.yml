@@ -1,9 +1,9 @@
 # encoding: UTF-8
 
 productbyprocess0a:
-  detect: !ruby/regexp '/＜物の発明に係る請求項にそ造方法/'
-  full: !ruby/regexp '/求項にその物の製造方法が記載されている場合の明確性要件について/m'
-  text: 'OAOA_TEMPLATER_TAB&lt;Clarity requirements in the case where a claim for an invention of a product recites a process for manufacturing that product&gt;'
+  detect: !ruby/regexp '/＜物の発明に係る請求項にそ.{1,40}造方法/'
+  full: !ruby/regexp '/求項にその物の製造方法が記載されている場合.{1,10}件について＞/m'
+  text: 'OAOA_TEMPLATER_TAB<Clarity requirements in the case where a claim for an invention of a product recites a process for manufacturing that product>'
 productbyprocess0:
   detect: !ruby/regexp '/請求項[\p{N},～、－及びおよ]+に係る発明は、「?/'
   full: !ruby/regexp '/(請求項[\p{N},～、－及びおよ]+に係る発明)は、「?([^」]+?)」?(?:（物の発明）|という、?物の発明)であるが、当該請求項には、「(.+?)」という、その物の製造方法が記載されているものと認められる。/m'
@@ -14,7 +14,7 @@ productbyprocess1:
   text: "OAOA_TEMPLATER_TABWhen a claim for an invention of a product recites a process for manufacturing that product, it is reasonable to consider that a recitation of such a claim can be said to meet the requirement of describing an “invention which is clear” as stipulated in Japanese Patent Law, Article 36, Paragraph 6, Number 2 only when there are circumstances under which it was impossible or generally not practical (“impossible/impractical circumstances”) to directly specify the product in question by means of the structure or characteristics thereof at the time of filing (Supreme Court Judgments of 2015/06/05 (year/month/day), 2012 (ju) No. 1204 and No. 2658).OAOA_TEMPLATER_TABHowever, since the specification, etc. has no disclosures regarding impossible/impractical circumstances and the applicant did not assert/prove that there are such circumstances, no reasons could be found for judging that such circumstances did exist.\n"
 productbyprocess2:
   detect: !ruby/regexp '/＜補正等の示唆＞/'
-  full: !ruby/regexp '/補正等の示唆.{110,150}ア．該当する.{50,100}意見書等による主張・立証/m'
+  full: !ruby/regexp '/補正等の示唆.{110,150}イ．.{50,100}意見書等による主張・立証/m'
   text: "OAOA_TEMPLATER_TAB< Examiner’s Suggestions for Amendments >OAOA_TEMPLATER_TABThe applicant/appellant should refer to the following means which may be considered when attempting to overcome the aforementioned reason for rejection.\n A. Canceling the claim in question\n B. Making an amendment which changes the invention in the claim in question to an invention of a process for producing a product\n C. Making an amendment which changes the invention in the claim in question to an invention of a product which does not include a manufacturing process\n D. Asserting/proving that there are impossible/impractical circumstances via the submission of Remarks"
 productbyprocess3:
   detect: !ruby/regexp '/補正の際は、出願当初の明細書、特許請求の/'
