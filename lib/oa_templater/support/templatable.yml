@@ -41,3 +41,8 @@ bis159:
   full: !ruby/regexp '/この補正は同法第１７条の２第６項において準用する同法第１２６条第７項.{0,20}第１５９条第１項.{0,20}第５３条第１項の規定により却下されるべき...../'
   text: "OAOA_TEMPLATER_TABTherefore, the Amendments violate the provisions of Article 126, Paragraph 7 as applied mutatis mutandis to Article 17bis, Paragraph 6.  Therefore, the Amendments should be rejected under the provisions of Article 53, Paragraph 1 as applied mutatis mutandis to Article 159, Paragraph 1."
 
+bis172531:
+  detect: !ruby/regexp '/補正は同法第１７条の２第６/'
+  full: !ruby/regexp '/補正は同法第１７条の２第６.{10,150}同法第５３条第１.{10,100}決定.../'
+  text: "OAOA_TEMPLATER_TABAccordingly, the Amendments are not within the scope disclosed in the translation, etc., and since these amendments are in violation of the provisions of Japanese Patent Law, Article 17bis, Paragraph 3, a decision is made as stated in the above conclusion pursuant to Japanese Patent Law, Article 53, Paragraph 1."
+
