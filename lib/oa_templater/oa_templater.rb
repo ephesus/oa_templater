@@ -362,8 +362,8 @@ module OaTemplater
     def check_for_templatable_portion(line, tdata)
       odata = [line, tdata].join.gsub("\n", '') #unshift the first line back to tdata
       @templatables.each do |t, a|
-        if line =~ a['detect'] 
-          if m = odata.match(a['full'])
+        if line =~ /^.{0,4}#{a['detect']}/
+          if m = odata.match(/^.{0,4}#{a['full']}/)
             #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
             tdata = [line, "\n", tdata].join
             tdata = tdata[m.end(0) .. -1]  
