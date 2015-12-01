@@ -701,7 +701,7 @@ module OaTemplater
     def swap_words(tex)
       tex.gsub!('、', ',')
       tex.gsub!('，', ',')
-      tex.gsub!('拡大先願', 'Expansion of Application')
+      tex.gsub!('拡大先願', 'Lack of Novelty Due to Secret Prior Art')
       tex.gsub!('ないし', 'to')
       tex.gsub!('について', '')
       tex.gsub!('のいずれか', 'any one of')
