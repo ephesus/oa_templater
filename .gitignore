@@ -3,9 +3,9 @@ dd*
 satei*
 ALP*
 ~*
-**/*.swp
-**/*.patch
-**/*lnk
-./*docx
-*.gem
+*.swp
+*.patch
+*lnk
+/*docx
+/*.gem
 
