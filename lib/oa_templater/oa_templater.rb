@@ -394,10 +394,12 @@ module OaTemplater
       res += res =~ /inventions/ ? ' are' : ' is'
     end
 
+    #is_mistaken_header?
     def mistaken_header?(tex)
       val = false
       val = true if tex =~ /調査/ || /先行技術文/ =~ tex || /注意/ =~ tex and !(/検討しましたが/ =~ tex)
       val = true if (tex =~ /段/) || (tex =~/段/) || (tex =~ /には/) || (tex =~ /が/)
+      val = true if (tex =~ /係る発明/) || (tex =~/明らか/)
       val
     end
 
