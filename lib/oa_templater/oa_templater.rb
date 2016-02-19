@@ -713,6 +713,7 @@ module OaTemplater
       tex.gsub!('新規事項', 'New Matter')
       tex.gsub!('実施可能要件', 'Enablement Requirements')
       tex.gsub!('産業上の利用可能性', 'Industrial Applicability')
+      tex.gsub!('特許請求の範囲の記載に関する委任省令要件', 'Ministerial Ordinance Requirements Regarding Claims')
       tex.gsub!('発明の単一性', 'Unity of Invention')
       tex.gsub!('明確性', 'Clarity')
       tex.gsub!('サポート要件', 'Support Requirements')
