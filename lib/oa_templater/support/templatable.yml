@@ -2,7 +2,7 @@
 
 productbyprocess0a:
   detect: !ruby/regexp '/＜物の発明に係る請求項にそ.{1,40}造方法/'
-  full: !ruby/regexp '/求項にその物の製造方法が記載されている場合.{1,10}件について＞/m'
+  full: !ruby/regexp '/＜物の発明に係る請求項にその物の製造方法が記載されている場合の明確性要件について＞/m'
   text: 'OAOA_TEMPLATER_TAB<Clarity requirements in the case where a claim for an invention of a product recites a process for manufacturing that product>'
 productbyprocess0:
   detect: !ruby/regexp '/請求項[\p{N},～、－及びおよ]+に係る発明は、「?/'

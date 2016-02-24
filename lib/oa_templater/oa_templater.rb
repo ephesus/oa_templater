@@ -346,7 +346,9 @@ module OaTemplater
           end
         end
 
-        3.times { oa_headers_text.gsub!("\n\n\n", "\n") }
+        oa_headers_text.gsub!("\n\n\n", "\n")
+        oa_headers_text.gsub!("\n\n\n", "\n")
+        oa_headers_text.gsub!("\n\n\n", "\n")
 
         oa_headers_text.encode!(:xml => :text)
         #replace OAOA_TEMPLATER_TAB with word_ml newline + tab
@@ -366,7 +368,7 @@ module OaTemplater
           if m = odata.match(/^.{0,2}#{a['full']}/)
             #this starting offset should actually be m.end(0) - line.length + (the number of newline characters up to the match)
             tdata = [line, "\n", tdata].join
-            tdata = tdata[m.end(0) .. -1]  
+            tdata = tdata[(m.end(0)+1) .. -1]  
             tex = odata[m.begin(0)..m.end(0)]
             tex.gsub!(a['full']) do 
               res = a['text']
