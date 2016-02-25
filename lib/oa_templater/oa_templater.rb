@@ -428,7 +428,7 @@ module OaTemplater
                 count = 1 if count == 0
                 wellknown_text = tex =~ /周知技術/ ? ' (Publication showing well-known technology)' : ''
                 newlyadd_text = ((tex =~ /追加した文献）/) || (tex =~ /新たに引/)) ? ' (Newly added publication)' : ''
-                if /United States/ =~ a['english']
+                if (/United States/ =~ a['english']) or (/United Kingdom/ =~ a['english'])
                   # citation is in English (no prime needed)
                   citation_text += sprintf(CIT_SIMPLE, count, convert_pub_no(m, a['english']) + newlyadd_text + wellknown_text)
                 else # normal
