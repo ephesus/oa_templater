@@ -637,8 +637,8 @@ module OaTemplater
 
         end
       else
+        #handle special Reason lines
         if /#{R_HEADER_REASONS}/x =~ tex
-          #handle special Reason lines
           if /#{R_OYOBI}/ =~ tex
             tex.split(/#{R_OYOBI}/).each do |section|
               section = format_number_listing(section)
