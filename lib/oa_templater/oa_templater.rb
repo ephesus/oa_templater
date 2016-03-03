@@ -801,7 +801,7 @@ module OaTemplater
     def init_instance_vars
       @props = {}
       @scrapes = {}
-      @props[:citaton_list] = ''
+      set_prop(:citaton_list, '')
       capture_the(:mailing_no, /発送番号\p{Z}+(\S+)/)
       capture_the(:ref_no, /整理番号\p{Z}+(\S+)/)
       capture_the(:ipc_list, /調査した分野$/)
@@ -828,7 +828,7 @@ module OaTemplater
     def capture_the(prop, reg, offset = 0)
       matches = @data.match(reg, offset)
       @scrapes[prop] = matches ? matches : nil
-      @props[prop] = matches ? matches[1] : ''
+      set_prop(prop, matches ? matches[1] : '')
     end
 
     def format_date(format, date)
