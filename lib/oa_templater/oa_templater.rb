@@ -234,9 +234,9 @@ module OaTemplater
       case @data
       when /拒絶の理由を発見しない請求項/
         if m = @data.match(R_CAPTURE_NO_REJECT_CLAIMS)
-          set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for #{format_headers(m[1])} which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+          set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for #{format_headers(m[1])}.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
         else
-          set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for the claims which were not indicated in this Notice of Reasons for Rejection.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
+          set_prop(:currently_known, "<Claims for which no reasons for rejection have been found>\r\n \tNo reasons for rejection are currently known for the claims.  The applicant will be notified of new reasons for rejection if such reasons for rejection are found.")
         end
       when /拒絶の理由が通知される/
         set_prop(:currently_known, 'The applicant will be notified of new reasons for rejection if such reasons for rejection are found.')
