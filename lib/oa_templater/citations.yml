@@ -69,3 +69,7 @@ ca_patent:
 ja_uma:
   english: 'Japanese Examined Utility Model Application, Second Publication No. CIT_NO'
   japanese: !ruby/regexp '/\s*(実公)([昭|平]*)(\p{N}+?).(?:\p{Z}*)(\p{N}+?)号公報/i'
+austria_p:
+  english: 'Austrian Patent, Publication No. CIT_NO'
+  japanese: !ruby/regexp '/(?:.|．|\p{Z}|）)\s*オーストリア国特許(?:発明)?第(\p{N}+?)号/'
+
